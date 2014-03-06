@@ -3,7 +3,7 @@
 Any patches to this script should be made against the original
 CoffeeScript source file available (and documented) at:
 
-    TODO: GitHub Gist URL here once assigned
+    https://gist.github.com/ssokolow/9a7a57fbabf0948abd5e
 
 Copyright ©2014 Stephan Sokolow
 License: MIT (http://opensource.org/licenses/MIT)
