@@ -166,7 +166,7 @@ scrapers =
       'source_id': 'indiegamestand'
       'game_list' : -> {
         # **Note:** IGS game URLs change during promos
-        url: $('.game-thumb', x).closest('a')[0].href
+        url: $('.game-thumb', x)?.closest('a')?[0]?.href
         title: $('.game-title', x).text().trim()
         sources: ['indiegamestand']
         } for x in $('#wallet_contents .line-item')
