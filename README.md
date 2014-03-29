@@ -4,8 +4,8 @@ This userscript adds "Export to ITAD" buttons to online game vendors who do
 not provide a way for sites like IsThereAnyDeal.com to query user game lists
 remotely.
 
-It is currently in **beta** and any bugs should be reported in the issue
-tracker.
+It is currently in **beta** and any bugs should be reported in the
+[issue tracker](https://github.com/ssokolow/itad_importer/issues).
 
 Currently supported vendors are:
 
