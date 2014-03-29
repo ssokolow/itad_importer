@@ -8,26 +8,9 @@ CoffeeScript source file available (and documented) at:
 Copyright ©2014 Stephan Sokolow
 License: MIT (http://opensource.org/licenses/MIT)
 
-CoffeeScript is simple to learn but If you aren't set up to develop
-in it, you may need this quick-and-dirty testing environment:
-
- 1. Open http://coffeescript.org/
- 2. Open the "Try CoffeeScript" tab.
- 3. Use the browser's Developer Tools to add a contentEditable
-  attribute to the `<pre>` tag for the right pane so you can use
-  <kbd>Ctrl+A</kbd> <kbd>Ctrl+C</kbd> to quickly copy everything.
- 4. Install the stable version of this userscript and use Greasemonkey's
-  edit button to open up the version it's using so you can test changes
-  simply by copying JS from "Try CoffeeScript" to the editor, clicking
-  save, and reloading the page in the browser.
- 5. Use the "Try CoffeeScript" button to switch back and forth between
-  code and reference materials.
-
-Also, the best way to familiarize yourself with this script is to
-install and run the `docco` documentation generator. This will unweave
-the code and comments into a syntax-colorized, two-column form.
-
-TODO: Add a `@downloadURL` for the script
+TODO:
+- Add support for wishlist importing too
+- Add a `@downloadURL` for the script
 
 Note: While we do not use GM_info, we must request it to force the userscript
 to be isolated from the page so its jQuery doesn't collide with the site's
@@ -165,7 +148,9 @@ scrapers =
     'https://indiegamestand\.com/wallet\.php' :
       'source_id': 'indiegamestand'
       'game_list' : -> {
-        # **Note:** IGS game URLs change during promos
+        # **Note:** IGS game URLs change during promos and some IGS wallet
+        # entries may not have them (eg. entries just present to provide
+        # a second steam key for some DLC from another entry)
         url: $('.game-thumb', x)?.closest('a')?[0]?.href
         title: $('.game-title', x).text().trim()
         sources: ['indiegamestand']
