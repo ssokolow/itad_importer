@@ -11,7 +11,8 @@ Currently supported vendors are:
 
 * [DotEmu](http://www.dotemu.com)
 * [GOG.com](http://www.gog.com)
-* [Humble Store](http://www.humblebundle.com) (anything in your Humble Library)
+* [Humble Store](http://www.humblebundle.com) (anything in your
+  [Humble Library](https://www.humblebundle.com/home))
 * [IndieGameStand](http://www.indiegamestand.com)
 * [ShinyLoot](http://www.shinyloot.com)
 
@@ -21,10 +22,11 @@ on imgur.
 ### Installation
 
 1. Install [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/)
-   in [Firefox](http://getfirefox.com/) (Tampermonkey in Chrome should also work
-   but hasn't yet been tested)
-2. Click the Javascript file here and then click the "Raw" button
-3. You should be presented with a dialog offering to install the script.
+   in [Firefox](http://getfirefox.com/)
+   ([Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+   in Chrome should also work but hasn't yet been tested)
+2. Restart Firefox
+3. Install the [userscript](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
 
 (This script will be uploaded to userscript repositories like
 [Greasy Fork](https://greasyfork.org/) once it is reasonable apparent that
@@ -40,13 +42,14 @@ discretion.
 
 The official method for developing this script is as follows:
 
-1. Install the release version of the script in your browser
-2. Install Node.js
+1. Install the [release version](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
+   of the script in your browser
+2. Install [Node.js](http://nodejs.org/)
 3. Run `npm install -g coffee-script coffeelint docco`
 4. Run `./develop.sh`
 5. Saving changes to the CoffeeScript source will now regenerate the installed
    copy of the script.
-6. When you're finished, hit Ctrl+C
+6. When you're finished, hit <kbd>Ctrl</kbd>+<kbd>C</kbd>
 7. `develop.sh` will regenerate the in-repository JavaScript and code
    documentation.
 8. Commit the updated built files
@@ -59,7 +62,8 @@ can also be used:
  2. Open the "Try CoffeeScript" tab.
  3. Use the browser's Developer Tools to add a `contentEditable`
   attribute to the `<pre>` tag for the right pane so you can use
-  <kbd>Ctrl+A</kbd> <kbd>Ctrl+C</kbd> to quickly copy everything.
+  <kbd>Ctrl</kbd>+<kbd>A</kbd> followed by <kbd>Ctrl</kbd>+<kbd>C</kbd> to
+  quickly copy everything.
  4. Install the stable version of this userscript and use Greasemonkey's
   edit button to open up the version it's using so you can test changes
   simply by copying JS from "Try CoffeeScript" to the editor, clicking
