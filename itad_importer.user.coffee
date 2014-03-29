@@ -43,7 +43,6 @@ jQuery.
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
 // @match *://www.dotemu.com/*
-// @match *://www.gameolith.com/user/*
 // @match *://secure.gog.com/account/games*
 // @match *://www.humblebundle.com/home*
 // @match *://indiegamestand.com/wallet.php
@@ -88,25 +87,6 @@ scrapers =
         marginRight: '5px'
         })
         .appendTo('.my-games h2.pane-title')
-
-  'www.gameolith.com' :
-    'https?://www\.gameolith\.com/user/[^/]+/games/?' :
-      'source_id': 'gameolith'
-      'game_list' : -> {
-        url: x.href
-        title: $(x).text().trim()
-        sources: ['gameolith']
-        } for x in $('.games-list-vertical a, .game-library a')
-
-      'insert_button': ->
-        $('<button></button>')
-        .html(BUTTON_LABEL).css({
-        # Gameolith's `<button>` CSS is almost perfect as-is.
-        float: 'right'
-        background: 'transparent'
-        padding: '3px'
-        })
-        .appendTo('.games-list-vertical h1')
 
   'secure.gog.com' :
     # **TODO:** Figure out a way to detect which mode is in use so we can
