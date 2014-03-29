@@ -38,7 +38,7 @@ jQuery.
 // @version 0.1a1
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
-// @icon https://s3-eu-west-1.amazonaws.com/itad/images/apple-touch-icon-57x57.png
+// @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
 // @grant GM_info
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
