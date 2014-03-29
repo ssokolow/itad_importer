@@ -43,7 +43,7 @@ jQuery.
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
 // @match *://www.dotemu.com/*
-// @match *://secure.gog.com/account/games*
+// @match *://secure.gog.com/account*
 // @match *://www.humblebundle.com/home*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
@@ -89,50 +89,49 @@ scrapers =
         .appendTo('.my-games h2.pane-title')
 
   'secure.gog.com' :
-    # **TODO:** Figure out a way to detect which mode is in use so we can
-    # integrate with the cookie-powered /games URL.
-    'https://secure\.gog\.com/account/games/shelf/?' :
+    'https://secure\.gog\.com/account(/games(/(shelf|list))?)?/?' :
       'source_id': 'gog'
-      'game_list' : -> {
-      # The shelf view mode only sees game IDs and slugs easily
-      id: attr(x, 'data-gameid')
-      url: ('http://www.gog.com/en/game/' +
-          attr(x, 'data-gameindex'))
-      sources: ['gog']
-      } for x in $('[data-gameindex]')
+      'game_list' : ->
+        if $('.shelf_container').length > 0
+          {
+          # The shelf view mode only sees game IDs and slugs easily
+          id: attr(x, 'data-gameid')
+          url: ('http://www.gog.com/en/game/' +
+              attr(x, 'data-gameindex'))
+          sources: ['gog']
+          } for x in $('[data-gameindex]')
+
+        else if $('.games_list').length > 0
+          {
+          id: $(x).closest('.game-item').attr('id').substring(8)
+          # The list view mode only sees game titles easily
+          title: x.textContent.trim()
+          sources: ['gog']
+          } for x in $('.game-title-link')
 
       'insert_button': ->
-        $("<span class='shelf_btn'></button>")
-        # Use GOG's style but tweak it and force *both* ends round
-        .css({
-        float: 'right'
-        borderRadius: '9px'
-        opacity: 0.7
-        marginTop: '15px'
-        marginRight: '-32px'
-        })
-        .html(BUTTON_LABEL)
-        .prependTo($('.shelf_header').filter(':first'))
-
-    'https://secure\.gog\.com/account/games/list/?' :
-      'source_id': 'gog'
-      'game_list' : -> {
-        id: $(x).closest('.game-item').attr('id').substring(8)
-        # The list view mode only sees game titles easily
-        title: x.textContent.trim()
-        sources: ['gog']
-        } for x in $('.game-title-link')
-
-      'insert_button': ->
-        # Use GOG's style class but force it to be its own tweaked
-        # button group because their style won't round both ends
-        # of the same button
-        $("<span class='list_btn'></span>")
-        .css({ float: 'right', borderRadius: '9px' })
-        .html(BUTTON_LABEL)
-        # Prevent it from throwing off the other group
-        .wrap('<span></span>')
-        .appendTo('.list_header')
+        if $('.shelf_container').length > 0
+          $("<span class='shelf_btn'></button>")
+          # Use GOG's style but tweak it and force *both* ends round
+          .css({
+          float: 'right'
+          borderRadius: '9px'
+          opacity: 0.7
+          marginTop: '15px'
+          marginRight: '-32px'
+          })
+          .html(BUTTON_LABEL)
+          .prependTo($('.shelf_header').filter(':first'))
+        else if $('.games_list').length > 0
+          # Use GOG's style class but force it to be its own tweaked
+          # button group because their style won't round both ends
+          # of the same button
+          $("<span class='list_btn'></span>")
+          .css({ float: 'right', borderRadius: '9px' })
+          .html(BUTTON_LABEL)
+          # Prevent it from throwing off the other group
+          .wrap('<span></span>')
+          .appendTo('.list_header')
 
   'www.humblebundle.com' :
     'https://www\.humblebundle\.com/home/?' :
