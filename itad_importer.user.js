@@ -5,7 +5,7 @@
 Any patches to this script should be made against the original
 CoffeeScript source file available (and documented) at:
 
-  https://gist.github.com/ssokolow/9a7a57fbabf0948abd5e
+  https://github.com/ssokolow/itad_importer
 
 Copyright ©2014 Stephan Sokolow
 License: MIT (http://opensource.org/licenses/MIT)
