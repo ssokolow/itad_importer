@@ -29,15 +29,15 @@ on imgur.
 3. Install the [userscript](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
 
 (This script will be uploaded to userscript repositories like
-[Greasy Fork](https://greasyfork.org/) once it is reasonable apparent that
+[Greasy Fork](https://greasyfork.org/) once it is reasonably apparent that
 rapid patching is no longer a concern.)
 
 ### Development
 
-The authoritative copy of this script is the CoffeeScript source file. Patches
-against the generated JavaScript may or may not be accepted at the developers'
-discretion. (We have to rewrite them in CoffeeScript, so they'll have to be
-worthwhile.)
+The authoritative copy of this script is the
+[CoffeeScript](http://coffeescript.org/) source file. Patches against the
+generated JavaScript may or may not be accepted at the developers' discretion.
+(We have to rewrite them in CoffeeScript, so they'll have to be worthwhile.)
 
 The official method for developing this script is as follows:
 
