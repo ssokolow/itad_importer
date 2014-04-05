@@ -39,6 +39,15 @@ BUTTON_LABEL = "Export to ITAD"
 # Less overhead than instantiating a new jQuery object
 attr = (node, name) -> node.getAttribute(name)
 
+# Common code to extract metadata from the GOG.com shelf and wishlist views
+gog_nonlist_parse = -> {
+  # The shelf view mode only sees game IDs and slugs easily
+  id: attr(x, 'data-gameid')
+  url: ('http://www.gog.com/en/game/' +
+      attr(x, 'data-gameindex'))
+  sources: ['gog']
+} for x in $('[data-gameindex]')
+
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
 # This should allow for extremely robust scaling as well as enabling the
@@ -72,18 +81,11 @@ scrapers =
         .appendTo('.my-games h2.pane-title')
 
   'secure.gog.com' :
-    'https://secure\.gog\.com/account(/games(/(shelf|list))?)?/?' :
+    '^https://secure\.gog\.com/account(/games(/(shelf|list))?)?/?$' :
       'source_id': 'gog'
       'game_list' : ->
         if $('.shelf_container').length > 0
-          {
-          # The shelf view mode only sees game IDs and slugs easily
-          id: attr(x, 'data-gameid')
-          url: ('http://www.gog.com/en/game/' +
-              attr(x, 'data-gameindex'))
-          sources: ['gog']
-          } for x in $('[data-gameindex]')
-
+          gog_nonlist_parse()
         else if $('.games_list').length > 0
           {
           id: $(x).closest('.game-item').attr('id').substring(8)
@@ -115,6 +117,19 @@ scrapers =
           # Prevent it from throwing off the other group
           .wrap('<span></span>')
           .appendTo('.list_header')
+    'https://secure\.gog\.com/account/wishlist' :
+      'source_id': 'gog'
+      'game_list' : gog_nonlist_parse
+      'insert_button': ->
+        # Borrow the styling from the games list since I couldn't find
+        # anything better in GOG's own styling.
+        $("<span class='list_btn'></span>")
+        .css({ float: 'right', borderRadius: '9px' })
+        .html(BUTTON_LABEL)
+        # Prevent it from throwing off the other group
+        .wrap('<span></span>')
+        .appendTo('.wlist_header')
+      'is_wishlist': true
 
   'www.humblebundle.com' :
     'https://www\.humblebundle\.com/home/?' :
@@ -205,10 +220,14 @@ scrapeGames = (profile) ->
     source: profile.source_id
   }
 
+  url = if profile.is_wishlist?
+    'http://isthereanydeal.com/outside/user/wait/3rdparty'
+  else
+    'http://isthereanydeal.com/outside/user/collection/3rdparty'
+
   # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
   # navigates the top-level window.
-  form = $("<form id='itad_submitter' method='POST' />").attr('action',
-      'http://isthereanydeal.com/outside/user/collection/3rdparty')
+  form = $("<form id='itad_submitter' method='POST' />").attr('action', url)
   params['returnTo'] = location.href
 
   # Submit the form data
