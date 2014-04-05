@@ -32,9 +32,10 @@ jQuery.
 // @match *://www.humblebundle.com/home*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
+// @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, attr, gog_nonlist_parse, scrapeGames, scrapers;
+var BUTTON_LABEL, attr, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -55,6 +56,23 @@ gog_nonlist_parse = function() {
     });
   }
   return _results;
+};
+
+shinyloot_insert_button = function() {
+  return $('<button></button>').html(BUTTON_LABEL).css({
+    background: 'url("/images/filters/sort-background-inactive.png") ' + 'repeat-x scroll 0% 0% transparent',
+    border: '1px solid #666',
+    borderRadius: '2px',
+    boxShadow: '0px 1px 6px #777',
+    color: '#222',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    fontFamily: 'Arial,Helvetica,Sans-serif',
+    float: 'right',
+    padding: '2px 8px',
+    marginRight: '-6px',
+    verticalAlign: 'middle'
+  }).appendTo('#content .header');
 };
 
 scrapers = {
@@ -188,7 +206,7 @@ scrapers = {
     }
   },
   'www.shinyloot.com': {
-    'http://www\.shinyloot\.com/m/games/?': {
+    'https?://www\.shinyloot\.com/m/games/?': {
       'source_id': 'shinyloot',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
@@ -204,22 +222,25 @@ scrapers = {
         }
         return _results;
       },
-      'insert_button': function() {
-        return $('<button></button>').html(BUTTON_LABEL).css({
-          background: 'url("/images/filters/sort-background-inactive.png") ' + 'repeat-x scroll 0% 0% transparent',
-          border: '1px solid #666',
-          borderRadius: '2px',
-          boxShadow: '0px 1px 6px #777',
-          color: '#222',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          fontFamily: 'Arial,Helvetica,Sans-serif',
-          float: 'right',
-          padding: '2px 8px',
-          marginRight: '-6px',
-          verticalAlign: 'middle'
-        }).appendTo('#content .header');
-      }
+      'insert_button': shinyloot_insert_button
+    },
+    'https?://www\.shinyloot\.com/m/wishlist/?': {
+      'source_id': 'shinyloot',
+      'game_list': function() {
+        var x, _i, _len, _ref, _results;
+        _ref = $('.gameItem');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push({
+            url: $('.gameInfo + a', x)[0].href,
+            title: $('.gameName', x).text().trim()
+          });
+        }
+        return _results;
+      },
+      'insert_button': shinyloot_insert_button,
+      'is_wishlist': true
     }
   }
 };

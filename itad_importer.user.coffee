@@ -30,6 +30,7 @@ jQuery.
 // @match *://www.humblebundle.com/home*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
+// @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
 ###
 
@@ -47,6 +48,28 @@ gog_nonlist_parse = -> {
       attr(x, 'data-gameindex'))
   sources: ['gog']
 } for x in $('[data-gameindex]')
+
+shinyloot_insert_button = ->
+  $('<button></button>')
+  .html(BUTTON_LABEL).css({
+  # ShinyLoot's buttons are a chimeric grab-bag and
+  # the nicest looking ones have site-provided CSS
+  # that's tied to markup using `<ul>` and `<li>`.
+  background: 'url("/images/filters/sort-background-inactive.png") ' +
+              'repeat-x scroll 0% 0% transparent'
+  border: '1px solid #666'
+  borderRadius: '2px'
+  boxShadow: '0px 1px 6px #777'
+  color: '#222'
+  fontSize: '12px'
+  fontWeight: 'bold'
+  fontFamily: 'Arial,Helvetica,Sans-serif'
+  float: 'right'
+  padding: '2px 8px'
+  marginRight: '-6px'
+  verticalAlign: 'middle'
+  })
+  .appendTo('#content .header')
 
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
@@ -183,35 +206,22 @@ scrapers =
         .appendTo('#game_wallet h2')
 
   'www.shinyloot.com' :
-    'http://www\.shinyloot\.com/m/games/?' :
+    'https?://www\.shinyloot\.com/m/games/?' :
       'source_id': 'shinyloot'
       'game_list' : -> {
         url: $('.right-float a img', x).closest('a')[0].href
         title: $(x).prev('h3').text().trim()
         sources: ['shinyloot']
         } for x in $('#accordion .ui-widget-content')
-
-      'insert_button': ->
-        $('<button></button>')
-        .html(BUTTON_LABEL).css({
-        # ShinyLoot's buttons are a chimeric grab-bag and
-        # the nicest looking ones have site-provided CSS
-        # that's tied to markup using `<ul>` and `<li>`.
-        background: 'url("/images/filters/sort-background-inactive.png") ' +
-                    'repeat-x scroll 0% 0% transparent'
-        border: '1px solid #666'
-        borderRadius: '2px'
-        boxShadow: '0px 1px 6px #777'
-        color: '#222'
-        fontSize: '12px'
-        fontWeight: 'bold'
-        fontFamily: 'Arial,Helvetica,Sans-serif'
-        float: 'right'
-        padding: '2px 8px'
-        marginRight: '-6px'
-        verticalAlign: 'middle'
-        })
-        .appendTo('#content .header')
+      'insert_button': shinyloot_insert_button
+    'https?://www\.shinyloot\.com/m/wishlist/?' :
+      'source_id': 'shinyloot'
+      'game_list' : -> {
+        url: $('.gameInfo + a', x)[0].href
+        title: $('.gameName', x).text().trim()
+        } for x in $('.gameItem')
+      'insert_button': shinyloot_insert_button
+      'is_wishlist': true
 
 # Callback for the button
 scrapeGames = (profile) ->
