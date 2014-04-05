@@ -2,14 +2,14 @@
 
 This userscript adds "Export to ITAD" buttons to online game vendors who do
 not provide a way for sites like IsThereAnyDeal.com to query user game lists
-remotely.
+and wishlists remotely.
 
 It is currently in **beta** and any bugs should be reported in the
 [issue tracker](https://github.com/ssokolow/itad_importer/issues).
 
 Currently supported vendors are:
 
-* [DotEmu](http://www.dotemu.com)
+* [DotEmu](http://www.dotemu.com) (no wishlist support)
 * [GOG.com](http://www.gog.com)
 * [Humble Store](http://www.humblebundle.com) (anything in your
   [Humble Library](https://www.humblebundle.com/home))
