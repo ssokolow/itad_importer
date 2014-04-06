@@ -15,6 +15,7 @@ Currently supported vendors are:
   [Humble Library](https://www.humblebundle.com/home))
 * [IndieGameStand](http://www.indiegamestand.com)
 * [ShinyLoot](http://www.shinyloot.com)
+* [GreenMan Gaming](http://www.greenmangaming.com)
 
 Pending a proper website, [screenshots](http://imgur.com/a/6FG6B) are available
 on imgur.

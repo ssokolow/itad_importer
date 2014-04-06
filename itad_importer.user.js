@@ -33,9 +33,10 @@ jQuery.
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
+// @match *://www.greenmangaming.com/user/account*
 // ==/UserScript==
  */
-var BUTTON_LABEL, attr, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, attr, gmg_insert_button, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -73,6 +74,14 @@ shinyloot_insert_button = function() {
     marginRight: '-6px',
     verticalAlign: 'middle'
   }).appendTo('#content .header');
+};
+
+gmg_insert_button = function() {
+  if (location.hash === "#games") {
+    return $('#content h1').append('<a class="button right" id="itad_button">' + BUTTON_LABEL + '</a>');
+  } else {
+    return $('#itad_button').detach();
+  }
 };
 
 scrapers = {
@@ -241,6 +250,41 @@ scrapers = {
       },
       'insert_button': shinyloot_insert_button,
       'is_wishlist': true
+    }
+  },
+  'www.greenmangaming.com': {
+    'https?://www\.greenmangaming\.com/user/account/': {
+      'source_id': 'greenmangaming',
+      'game_list': function() {
+        var results, section, shops, x, y, _i, _j, _len, _len1, _ref, _ref1;
+        results = [];
+        _ref = $('#games #page_container section');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          y = _ref[_i];
+          section = $("h2", y).text();
+          if (/steam/i.test(section)) {
+            shops = ['steam', 'greenmangaming'];
+          } else if (/origin/i.test(section)) {
+            shops = ['origin', 'greenmangaming'];
+          } else {
+            shops = ['greenmangaming'];
+          }
+          _ref1 = $('tbody tr', y);
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            x = _ref1[_j];
+            results.push({
+              url: $('td.download a', x)[0].href,
+              title: $('td.name', x).text().trim(),
+              sources: shops
+            });
+          }
+        }
+        return results;
+      },
+      'insert_button': function() {
+        $(window).bind('hashchange', gmg_insert_button);
+        return gmg_insert_button();
+      }
     }
   }
 };

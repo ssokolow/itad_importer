@@ -31,6 +31,7 @@ jQuery.
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
+// @match *://www.greenmangaming.com/user/account*
 // ==/UserScript==
 ###
 
@@ -70,6 +71,13 @@ shinyloot_insert_button = ->
   verticalAlign: 'middle'
   })
   .appendTo('#content .header')
+
+gmg_insert_button = ->
+  if location.hash == "#games"
+    $('#content h1')
+    .append('<a class="button right" id="itad_button">'+BUTTON_LABEL+'</a>')
+  else
+    $('#itad_button').detach()
 
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
@@ -222,6 +230,33 @@ scrapers =
         } for x in $('.gameItem')
       'insert_button': shinyloot_insert_button
       'is_wishlist': true
+
+  'www.greenmangaming.com' :
+    'https?://www\.greenmangaming\.com/user/account/' :
+      'source_id': 'greenmangaming'
+      'game_list' : ->
+
+        results = []
+        for y in $('#games #page_container section')
+
+          section = $("h2", y).text()
+          if /steam/i.test(section)
+            shops = ['steam', 'greenmangaming']
+          else if /origin/i.test(section)
+            shops = ['origin', 'greenmangaming']
+          else
+            shops = ['greenmangaming']
+
+          for x in $('tbody tr', y)
+            results.push({
+              url: $('td.download a', x)[0].href
+              title: $('td.name', x).text().trim()
+              sources: shops
+            })
+        return results
+      'insert_button': ->
+        $(window).bind 'hashchange', gmg_insert_button
+        gmg_insert_button()
 
 # Callback for the button
 scrapeGames = (profile) ->
