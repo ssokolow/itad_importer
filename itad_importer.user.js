@@ -77,7 +77,7 @@ shinyloot_insert_button = function() {
 
 scrapers = {
   'www.dotemu.com': {
-    'https://www\.dotemu\.com/(en|fr|es)/user/?': {
+    'https://www\\.dotemu\\.com/(en|fr|es)/user/?': {
       'source_id': 'dotemu',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
@@ -102,7 +102,7 @@ scrapers = {
     }
   },
   'secure.gog.com': {
-    '^https://secure\.gog\.com/account(/games(/(shelf|list))?)?/?$': {
+    '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)': {
       'source_id': 'gog',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
@@ -139,7 +139,7 @@ scrapers = {
         }
       }
     },
-    'https://secure\.gog\.com/account/wishlist': {
+    '^https://secure\\.gog\\.com/account/wishlist': {
       'source_id': 'gog',
       'game_list': gog_nonlist_parse,
       'insert_button': function() {
@@ -152,7 +152,7 @@ scrapers = {
     }
   },
   'www.humblebundle.com': {
-    'https://www\.humblebundle\.com/home/?': {
+    'https://www\\.humblebundle\\.com/home/?': {
       'source_id': 'humblestore',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
@@ -180,7 +180,7 @@ scrapers = {
     }
   },
   'indiegamestand.com': {
-    'https://indiegamestand\.com/wallet\.php': {
+    'https://indiegamestand\\.com/wallet\\.php': {
       'source_id': 'indiegamestand',
       'game_list': function() {
         var x, _i, _len, _ref, _ref1, _ref2, _ref3, _results;
@@ -206,7 +206,7 @@ scrapers = {
     }
   },
   'www.shinyloot.com': {
-    'https?://www\.shinyloot\.com/m/games/?': {
+    'https?://www\\.shinyloot\\.com/m/games/?': {
       'source_id': 'shinyloot',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
@@ -224,7 +224,7 @@ scrapers = {
       },
       'insert_button': shinyloot_insert_button
     },
-    'https?://www\.shinyloot\.com/m/wishlist/?': {
+    'https?://www\\.shinyloot\\.com/m/wishlist/?': {
       'source_id': 'shinyloot',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
