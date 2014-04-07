@@ -164,7 +164,7 @@ scrapers =
       'is_wishlist': true
 
   'www.greenmangaming.com' :
-    'https?://(www\.)?greenmangaming\.com/user/account/?' :
+    'https?://(www\\.)?greenmangaming\\.com/user/account/?' :
       'source_id': 'greenmangaming'
       'game_list' : ->
 

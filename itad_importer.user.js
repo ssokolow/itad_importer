@@ -164,7 +164,7 @@ scrapers = {
     }
   },
   'www.greenmangaming.com': {
-    'https?://(www\.)?greenmangaming\.com/user/account/?': {
+    'https?://(www\\.)?greenmangaming\\.com/user/account/?': {
       'source_id': 'greenmangaming',
       'game_list': function() {
         var results, section, shops, x, y, _i, _j, _len, _len1, _ref, _ref1;
