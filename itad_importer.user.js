@@ -265,22 +265,33 @@ scrapeGames = function(profile) {
 };
 
 $(function() {
-  var profile, regex, _ref, _results;
-  _ref = scrapers[location.host];
-  _results = [];
-  for (regex in _ref) {
-    profile = _ref[regex];
-    if (location.href.match(regex)) {
-      $('#itad_btn, #itad_dlg, .itad_close').remove();
-      if (typeof profile.insert_button === "function") {
-        profile.insert_button().attr('id', 'itad_btn').click(function() {
-          return scrapeGames(profile);
-        });
+  var e, profile, profile_matched, regex, _ref, _results;
+  console.log("Loading ITAD importer...");
+  if (scrapers[location.host]) {
+    console.log("Matched domain: " + location.host);
+    _ref = scrapers[location.host];
+    _results = [];
+    for (regex in _ref) {
+      profile = _ref[regex];
+      try {
+        profile_matched = location.href.match(regex);
+      } catch (_error) {
+        e = _error;
+        console.error("Bad regex: " + regex);
       }
-      break;
-    } else {
-      _results.push(void 0);
+      if (location.href.match(regex)) {
+        console.log("Matched profile: " + regex);
+        $('#itad_btn, #itad_dlg, .itad_close').remove();
+        if (typeof profile.insert_button === "function") {
+          profile.insert_button().attr('id', 'itad_btn').click(function() {
+            return scrapeGames(profile);
+          });
+        }
+        break;
+      } else {
+        _results.push(void 0);
+      }
     }
+    return _results;
   }
-  return _results;
 });

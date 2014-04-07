@@ -258,14 +258,23 @@ $ ->
   #
   # It seems we don't need an explicit `if location.host of scrapers`
   # before the `for` loop
-  for regex, profile of scrapers[location.host]
-    if location.href.match(regex)
-      # Allow reloading the script without reloading the page for RAD
-      $('#itad_btn, #itad_dlg, .itad_close').remove()
-      # Use the `?` existential operator to die quietly if the profile
-      # doesn't have an `insert_button` member.
-      profile.insert_button?().attr('id', 'itad_btn').click(
-        -> scrapeGames(profile)
-      )
-      # We only ever want to match one profile so break here
-      break
+  console.log("Loading ITAD importer...")
+  if scrapers[location.host]
+    console.log("Matched domain: " + location.host)
+    for regex, profile of scrapers[location.host]
+      try
+        profile_matched = location.href.match(regex)
+      catch e
+        console.error("Bad regex: " + regex)
+
+      if location.href.match(regex)
+        console.log("Matched profile: " + regex)
+        # Allow reloading the script without reloading the page for RAD
+        $('#itad_btn, #itad_dlg, .itad_close').remove()
+        # Use the `?` existential operator to die quietly if the profile
+        # doesn't have an `insert_button` member.
+        profile.insert_button?().attr('id', 'itad_btn').click(
+          -> scrapeGames(profile)
+        )
+        # We only ever want to match one profile so break here
+        break
