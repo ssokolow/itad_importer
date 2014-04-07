@@ -44,7 +44,7 @@ The official method for developing this script is as follows:
 1. Install the [release version](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
    of the script in Firefox
 2. Install [Node.js](http://nodejs.org/)
-3. Run `sudo npm install -g coffee-script coffeelint docco`
+3. Run `sudo npm install -g coffee-script coffeelint coffee-jshint docco`
 4. Run `./develop.sh`
 5. Saving changes to the CoffeeScript source will now regenerate the copy of
    the script installed in Firefox.
