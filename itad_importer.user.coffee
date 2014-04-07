@@ -74,8 +74,9 @@ shinyloot_insert_button = ->
 
 gmg_insert_button = ->
   if location.hash == "#games"
-    $('#content h1')
-    .append("<a class='button right' id='itad_button'>#{BUTTON_LABEL}</a>")
+    $("<a class='button right' id='itad_button'>#{BUTTON_LABEL}</a>")
+    .css({margin: '0px', marginTop:'3px'})
+    .appendTo('#content h1')
   else
     $('#itad_button').remove()
 
@@ -162,6 +163,31 @@ scrapers =
         .appendTo('.wlist_header')
       'is_wishlist': true
 
+  'www.greenmangaming.com' :
+    'https?://(www\.)?greenmangaming\.com/user/account/?' :
+      'source_id': 'greenmangaming'
+      'game_list' : ->
+
+        results = []
+        for y in $('#games #page_container section')
+          section = $("h2", y).text()
+          shops = ['greenmangaming']
+          if /origin/i.test(section)
+            shops.unshift('origin')
+          if /steam/i.test(section)
+            shops.unshift('steam')
+
+          for x in $('tbody tr', y)
+            results.push({
+              url: $('td.download a', x)[0].href
+              title: $('td.name', x).text().trim()
+              sources: shops
+            })
+        return results
+      'insert_button': ->
+        $(window).bind('hashchange', gmg_insert_button)
+        gmg_insert_button()
+
   'www.humblebundle.com' :
     'https://www\.humblebundle\.com/home/?' :
       'source_id': 'humblestore'
@@ -230,31 +256,6 @@ scrapers =
         } for x in $('.gameItem')
       'insert_button': shinyloot_insert_button
       'is_wishlist': true
-
-  'www.greenmangaming.com' :
-    'https?://(www\.)?greenmangaming\.com/user/account/?' :
-      'source_id': 'greenmangaming'
-      'game_list' : ->
-
-        results = []
-        for y in $('#games #page_container section')
-          section = $("h2", y).text()
-          shops = ['greenmangaming']
-          if /origin/i.test(section)
-            shops.unshift('origin')
-          if /steam/i.test(section)
-            shops.unshift('steam')
-
-          for x in $('tbody tr', y)
-            results.push({
-              url: $('td.download a', x)[0].href
-              title: $('td.name', x).text().trim()
-              sources: shops
-            })
-        return results
-      'insert_button': ->
-        $(window).bind('hashchange', gmg_insert_button)
-        gmg_insert_button()
 
 # Callback for the button
 scrapeGames = (profile) ->

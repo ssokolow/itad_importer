@@ -180,8 +180,9 @@ that’s tied to markup using <code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code
 
 <span class="hljs-function"><span class="hljs-title">gmg_insert_button</span> = -&gt;</span>
   <span class="hljs-keyword">if</span> location.hash == <span class="hljs-string">"#games"</span>
-    $(<span class="hljs-string">'#content h1'</span>)
-    .append(<span class="hljs-string">"&lt;a class='button right' id='itad_button'&gt;<span class="hljs-subst">#{BUTTON_LABEL}</span>&lt;/a&gt;"</span>)
+    $(<span class="hljs-string">"&lt;a class='button right' id='itad_button'&gt;<span class="hljs-subst">#{BUTTON_LABEL}</span>&lt;/a&gt;"</span>)
+    .css({<span class="hljs-attribute">margin</span>: <span class="hljs-string">'0px'</span>, <span class="hljs-attribute">marginTop</span>:<span class="hljs-string">'3px'</span>})
+    .appendTo(<span class="hljs-string">'#content h1'</span>)
   <span class="hljs-keyword">else</span>
     $(<span class="hljs-string">'#itad_button'</span>).remove()</pre></div></div>
             
@@ -448,6 +449,31 @@ anything better in GOG’s own styling.</p>
         .appendTo(<span class="hljs-string">'.wlist_header'</span>)
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
+  <span class="hljs-string">'www.greenmangaming.com'</span> :
+    <span class="hljs-string">'https?://(www\.)?greenmangaming\.com/user/account/?'</span> :
+      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'greenmangaming'</span>
+      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span>
+
+        results = []
+        <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#games #page_container section'</span>)
+          section = $(<span class="hljs-string">"h2"</span>, y).text()
+          shops = [<span class="hljs-string">'greenmangaming'</span>]
+          <span class="hljs-keyword">if</span> <span class="hljs-regexp">/origin/i</span>.test(section)
+            shops.unshift(<span class="hljs-string">'origin'</span>)
+          <span class="hljs-keyword">if</span> <span class="hljs-regexp">/steam/i</span>.test(section)
+            shops.unshift(<span class="hljs-string">'steam'</span>)
+
+          <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'tbody tr'</span>, y)
+            results.push({
+              <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'td.download a'</span>, x)[<span class="hljs-number">0</span>].href
+              <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'td.name'</span>, x).text().trim()
+              <span class="hljs-attribute">sources</span>: shops
+            })
+        <span class="hljs-keyword">return</span> results
+      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+        $(<span class="hljs-built_in">window</span>).bind(<span class="hljs-string">'hashchange'</span>, gmg_insert_button)
+        gmg_insert_button()
+
   <span class="hljs-string">'www.humblebundle.com'</span> :
     <span class="hljs-string">'https://www\.humblebundle\.com/home/?'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
@@ -580,32 +606,7 @@ their button styles are scoped to <code>#game_wallet</code></p>
         <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.gameName'</span>, x).text().trim()
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.gameItem'</span>)
       <span class="hljs-string">'insert_button'</span>: shinyloot_insert_button
-      <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
-
-  <span class="hljs-string">'www.greenmangaming.com'</span> :
-    <span class="hljs-string">'https?://(www\.)?greenmangaming\.com/user/account/?'</span> :
-      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'greenmangaming'</span>
-      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span>
-
-        results = []
-        <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#games #page_container section'</span>)
-          section = $(<span class="hljs-string">"h2"</span>, y).text()
-          shops = [<span class="hljs-string">'greenmangaming'</span>]
-          <span class="hljs-keyword">if</span> <span class="hljs-regexp">/origin/i</span>.test(section)
-            shops.unshift(<span class="hljs-string">'origin'</span>)
-          <span class="hljs-keyword">if</span> <span class="hljs-regexp">/steam/i</span>.test(section)
-            shops.unshift(<span class="hljs-string">'steam'</span>)
-
-          <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'tbody tr'</span>, y)
-            results.push({
-              <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'td.download a'</span>, x)[<span class="hljs-number">0</span>].href
-              <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'td.name'</span>, x).text().trim()
-              <span class="hljs-attribute">sources</span>: shops
-            })
-        <span class="hljs-keyword">return</span> results
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        $(<span class="hljs-built_in">window</span>).bind(<span class="hljs-string">'hashchange'</span>, gmg_insert_button)
-        gmg_insert_button()</pre></div></div>
+      <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         

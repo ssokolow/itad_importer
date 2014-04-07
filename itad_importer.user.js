@@ -78,7 +78,10 @@ shinyloot_insert_button = function() {
 
 gmg_insert_button = function() {
   if (location.hash === "#games") {
-    return $('#content h1').append("<a class='button right' id='itad_button'>" + BUTTON_LABEL + "</a>");
+    return $("<a class='button right' id='itad_button'>" + BUTTON_LABEL + "</a>").css({
+      margin: '0px',
+      marginTop: '3px'
+    }).appendTo('#content h1');
   } else {
     return $('#itad_button').remove();
   }
@@ -158,6 +161,41 @@ scrapers = {
         }).html(BUTTON_LABEL).wrap('<span></span>').appendTo('.wlist_header');
       },
       'is_wishlist': true
+    }
+  },
+  'www.greenmangaming.com': {
+    'https?://(www\.)?greenmangaming\.com/user/account/?': {
+      'source_id': 'greenmangaming',
+      'game_list': function() {
+        var results, section, shops, x, y, _i, _j, _len, _len1, _ref, _ref1;
+        results = [];
+        _ref = $('#games #page_container section');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          y = _ref[_i];
+          section = $("h2", y).text();
+          shops = ['greenmangaming'];
+          if (/origin/i.test(section)) {
+            shops.unshift('origin');
+          }
+          if (/steam/i.test(section)) {
+            shops.unshift('steam');
+          }
+          _ref1 = $('tbody tr', y);
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            x = _ref1[_j];
+            results.push({
+              url: $('td.download a', x)[0].href,
+              title: $('td.name', x).text().trim(),
+              sources: shops
+            });
+          }
+        }
+        return results;
+      },
+      'insert_button': function() {
+        $(window).bind('hashchange', gmg_insert_button);
+        return gmg_insert_button();
+      }
     }
   },
   'www.humblebundle.com': {
@@ -250,41 +288,6 @@ scrapers = {
       },
       'insert_button': shinyloot_insert_button,
       'is_wishlist': true
-    }
-  },
-  'www.greenmangaming.com': {
-    'https?://(www\.)?greenmangaming\.com/user/account/?': {
-      'source_id': 'greenmangaming',
-      'game_list': function() {
-        var results, section, shops, x, y, _i, _j, _len, _len1, _ref, _ref1;
-        results = [];
-        _ref = $('#games #page_container section');
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          y = _ref[_i];
-          section = $("h2", y).text();
-          shops = ['greenmangaming'];
-          if (/origin/i.test(section)) {
-            shops.unshift('origin');
-          }
-          if (/steam/i.test(section)) {
-            shops.unshift('steam');
-          }
-          _ref1 = $('tbody tr', y);
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            x = _ref1[_j];
-            results.push({
-              url: $('td.download a', x)[0].href,
-              title: $('td.name', x).text().trim(),
-              sources: shops
-            });
-          }
-        }
-        return results;
-      },
-      'insert_button': function() {
-        $(window).bind('hashchange', gmg_insert_button);
-        return gmg_insert_button();
-      }
     }
   }
 };
