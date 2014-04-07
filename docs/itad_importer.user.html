@@ -205,7 +205,7 @@ Greasemonkey <code>@include</code> lines.</p>
             
             <div class="content"><div class='highlight'><pre>scrapers =
   <span class="hljs-string">'www.dotemu.com'</span> :
-    <span class="hljs-string">'https://www\.dotemu\.com/(en|fr|es)/user/?'</span> :</pre></div></div>
+    <span class="hljs-string">'https://www\\.dotemu\\.com/(en|fr|es)/user/?'</span> :</pre></div></div>
             
         </li>
         
@@ -321,7 +321,7 @@ a jQuery wrapper so the click handler can be bound.</p>
         .appendTo(<span class="hljs-string">'.my-games h2.pane-title'</span>)
 
   <span class="hljs-string">'secure.gog.com'</span> :
-    <span class="hljs-string">'^https://secure\.gog\.com/account(/games(/(shelf|list))?)?/?$'</span> :
+    <span class="hljs-string">'^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
       <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span>
         <span class="hljs-keyword">if</span> $(<span class="hljs-string">'.shelf_container'</span>).length &gt; <span class="hljs-number">0</span>
@@ -409,7 +409,7 @@ of the same button</p>
             
             <div class="content"><div class='highlight'><pre>          .wrap(<span class="hljs-string">'&lt;span&gt;&lt;/span&gt;'</span>)
           .appendTo(<span class="hljs-string">'.list_header'</span>)
-    <span class="hljs-string">'https://secure\.gog\.com/account/wishlist'</span> :
+    <span class="hljs-string">'^https://secure\\.gog\\.com/account/wishlist'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
       <span class="hljs-string">'game_list'</span> : gog_nonlist_parse
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
@@ -475,7 +475,7 @@ anything better in GOG’s own styling.</p>
         gmg_insert_button()
 
   <span class="hljs-string">'www.humblebundle.com'</span> :
-    <span class="hljs-string">'https://www\.humblebundle\.com/home/?'</span> :
+    <span class="hljs-string">'https://www\\.humblebundle\\.com/home/?'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
       <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> { <span class="hljs-attribute">title</span>: x.textContent.trim(), <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'humblestore'</span>]
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.row'</span>).has(</pre></div></div>
@@ -542,7 +542,7 @@ anything better in GOG’s own styling.</p>
         .prependTo(<span class="hljs-string">'.base-main-wrapper h1'</span>)
 
   <span class="hljs-string">'indiegamestand.com'</span> :
-    <span class="hljs-string">'https://indiegamestand\.com/wallet\.php'</span> :
+    <span class="hljs-string">'https://indiegamestand\\.com/wallet\\.php'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'indiegamestand'</span>
       <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {</pre></div></div>
             
@@ -591,7 +591,7 @@ their button styles are scoped to <code>#game_wallet</code></p>
             <div class="content"><div class='highlight'><pre>        .appendTo(<span class="hljs-string">'#game_wallet h2'</span>)
 
   <span class="hljs-string">'www.shinyloot.com'</span> :
-    <span class="hljs-string">'https?://www\.shinyloot\.com/m/games/?'</span> :
+    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/games/?'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'shinyloot'</span>
       <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {
         <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.right-float a img'</span>, x).closest(<span class="hljs-string">'a'</span>)[<span class="hljs-number">0</span>].href
@@ -599,7 +599,7 @@ their button styles are scoped to <code>#game_wallet</code></p>
         <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'shinyloot'</span>]
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#accordion .ui-widget-content'</span>)
       <span class="hljs-string">'insert_button'</span>: shinyloot_insert_button
-    <span class="hljs-string">'https?://www\.shinyloot\.com/m/wishlist/?'</span> :
+    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/wishlist/?'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'shinyloot'</span>
       <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {
         <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.gameInfo + a'</span>, x)[<span class="hljs-number">0</span>].href
@@ -688,7 +688,7 @@ navigates the top-level window.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$<span class="hljs-function"> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>$(<span class="hljs-function">-&gt;</span></pre></div></div>
             
         </li>
         
@@ -705,8 +705,17 @@ before the <code>for</code> loop</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">for</span> regex, profile <span class="hljs-keyword">of</span> scrapers[location.host]
-    <span class="hljs-keyword">if</span> location.href.match(regex)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Loading ITAD importer..."</span>)
+  <span class="hljs-keyword">if</span> scrapers[location.host]
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Matched domain: "</span> + location.host)
+    <span class="hljs-keyword">for</span> regex, profile <span class="hljs-keyword">of</span> scrapers[location.host]
+      <span class="hljs-keyword">try</span>
+        profile_matched = location.href.match(regex)
+      <span class="hljs-keyword">catch</span> e
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Bad regex: "</span> + regex)
+
+      <span class="hljs-keyword">if</span> location.href.match(regex)
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Matched profile: "</span> + regex)</pre></div></div>
             
         </li>
         
@@ -721,7 +730,7 @@ before the <code>for</code> loop</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      $(<span class="hljs-string">'#itad_btn, #itad_dlg, .itad_close'</span>).remove()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'#itad_btn, #itad_dlg, .itad_close'</span>).remove()</pre></div></div>
             
         </li>
         
@@ -737,9 +746,9 @@ doesn’t have an <code>insert_button</code> member.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      profile.insert_button?().attr(<span class="hljs-string">'id'</span>, <span class="hljs-string">'itad_btn'</span>).click(<span class="hljs-function">
-        -&gt;</span> scrapeGames(profile)
-      )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        profile.insert_button?().attr(<span class="hljs-string">'id'</span>, <span class="hljs-string">'itad_btn'</span>).click(<span class="hljs-function">
+          -&gt;</span> scrapeGames(profile)
+        )</pre></div></div>
             
         </li>
         
@@ -754,7 +763,8 @@ doesn’t have an <code>insert_button</code> member.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">break</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">break</span>
+)</pre></div></div>
             
         </li>
         

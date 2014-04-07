@@ -87,7 +87,7 @@ gmg_insert_button = ->
 # Greasemonkey `@include` lines.
 scrapers =
   'www.dotemu.com' :
-    'https://www\.dotemu\.com/(en|fr|es)/user/?' :
+    'https://www\\.dotemu\\.com/(en|fr|es)/user/?' :
       # The store being imported from
       'source_id': 'dotemu'
       # Each scraper must have a `game_list` method which returns...
@@ -113,7 +113,7 @@ scrapers =
         .appendTo('.my-games h2.pane-title')
 
   'secure.gog.com' :
-    '^https://secure\.gog\.com/account(/games(/(shelf|list))?)?/?$' :
+    '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)' :
       'source_id': 'gog'
       'game_list' : ->
         if $('.shelf_container').length > 0
@@ -149,7 +149,7 @@ scrapers =
           # Prevent it from throwing off the other group
           .wrap('<span></span>')
           .appendTo('.list_header')
-    'https://secure\.gog\.com/account/wishlist' :
+    '^https://secure\\.gog\\.com/account/wishlist' :
       'source_id': 'gog'
       'game_list' : gog_nonlist_parse
       'insert_button': ->
@@ -189,7 +189,7 @@ scrapers =
         gmg_insert_button()
 
   'www.humblebundle.com' :
-    'https://www\.humblebundle\.com/home/?' :
+    'https://www\\.humblebundle\\.com/home/?' :
       'source_id': 'humblestore'
       'game_list' : -> { title: x.textContent.trim(), sources: ['humblestore']
         } for x in $('div.row').has(
@@ -217,7 +217,7 @@ scrapers =
         .prependTo('.base-main-wrapper h1')
 
   'indiegamestand.com' :
-    'https://indiegamestand\.com/wallet\.php' :
+    'https://indiegamestand\\.com/wallet\\.php' :
       'source_id': 'indiegamestand'
       'game_list' : -> {
         # **Note:** IGS game URLs change during promos and some IGS wallet
@@ -240,7 +240,7 @@ scrapers =
         .appendTo('#game_wallet h2')
 
   'www.shinyloot.com' :
-    'https?://www\.shinyloot\.com/m/games/?' :
+    'https?://www\\.shinyloot\\.com/m/games/?' :
       'source_id': 'shinyloot'
       'game_list' : -> {
         url: $('.right-float a img', x).closest('a')[0].href
@@ -248,7 +248,7 @@ scrapers =
         sources: ['shinyloot']
         } for x in $('#accordion .ui-widget-content')
       'insert_button': shinyloot_insert_button
-    'https?://www\.shinyloot\.com/m/wishlist/?' :
+    'https?://www\\.shinyloot\\.com/m/wishlist/?' :
       'source_id': 'shinyloot'
       'game_list' : -> {
         url: $('.gameInfo + a', x)[0].href
@@ -287,19 +287,29 @@ scrapeGames = (profile) ->
   form.submit()
 
 # CoffeeScript shorthand for `$(document).ready(function() {`
-$ ->
+$(->
   # Resolve and call the correct profile
   #
   # It seems we don't need an explicit `if location.host of scrapers`
   # before the `for` loop
-  for regex, profile of scrapers[location.host]
-    if location.href.match(regex)
-      # Allow reloading the script without reloading the page for RAD
-      $('#itad_btn, #itad_dlg, .itad_close').remove()
-      # Use the `?` existential operator to die quietly if the profile
-      # doesn't have an `insert_button` member.
-      profile.insert_button?().attr('id', 'itad_btn').click(
-        -> scrapeGames(profile)
-      )
-      # We only ever want to match one profile so break here
-      break
+  console.log("Loading ITAD importer...")
+  if scrapers[location.host]
+    console.log("Matched domain: " + location.host)
+    for regex, profile of scrapers[location.host]
+      try
+        profile_matched = location.href.match(regex)
+      catch e
+        console.error("Bad regex: " + regex)
+
+      if location.href.match(regex)
+        console.log("Matched profile: " + regex)
+        # Allow reloading the script without reloading the page for RAD
+        $('#itad_btn, #itad_dlg, .itad_close').remove()
+        # Use the `?` existential operator to die quietly if the profile
+        # doesn't have an `insert_button` member.
+        profile.insert_button?().attr('id', 'itad_btn').click(
+          -> scrapeGames(profile)
+        )
+        # We only ever want to match one profile so break here
+        break
+)
