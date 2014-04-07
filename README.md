@@ -11,11 +11,11 @@ Currently supported vendors are:
 
 * [DotEmu](http://www.dotemu.com) (no wishlist support)
 * [GOG.com](http://www.gog.com)
+* [GreenMan Gaming](http://www.greenmangaming.com)
 * [Humble Store](http://www.humblebundle.com) (anything in your
   [Humble Library](https://www.humblebundle.com/home))
 * [IndieGameStand](http://www.indiegamestand.com)
 * [ShinyLoot](http://www.shinyloot.com)
-* [GreenMan Gaming](http://www.greenmangaming.com)
 
 Pending a proper website, [screenshots](http://imgur.com/a/6FG6B) are available
 on imgur.

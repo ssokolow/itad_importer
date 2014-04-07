@@ -59,11 +59,11 @@ jQuery.
 <span class="hljs-regexp">//</span>
 <span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//</span>www.dotemu.com/*
 <span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//</span>secure.gog.com/account*
+<span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//</span>www.greenmangaming.com/user/account*
 <span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//</span>www.humblebundle.com/home*
 <span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//i</span>ndiegamestand.com/wallet.php
 <span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//</span>www.shinyloot.com/m/games*
 <span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//</span>www.shinyloot.com/m/wishlist*
-<span class="hljs-regexp">//</span> <span class="hljs-property">@match</span> *:<span class="hljs-regexp">//</span>www.greenmangaming.com/user/account*
 <span class="hljs-regexp">//</span> ==/UserScript==</pre></div></div>
             
         </li>
@@ -181,9 +181,9 @@ that’s tied to markup using <code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code
 <span class="hljs-function"><span class="hljs-title">gmg_insert_button</span> = -&gt;</span>
   <span class="hljs-keyword">if</span> location.hash == <span class="hljs-string">"#games"</span>
     $(<span class="hljs-string">'#content h1'</span>)
-    .append(<span class="hljs-string">'&lt;a class="button right" id="itad_button"&gt;'</span>+BUTTON_LABEL+<span class="hljs-string">'&lt;/a&gt;'</span>)
+    .append(<span class="hljs-string">"&lt;a class='button right' id='itad_button'&gt;<span class="hljs-subst">#{BUTTON_LABEL}</span>&lt;/a&gt;"</span>)
   <span class="hljs-keyword">else</span>
-    $(<span class="hljs-string">'#itad_button'</span>).detach()</pre></div></div>
+    $(<span class="hljs-string">'#itad_button'</span>).remove()</pre></div></div>
             
         </li>
         
@@ -583,20 +583,18 @@ their button styles are scoped to <code>#game_wallet</code></p>
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
   <span class="hljs-string">'www.greenmangaming.com'</span> :
-    <span class="hljs-string">'https?://www\.greenmangaming\.com/user/account/'</span> :
+    <span class="hljs-string">'https?://(www\.)?greenmangaming\.com/user/account/?'</span> :
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'greenmangaming'</span>
       <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span>
 
         results = []
         <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#games #page_container section'</span>)
-
           section = $(<span class="hljs-string">"h2"</span>, y).text()
+          shops = [<span class="hljs-string">'greenmangaming'</span>]
+          <span class="hljs-keyword">if</span> <span class="hljs-regexp">/origin/i</span>.test(section)
+            shops.unshift(<span class="hljs-string">'origin'</span>)
           <span class="hljs-keyword">if</span> <span class="hljs-regexp">/steam/i</span>.test(section)
-            shops = [<span class="hljs-string">'steam'</span>, <span class="hljs-string">'greenmangaming'</span>]
-          <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> <span class="hljs-regexp">/origin/i</span>.test(section)
-            shops = [<span class="hljs-string">'origin'</span>, <span class="hljs-string">'greenmangaming'</span>]
-          <span class="hljs-keyword">else</span>
-            shops = [<span class="hljs-string">'greenmangaming'</span>]
+            shops.unshift(<span class="hljs-string">'steam'</span>)
 
           <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'tbody tr'</span>, y)
             results.push({
@@ -606,7 +604,7 @@ their button styles are scoped to <code>#game_wallet</code></p>
             })
         <span class="hljs-keyword">return</span> results
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        $(<span class="hljs-built_in">window</span>).bind <span class="hljs-string">'hashchange'</span>, gmg_insert_button
+        $(<span class="hljs-built_in">window</span>).bind(<span class="hljs-string">'hashchange'</span>, gmg_insert_button)
         gmg_insert_button()</pre></div></div>
             
         </li>

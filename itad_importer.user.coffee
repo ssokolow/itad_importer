@@ -27,11 +27,11 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://secure.gog.com/account*
+// @match *://www.greenmangaming.com/user/account*
 // @match *://www.humblebundle.com/home*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
-// @match *://www.greenmangaming.com/user/account*
 // ==/UserScript==
 ###
 
@@ -75,9 +75,9 @@ shinyloot_insert_button = ->
 gmg_insert_button = ->
   if location.hash == "#games"
     $('#content h1')
-    .append('<a class="button right" id="itad_button">'+BUTTON_LABEL+'</a>')
+    .append("<a class='button right' id='itad_button'>#{BUTTON_LABEL}</a>")
   else
-    $('#itad_button').detach()
+    $('#itad_button').remove()
 
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
@@ -232,20 +232,18 @@ scrapers =
       'is_wishlist': true
 
   'www.greenmangaming.com' :
-    'https?://www\.greenmangaming\.com/user/account/' :
+    'https?://(www\.)?greenmangaming\.com/user/account/?' :
       'source_id': 'greenmangaming'
       'game_list' : ->
 
         results = []
         for y in $('#games #page_container section')
-
           section = $("h2", y).text()
+          shops = ['greenmangaming']
+          if /origin/i.test(section)
+            shops.unshift('origin')
           if /steam/i.test(section)
-            shops = ['steam', 'greenmangaming']
-          else if /origin/i.test(section)
-            shops = ['origin', 'greenmangaming']
-          else
-            shops = ['greenmangaming']
+            shops.unshift('steam')
 
           for x in $('tbody tr', y)
             results.push({
@@ -255,7 +253,7 @@ scrapers =
             })
         return results
       'insert_button': ->
-        $(window).bind 'hashchange', gmg_insert_button
+        $(window).bind('hashchange', gmg_insert_button)
         gmg_insert_button()
 
 # Callback for the button
