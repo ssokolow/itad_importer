@@ -78,12 +78,12 @@ shinyloot_insert_button = function() {
 
 gmg_insert_button = function() {
   if (location.hash === "#games") {
-    return $("<a class='button right' id='itad_button'>" + BUTTON_LABEL + "</a>").css({
+    return $("<a class='button right' id='itad_btn'>" + BUTTON_LABEL + "</a>").css({
       margin: '0px',
       marginTop: '3px'
     }).appendTo('#content h1');
   } else {
-    return $('#itad_button').remove();
+    return $('#itad_btn').remove();
   }
 };
 

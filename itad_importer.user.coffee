@@ -74,11 +74,11 @@ shinyloot_insert_button = ->
 
 gmg_insert_button = ->
   if location.hash == "#games"
-    $("<a class='button right' id='itad_button'>#{BUTTON_LABEL}</a>")
+    $("<a class='button right' id='itad_btn'>#{BUTTON_LABEL}</a>")
     .css({margin: '0px', marginTop:'3px'})
     .appendTo('#content h1')
   else
-    $('#itad_button').remove()
+    $('#itad_btn').remove()
 
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
