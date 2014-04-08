@@ -180,7 +180,7 @@ that’s tied to markup using <code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code
 
 <span class="hljs-function"><span class="hljs-title">gmg_insert_button</span> = -&gt;</span>
   <span class="hljs-keyword">if</span> location.hash == <span class="hljs-string">"#games"</span>
-    $(<span class="hljs-string">"&lt;a class='button right' id='itad_btn'&gt;<span class="hljs-subst">#{BUTTON_LABEL}</span>&lt;/a&gt;"</span>)
+    $(<span class="hljs-string">"&lt;a class='button right'&gt;<span class="hljs-subst">#{BUTTON_LABEL}</span>&lt;/a&gt;"</span>)
     .css({<span class="hljs-attribute">margin</span>: <span class="hljs-string">'0px'</span>, <span class="hljs-attribute">marginTop</span>:<span class="hljs-string">'3px'</span>})
     .appendTo(<span class="hljs-string">'#content h1'</span>)
   <span class="hljs-keyword">else</span>
@@ -471,7 +471,8 @@ anything better in GOG’s own styling.</p>
             })
         <span class="hljs-keyword">return</span> results
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        $(<span class="hljs-built_in">window</span>).bind(<span class="hljs-string">'hashchange'</span>, gmg_insert_button)
+        obj = <span class="hljs-keyword">this</span>
+        $(<span class="hljs-built_in">window</span>).one(<span class="hljs-string">'hashchange'</span>,<span class="hljs-function"> -&gt;</span> insertButton(obj))
         gmg_insert_button()
 
   <span class="hljs-string">'www.humblebundle.com'</span> :
@@ -673,7 +674,7 @@ navigates the top-level window.</p>
 
   <span class="hljs-title">form</span>.<span class="hljs-title">submit</span><span class="hljs-params">()</span>
 
-</span></pre></div></div>
+<span class="hljs-title">insertButton</span> = <span class="hljs-params">(profile)</span> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -684,11 +685,14 @@ navigates the top-level window.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
+              <p>Use the <code>?</code> existential operator to die quietly if the profile
+doesn’t have an <code>insert_button</code> member.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$(<span class="hljs-function">-&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  profile.insert_button?().attr(<span class="hljs-string">'id'</span>, <span class="hljs-string">'itad_btn'</span>).click(<span class="hljs-function">
+    -&gt;</span> scrapeGames(profile)
+  )</pre></div></div>
             
         </li>
         
@@ -698,6 +702,21 @@ navigates the top-level window.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$(<span class="hljs-function">-&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Resolve and call the correct profile</p>
 <p>It seems we don’t need an explicit <code>if location.host of scrapers</code>
@@ -720,35 +739,18 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p>Allow reloading the script without reloading the page for RAD</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'#itad_btn, #itad_dlg, .itad_close'</span>).remove()</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Use the <code>?</code> existential operator to die quietly if the profile
-doesn’t have an <code>insert_button</code> member.</p>
+              <p>Allow reloading the script without reloading the page for RAD</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        profile.insert_button?().attr(<span class="hljs-string">'id'</span>, <span class="hljs-string">'itad_btn'</span>).click(<span class="hljs-function">
-          -&gt;</span> scrapeGames(profile)
-        )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'#itad_btn, #itad_dlg, .itad_close'</span>).remove()
+        insertButton(profile)</pre></div></div>
             
         </li>
         

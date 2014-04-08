@@ -36,7 +36,7 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, attr, gmg_insert_button, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, attr, gmg_insert_button, gog_nonlist_parse, insertButton, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -78,7 +78,7 @@ shinyloot_insert_button = function() {
 
 gmg_insert_button = function() {
   if (location.hash === "#games") {
-    return $("<a class='button right' id='itad_btn'>" + BUTTON_LABEL + "</a>").css({
+    return $("<a class='button right'>" + BUTTON_LABEL + "</a>").css({
       margin: '0px',
       marginTop: '3px'
     }).appendTo('#content h1');
@@ -193,7 +193,11 @@ scrapers = {
         return results;
       },
       'insert_button': function() {
-        $(window).bind('hashchange', gmg_insert_button);
+        var obj;
+        obj = this;
+        $(window).one('hashchange', function() {
+          return insertButton(obj);
+        });
         return gmg_insert_button();
       }
     }
@@ -311,6 +315,12 @@ scrapeGames = function(profile) {
   return form.submit();
 };
 
+insertButton = function(profile) {
+  return typeof profile.insert_button === "function" ? profile.insert_button().attr('id', 'itad_btn').click(function() {
+    return scrapeGames(profile);
+  }) : void 0;
+};
+
 $(function() {
   var e, profile, profile_matched, regex, _ref, _results;
   console.log("Loading ITAD importer...");
@@ -329,11 +339,7 @@ $(function() {
       if (location.href.match(regex)) {
         console.log("Matched profile: " + regex);
         $('#itad_btn, #itad_dlg, .itad_close').remove();
-        if (typeof profile.insert_button === "function") {
-          profile.insert_button().attr('id', 'itad_btn').click(function() {
-            return scrapeGames(profile);
-          });
-        }
+        insertButton(profile);
         break;
       } else {
         _results.push(void 0);

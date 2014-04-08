@@ -74,7 +74,7 @@ shinyloot_insert_button = ->
 
 gmg_insert_button = ->
   if location.hash == "#games"
-    $("<a class='button right' id='itad_btn'>#{BUTTON_LABEL}</a>")
+    $("<a class='button right'>#{BUTTON_LABEL}</a>")
     .css({margin: '0px', marginTop:'3px'})
     .appendTo('#content h1')
   else
@@ -185,7 +185,8 @@ scrapers =
             })
         return results
       'insert_button': ->
-        $(window).bind('hashchange', gmg_insert_button)
+        obj = this
+        $(window).one('hashchange', -> insertButton(obj))
         gmg_insert_button()
 
   'www.humblebundle.com' :
@@ -286,6 +287,13 @@ scrapeGames = (profile) ->
 
   form.submit()
 
+insertButton = (profile) ->
+  # Use the `?` existential operator to die quietly if the profile
+  # doesn't have an `insert_button` member.
+  profile.insert_button?().attr('id', 'itad_btn').click(
+    -> scrapeGames(profile)
+  )
+
 # CoffeeScript shorthand for `$(document).ready(function() {`
 $(->
   # Resolve and call the correct profile
@@ -305,11 +313,7 @@ $(->
         console.log("Matched profile: " + regex)
         # Allow reloading the script without reloading the page for RAD
         $('#itad_btn, #itad_dlg, .itad_close').remove()
-        # Use the `?` existential operator to die quietly if the profile
-        # doesn't have an `insert_button` member.
-        profile.insert_button?().attr('id', 'itad_btn').click(
-          -> scrapeGames(profile)
-        )
+        insertButton(profile)
         # We only ever want to match one profile so break here
         break
 )
