@@ -29,6 +29,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://secure.gog.com/account*
+// @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
@@ -175,6 +176,29 @@ scrapers = {
         }).html(BUTTON_LABEL).wrap('<span></span>').appendTo('.wlist_header');
       },
       'is_wishlist': true
+    }
+  },
+  'groupees.com': {
+    'https?://(www\\.)?groupees\\.com/users/\\d+': {
+      'source_id': 'other',
+      'game_list': function() {
+        var x, _i, _len, _ref, _results;
+        _ref = $('.product .download-dropdown').parents('.details').find('h3');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push({
+            title: x.textContent.trim(),
+            sources: ['other']
+          });
+        }
+        return _results;
+      },
+      'insert_button': function() {
+        return $("<button></button>").css({
+          float: 'right'
+        }).addClass('button').html(BUTTON_LABEL + " (Selected Bundle)").insertBefore("input[name='search']");
+      }
     }
   },
   'www.humblebundle.com': {

@@ -27,6 +27,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://secure.gog.com/account*
+// @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
@@ -167,6 +168,19 @@ scrapers =
         .wrap('<span></span>')
         .appendTo('.wlist_header')
       'is_wishlist': true
+
+  'groupees.com' :
+    'https?://(www\\.)?groupees\\.com/users/\\d+' :
+      'source_id': 'other'
+      'game_list': -> {
+        title: x.textContent.trim(),
+        sources: ['other']
+      } for x in $('.product .download-dropdown').parents('.details').find('h3')
+      'insert_button': ->
+        $("<button></button>")
+          .css({ float: 'right' }).addClass('button')
+          .html(BUTTON_LABEL + " (Selected Bundle)")
+          .insertBefore("input[name='search']")
 
   'www.humblebundle.com' :
     'https://www\\.humblebundle\\.com/home/?' :
