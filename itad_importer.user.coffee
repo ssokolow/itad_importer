@@ -43,42 +43,39 @@ attr = (node, name) -> node.getAttribute(name)
 
 dotemu_add_button = (parent_selector) ->
   $('<button></button>')
-  .html(BUTTON_LABEL).css({
-  #DotEmu doesn't have a general button style we can use
-  float: 'right'
-  marginRight: '5px'
-  })
+  .html(BUTTON_LABEL).css
+    #DotEmu doesn't have a general button style we can use
+    float: 'right'
+    marginRight: '5px'
   .appendTo(parent_selector)
 
 # Common code to extract metadata from the GOG.com shelf and wishlist views
 gog_nonlist_parse = -> {
   # The shelf view mode only sees game IDs and slugs easily
   id: attr(x, 'data-gameid')
-  url: ('http://www.gog.com/en/game/' +
-      attr(x, 'data-gameindex'))
+  url: ('http://www.gog.com/en/game/' + attr(x, 'data-gameindex'))
   sources: ['gog']
 } for x in $('[data-gameindex]')
 
 shinyloot_insert_button = ->
   $('<button></button>')
-  .html(BUTTON_LABEL).css({
-  # ShinyLoot's buttons are a chimeric grab-bag and
-  # the nicest looking ones have site-provided CSS
-  # that's tied to markup using `<ul>` and `<li>`.
-  background: 'url("/images/filters/sort-background-inactive.png") ' +
-              'repeat-x scroll 0% 0% transparent'
-  border: '1px solid #666'
-  borderRadius: '2px'
-  boxShadow: '0px 1px 6px #777'
-  color: '#222'
-  fontSize: '12px'
-  fontWeight: 'bold'
-  fontFamily: 'Arial,Helvetica,Sans-serif'
-  float: 'right'
-  padding: '2px 8px'
-  marginRight: '-6px'
-  verticalAlign: 'middle'
-  })
+  .html(BUTTON_LABEL).css
+    # ShinyLoot's buttons are a chimeric grab-bag and
+    # the nicest looking ones have site-provided CSS
+    # that's tied to markup using `<ul>` and `<li>`.
+    background: 'url("/images/filters/sort-background-inactive.png") ' +
+                'repeat-x scroll 0% 0% transparent'
+    border: '1px solid #666'
+    borderRadius: '2px'
+    boxShadow: '0px 1px 6px #777'
+    color: '#222'
+    fontSize: '12px'
+    fontWeight: 'bold'
+    fontFamily: 'Arial,Helvetica,Sans-serif'
+    float: 'right'
+    padding: '2px 8px'
+    marginRight: '-6px'
+    verticalAlign: 'middle'
   .appendTo('#content .header')
 
 # Scrapers are looked up first by domain (lightweight) and then by
@@ -93,13 +90,14 @@ scrapers =
         # The store being imported from
         'source_id': 'dotemu'
         # Each scraper must have a `game_list` method which returns...
-        'game_list': -> {
-          # ...one or both of `title` and `url`
-          title: attr(x, 'title')
-          # We're guaranteed an absolute URL if we use the DOM href property
-          url: x.href
-          # The stores which should be added to the user's "owned on" list
-          sources: ['dotemu']
+        'game_list': ->
+          {
+            # ...one or both of `title` and `url`
+            title: attr(x, 'title')
+            # We're guaranteed an absolute URL if we use the DOM href property
+            url: x.href
+            # The stores which should be added to the user's "owned on" list
+            sources: ['dotemu']
           } for x in $('div.my-games div.field-title a')
 
         # Each scraper must have an `insert_button` member which adds
@@ -110,9 +108,9 @@ scrapers =
         'source_id': 'dotemu'
         'game_list': ->
           {
-          title: attr(x, 'title')
-          url: x.href
-          sources: ['dotemu']
+            title: attr(x, 'title')
+            url: x.href
+            sources: ['dotemu']
           } for x in $('div.user-wishlist .views-field-title-1 a')
         'insert_button': -> dotemu_add_button('.user-wishlist h2.pane-title')
         'is_wishlist': true
@@ -126,23 +124,22 @@ scrapers =
           gog_nonlist_parse()
         else if $('.games_list').length > 0
           {
-          id: $(x).closest('.game-item').attr('id').substring(8)
-          # The list view mode only sees game titles easily
-          title: x.textContent.trim()
-          sources: ['gog']
+            id: $(x).closest('.game-item').attr('id').substring(8)
+            # The list view mode only sees game titles easily
+            title: x.textContent.trim()
+            sources: ['gog']
           } for x in $('.game-title-link')
 
       'insert_button': ->
         if $('.shelf_container').length > 0
           $("<span class='shelf_btn'></button>")
           # Use GOG's style but tweak it and force *both* ends round
-          .css({
-          float: 'right'
-          borderRadius: '9px'
-          opacity: 0.7
-          marginTop: '15px'
-          marginRight: '-32px'
-          })
+          .css
+            float: 'right'
+            borderRadius: '9px'
+            opacity: 0.7
+            marginTop: '15px'
+            marginRight: '-32px'
           .html(BUTTON_LABEL)
           .prependTo($('.shelf_header').filter(':first'))
         else if $('.games_list').length > 0
@@ -172,10 +169,12 @@ scrapers =
   'groupees.com':
     'https?://(www\\.)?groupees\\.com/users/\\d+':
       'source_id': 'other'
-      'game_list': -> {
-        title: x.textContent.trim(),
-        sources: ['other']
-      } for x in $('.product .download-dropdown').parents('.details').find('h3')
+      'game_list': ->
+        {
+          title: x.textContent.trim(),
+          sources: ['other']
+        } for x in $('.product .download-dropdown')
+                    .parents('.details').find('h3')
       'insert_button': ->
         $("<button></button>")
           .css({ float: 'right' }).addClass('button')
@@ -207,28 +206,31 @@ scrapers =
         .append('<div class="right"></div>')
         .append(label)
         .append(a)
-        .css({ float: 'right', fontSize: '14px', fontWeight: 'normal' })
+        .css
+          float: 'right',
+          fontSize: '14px',
+          fontWeight: 'normal'
         .prependTo('.base-main-wrapper h1')
 
   'indiegamestand.com':
     'https://indiegamestand\\.com/wallet\\.php':
       'source_id': 'indiegamestand'
-      'game_list': -> {
-        # **Note:** IGS game URLs change during promos and some IGS wallet
-        # entries may not have them (eg. entries just present to provide
-        # a second steam key for some DLC from another entry)
-        url: $('.game-thumb', x)?.closest('a')?[0]?.href
-        title: $('.game-title', x).text().trim()
-        sources: ['indiegamestand']
+      'game_list': ->
+        {
+          # **Note:** IGS game URLs change during promos and some IGS wallet
+          # entries may not have them (eg. entries just present to provide
+          # a second steam key for some DLC from another entry)
+          url: $('.game-thumb', x)?.closest('a')?[0]?.href
+          title: $('.game-title', x).text().trim()
+          sources: ['indiegamestand']
         } for x in $('#wallet_contents .line-item')
 
       'insert_button': ->
         $('<div class="request key"></div>')
-        .html(BUTTON_LABEL).wrapInner("<div></div>").css({
-        display: 'inline-block'
-        marginLeft: '1em'
-        verticalAlign: 'middle'
-        })
+        .html(BUTTON_LABEL).wrapInner("<div></div>").css
+          display: 'inline-block'
+          marginLeft: '1em'
+          verticalAlign: 'middle'
         # This would look nicer if floated right in `.titles` but
         # their button styles are scoped to `#game_wallet`
         .appendTo('#game_wallet h2')
@@ -236,17 +238,19 @@ scrapers =
   'www.shinyloot.com':
     'https?://www\\.shinyloot\\.com/m/games/?':
       'source_id': 'shinyloot'
-      'game_list': -> {
-        url: $('.right-float a img', x).closest('a')[0].href
-        title: $(x).prev('h3').text().trim()
-        sources: ['shinyloot']
+      'game_list': ->
+        {
+          url: $('.right-float a img', x).closest('a')[0].href
+          title: $(x).prev('h3').text().trim()
+          sources: ['shinyloot']
         } for x in $('#accordion .ui-widget-content')
       'insert_button': shinyloot_insert_button
     'https?://www\\.shinyloot\\.com/m/wishlist/?':
       'source_id': 'shinyloot'
-      'game_list': -> {
-        url: $('.gameInfo + a', x)[0].href
-        title: $('.gameName', x).text().trim()
+      'game_list': ->
+        {
+          url: $('.gameInfo + a', x)[0].href
+          title: $('.gameName', x).text().trim()
         } for x in $('.gameItem')
       'insert_button': shinyloot_insert_button
       'is_wishlist': true
@@ -270,18 +274,17 @@ scrapeGames = (scraper_obj) ->
 
   # Submit the form data
   form.css({ display: 'none' })
-  $.each(params, (key, value) ->
+  $.each params, (key, value) ->
     $("<input type='hidden' />")
       .attr("name", key)
       .attr("value", value)
       .appendTo(form)
-  )
   $(document.body).append(form)
 
   form.submit()
 
 # CoffeeScript shorthand for `$(document).ready(function() {`
-$(->
+$ ->
   # Resolve and call the correct profile
   #
   # It seems we don't need an explicit `if location.host of scrapers`
@@ -310,10 +313,8 @@ $(->
           do (scraper) ->
             # Use the `?` existential operator to die quietly if the scraper
             # doesn't have an `insert_button` member.
-            scraper.insert_button?().addClass('itad_btn').click(
-              -> scrapeGames(scraper)
-            )
+            scraper.insert_button?().addClass('itad_btn').click ->
+              scrapeGames(scraper)
 
         # We only ever want to match one profile so break here
         break
-)
