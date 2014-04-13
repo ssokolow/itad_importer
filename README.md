@@ -48,7 +48,7 @@ The official method for developing this script is as follows:
 4. Run `npm run-script develop`
 5. Saving changes to the CoffeeScript source will now regenerate the copy of
    the script installed in Firefox.
-6. When you're finished, hit <kbd>Ctrl</kbd>+<kbd>C</kbd>
+6. When you're finished, hit <kbd>Enter</kbd>
 7. The development script will regenerate the in-repository JavaScript and code
    documentation before exiting.
 8. Commit the updated built files.

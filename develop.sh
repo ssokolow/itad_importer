@@ -13,9 +13,15 @@
 cd "`dirname \"$0\"`"
 
 printf "Running CoffeeScript compiler to watch for changes and update in-browser Javascript\n"
-printf "Press Ctrl+C to exit and rebuild repository copy\n\n"
+printf "Press Enter to exit and rebuild repository copy\n\n"
 for X in ~/.mozilla/firefox/*/gm_scripts/IsThereAnyDeal.com_Collection_Importer/; do
-    coffee -cwb -o "$X" itad_importer.user.coffee
+    coffee -cwb -o "$X" itad_importer.user.coffee &
+
+    # Reinvent Ctrl+C using Enter to work around npm flaw
+    PID=$!
+    read _
+    kill $PID
+
     break # Trick to just get the first match
 done
 
