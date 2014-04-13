@@ -224,13 +224,13 @@ scrapers =
       'is_wishlist': true
 
 # Callback for the button
-scrapeGames = (profile) ->
+scrapeGames = (scraper_obj) ->
   params = {
-    json: JSON.stringify(profile.game_list()),
-    source: profile.source_id
+    json: JSON.stringify(scraper_obj.game_list()),
+    source: scraper_obj.source_id
   }
 
-  url = if profile.is_wishlist?
+  url = if scraper_obj.is_wishlist?
     'http://isthereanydeal.com/outside/user/wait/3rdparty'
   else
     'http://isthereanydeal.com/outside/user/collection/3rdparty'
@@ -269,13 +269,23 @@ $(->
 
       if profile_matched
         console.log("Matched profile: " + regex)
+
         # Allow reloading the script without reloading the page for RAD
-        $('#itad_btn, #itad_dlg, .itad_close').remove()
-        # Use the `?` existential operator to die quietly if the profile
-        # doesn't have an `insert_button` member.
-        profile.insert_button?().attr('id', 'itad_btn').click(
-          -> scrapeGames(profile)
-        )
+        $('.itad_btn, #itad_dlg, .itad_close').remove()
+
+        # Simplify the following code
+        if not Array.isArray(profile)
+          profile = [profile]
+
+        for scraper in profile
+          # We'll need a closure to ensure click() calls the proper scraper
+          do (scraper) ->
+            # Use the `?` existential operator to die quietly if the scraper
+            # doesn't have an `insert_button` member.
+            scraper.insert_button?().addClass('itad_btn').click(
+              -> scrapeGames(scraper)
+            )
+
         # We only ever want to match one profile so break here
         break
 )

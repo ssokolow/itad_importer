@@ -245,13 +245,13 @@ scrapers = {
   }
 };
 
-scrapeGames = function(profile) {
+scrapeGames = function(scraper_obj) {
   var form, params, url;
   params = {
-    json: JSON.stringify(profile.game_list()),
-    source: profile.source_id
+    json: JSON.stringify(scraper_obj.game_list()),
+    source: scraper_obj.source_id
   };
-  url = profile.is_wishlist != null ? 'http://isthereanydeal.com/outside/user/wait/3rdparty' : 'http://isthereanydeal.com/outside/user/collection/3rdparty';
+  url = scraper_obj.is_wishlist != null ? 'http://isthereanydeal.com/outside/user/wait/3rdparty' : 'http://isthereanydeal.com/outside/user/collection/3rdparty';
   form = $("<form id='itad_submitter' method='POST' />").attr('action', url);
   params['returnTo'] = location.href;
   form.css({
@@ -265,7 +265,7 @@ scrapeGames = function(profile) {
 };
 
 $(function() {
-  var e, profile, profile_matched, regex, _ref, _results;
+  var e, profile, profile_matched, regex, scraper, _fn, _i, _len, _ref, _results;
   console.log("Loading ITAD importer...");
   if (scrapers[location.host]) {
     console.log("Matched domain: " + location.host);
@@ -279,13 +279,20 @@ $(function() {
         e = _error;
         console.error("Bad regex: " + regex);
       }
-      if (location.href.match(regex)) {
+      if (profile_matched) {
         console.log("Matched profile: " + regex);
-        $('#itad_btn, #itad_dlg, .itad_close').remove();
-        if (typeof profile.insert_button === "function") {
-          profile.insert_button().attr('id', 'itad_btn').click(function() {
-            return scrapeGames(profile);
-          });
+        $('.itad_btn, #itad_dlg, .itad_close').remove();
+        if (!Array.isArray(profile)) {
+          profile = [profile];
+        }
+        _fn = function(scraper) {
+          return typeof scraper.insert_button === "function" ? scraper.insert_button().addClass('itad_btn').click(function() {
+            return scrapeGames(scraper);
+          }) : void 0;
+        };
+        for (_i = 0, _len = profile.length; _i < _len; _i++) {
+          scraper = profile[_i];
+          _fn(scraper);
         }
         break;
       } else {
