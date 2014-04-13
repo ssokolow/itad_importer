@@ -28,7 +28,7 @@ done
 printf "\n\nRunning CoffeeLint...\n"
 coffeelint itad_importer.user.coffee
 printf "Running JSHint...\n"
-coffee-jshint --options loopfunc,browser,devel,jquery itad_importer.user.coffee
+coffee-jshint -o loopfunc,newcap,noarg,nonew,browser,devel,jquery itad_importer.user.coffee
 
 printf "\nRunning CoffeeScript Compiler for Repository Build...\n"
 coffee -cb itad_importer.user.coffee
