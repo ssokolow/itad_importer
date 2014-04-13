@@ -267,7 +267,7 @@ $(->
       catch e
         console.error("Bad regex: " + regex)
 
-      if location.href.match(regex)
+      if profile_matched
         console.log("Matched profile: " + regex)
         # Allow reloading the script without reloading the page for RAD
         $('#itad_btn, #itad_dlg, .itad_close').remove()
