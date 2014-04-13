@@ -44,12 +44,12 @@ The official method for developing this script is as follows:
 1. Install the [release version](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
    of the script in Firefox
 2. Install [Node.js](http://nodejs.org/)
-3. Run `sudo npm install -g coffee-script coffeelint coffee-jshint docco`
-4. Run `./develop.sh`
+3. Run `npm install`
+4. Run `npm run-script develop`
 5. Saving changes to the CoffeeScript source will now regenerate the copy of
    the script installed in Firefox.
 6. When you're finished, hit <kbd>Ctrl</kbd>+<kbd>C</kbd>
-7. `develop.sh` will regenerate the in-repository JavaScript and code
+7. The development script will regenerate the in-repository JavaScript and code
    documentation before exiting.
 8. Commit the updated built files.
 

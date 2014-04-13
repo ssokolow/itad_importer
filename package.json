@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "develop": "sh develop.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ssokolow/itad_importer.git"
+  },
+  "dependencies": {
+    "coffee-script" : "1.x",
+    "coffeelint"    : "1.x",
+    "coffee-jshint" : "0.x",
+    "docco"         : "0.x"
+  },
+  "license": "MIT"
+}
