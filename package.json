@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "coffee-script" : "1.x",
-    "coffeelint"    : "1.x",
+
+    "coffeelint"    : "^1.2.0",
     "coffee-jshint" : "0.x",
+
     "docco"         : "0.x"
   },
   "license": "MIT"
