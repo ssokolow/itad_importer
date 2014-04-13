@@ -106,7 +106,11 @@ jQuery.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">attr</span> = <span class="hljs-params">(node, name)</span> -&gt;</span> node.getAttribute(name)</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">attr</span> = <span class="hljs-params">(node, name)</span> -&gt;</span> node.getAttribute(name)
+
+<span class="hljs-function"><span class="hljs-title">dotemu_add_button</span> = <span class="hljs-params">(parent_selector)</span> -&gt;</span>
+  $(<span class="hljs-string">'&lt;button&gt;&lt;/button&gt;'</span>)
+  .html(BUTTON_LABEL).css({</pre></div></div>
             
         </li>
         
@@ -117,11 +121,14 @@ jQuery.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Common code to extract metadata from the GOG.com shelf and wishlist views</p>
+              <p>DotEmu doesn’t have a general button style we can use</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">gog_nonlist_parse</span> = -&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
+  <span class="hljs-attribute">marginRight</span>: <span class="hljs-string">'5px'</span>
+  })
+  .appendTo(parent_selector)</pre></div></div>
             
         </li>
         
@@ -131,6 +138,21 @@ jQuery.
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Common code to extract metadata from the GOG.com shelf and wishlist views</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">gog_nonlist_parse</span> = -&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>The shelf view mode only sees game IDs and slugs easily</p>
 
@@ -149,11 +171,11 @@ jQuery.
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>ShinyLoot’s buttons are a chimeric grab-bag and
 the nicest looking ones have site-provided CSS
@@ -180,11 +202,11 @@ that’s tied to markup using <code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Scrapers are looked up first by domain (lightweight) and then by
 a regex check on the URL (accurate).
@@ -195,23 +217,7 @@ Greasemonkey <code>@include</code> lines.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>scrapers =
-  <span class="hljs-string">'www.dotemu.com'</span> :
-    <span class="hljs-string">'https://www\\.dotemu\\.com/(en|fr|es)/user/?'</span> :</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>The store being imported from</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'dotemu'</span></pre></div></div>
+  <span class="hljs-string">'www.dotemu.com'</span> :</pre></div></div>
             
         </li>
         
@@ -222,11 +228,11 @@ Greasemonkey <code>@include</code> lines.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Each scraper must have a <code>game_list</code> method which returns…</p>
+              <p>Each profile can be an object or a list of objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">'https://www\\.dotemu\\.com/(en|fr|es)/user/?'</span> : [</pre></div></div>
             
         </li>
         
@@ -237,11 +243,11 @@ Greasemonkey <code>@include</code> lines.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>…one or both of <code>title</code> and <code>url</code></p>
+              <p>The store being imported from</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attribute">title</span>: attr(x, <span class="hljs-string">'title'</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'dotemu'</span></pre></div></div>
             
         </li>
         
@@ -252,11 +258,11 @@ Greasemonkey <code>@include</code> lines.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>We’re guaranteed an absolute URL if we use the DOM href property</p>
+              <p>Each scraper must have a <code>game_list</code> method which returns…</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attribute">url</span>: x.href</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -267,12 +273,11 @@ Greasemonkey <code>@include</code> lines.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>The stores which should be added to the user’s “owned on” list</p>
+              <p>…one or both of <code>title</code> and <code>url</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'dotemu'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.field-title a'</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-attribute">title</span>: attr(x, <span class="hljs-string">'title'</span>)</pre></div></div>
             
         </li>
         
@@ -283,15 +288,11 @@ Greasemonkey <code>@include</code> lines.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Each scraper must have an <code>insert_button</code> member which adds
-a button to the DOM using <code>BUTTON_LABEL</code> and then returns
-a jQuery wrapper so the click handler can be bound.</p>
+              <p>We’re guaranteed an absolute URL if we use the DOM href property</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        $(<span class="hljs-string">'&lt;button&gt;&lt;/button&gt;'</span>)
-        .html(BUTTON_LABEL).css({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-attribute">url</span>: x.href</pre></div></div>
             
         </li>
         
@@ -302,14 +303,40 @@ a jQuery wrapper so the click handler can be bound.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>DotEmu doesn’t have a general button style we can use</p>
+              <p>The stores which should be added to the user’s “owned on” list</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
-        <span class="hljs-attribute">marginRight</span>: <span class="hljs-string">'5px'</span>
-        })
-        .appendTo(<span class="hljs-string">'.my-games h2.pane-title'</span>)
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'dotemu'</span>]
+          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.my-games div.field-title a'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Each scraper must have an <code>insert_button</code> member which adds
+a button to the DOM using <code>BUTTON_LABEL</code> and then returns
+a jQuery wrapper so the click handler can be bound.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span> dotemu_add_button(<span class="hljs-string">'div.my-games h2.pane-title'</span>)
+      ,
+        <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'dotemu'</span>
+        <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span>
+          {
+          <span class="hljs-attribute">title</span>: attr(x, <span class="hljs-string">'title'</span>)
+          <span class="hljs-attribute">url</span>: x.href
+          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'dotemu'</span>]
+          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.user-wishlist .views-field-title-1 a'</span>)
+        <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span> dotemu_add_button(<span class="hljs-string">'.user-wishlist h2.pane-title'</span>)
+        <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
+      ]
 
   <span class="hljs-string">'secure.gog.com'</span> :
     <span class="hljs-string">'^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)'</span> :
@@ -324,11 +351,11 @@ a jQuery wrapper so the click handler can be bound.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>The list view mode only sees game titles easily</p>
 
@@ -345,11 +372,11 @@ a jQuery wrapper so the click handler can be bound.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Use GOG’s style but tweak it and force <em>both</em> ends round</p>
 
@@ -369,11 +396,11 @@ a jQuery wrapper so the click handler can be bound.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Use GOG’s style class but force it to be its own tweaked
 button group because their style won’t round both ends
@@ -388,11 +415,11 @@ of the same button</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Prevent it from throwing off the other group</p>
 
@@ -408,11 +435,11 @@ of the same button</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Borrow the styling from the games list since I couldn’t find
 anything better in GOG’s own styling.</p>
@@ -426,11 +453,11 @@ anything better in GOG’s own styling.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Prevent it from throwing off the other group</p>
 
@@ -449,11 +476,11 @@ anything better in GOG’s own styling.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Humble Library has no easy way to list only games</p>
 
@@ -471,11 +498,11 @@ anything better in GOG’s own styling.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Humble Library uses very weird button markup</p>
 
@@ -488,11 +515,11 @@ anything better in GOG’s own styling.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Apparently the <code>noicon</code> class isn’t versatile enough</p>
 
@@ -515,11 +542,11 @@ anything better in GOG’s own styling.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><strong>Note:</strong> IGS game URLs change during promos and some IGS wallet
 entries may not have them (eg. entries just present to provide
@@ -543,11 +570,11 @@ a second steam key for some DLC from another entry)</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>This would look nicer if floated right in <code>.titles</code> but
 their button styles are scoped to <code>#game_wallet</code></p>
@@ -577,23 +604,23 @@ their button styles are scoped to <code>#game_wallet</code></p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Callback for the button</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">scrapeGames</span> = <span class="hljs-params">(profile)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">scrapeGames</span> = <span class="hljs-params">(scraper_obj)</span> -&gt;</span>
   params = {
-    <span class="hljs-attribute">json</span>: JSON.stringify(profile.game_list()),
-    <span class="hljs-attribute">source</span>: profile.source_id
+    <span class="hljs-attribute">json</span>: JSON.stringify(scraper_obj.game_list()),
+    <span class="hljs-attribute">source</span>: scraper_obj.source_id
   }
 
-  url = <span class="hljs-keyword">if</span> profile.is_wishlist?
+  url = <span class="hljs-keyword">if</span> scraper_obj.is_wishlist?
     <span class="hljs-string">'http://isthereanydeal.com/outside/user/wait/3rdparty'</span>
   <span class="hljs-keyword">else</span>
     <span class="hljs-string">'http://isthereanydeal.com/outside/user/collection/3rdparty'</span></pre></div></div>
@@ -601,11 +628,11 @@ their button styles are scoped to <code>#game_wallet</code></p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><strong>TODO:</strong> Figure out why attempting to use an iframe for non-HTTPS sites
 navigates the top-level window.</p>
@@ -618,11 +645,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Submit the form data</p>
 
@@ -644,11 +671,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
 
@@ -659,11 +686,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Resolve and call the correct profile</p>
 <p>It seems we don’t need an explicit <code>if location.host of scrapers</code>
@@ -680,23 +707,8 @@ before the <code>for</code> loop</p>
       <span class="hljs-keyword">catch</span> e
         <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Bad regex: "</span> + regex)
 
-      <span class="hljs-keyword">if</span> location.href.match(regex)
+      <span class="hljs-keyword">if</span> profile_matched
         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Matched profile: "</span> + regex)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p>Allow reloading the script without reloading the page for RAD</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'#itad_btn, #itad_dlg, .itad_close'</span>).remove()</pre></div></div>
             
         </li>
         
@@ -707,14 +719,11 @@ before the <code>for</code> loop</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Use the <code>?</code> existential operator to die quietly if the profile
-doesn’t have an <code>insert_button</code> member.</p>
+              <p>Allow reloading the script without reloading the page for RAD</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        profile.insert_button?().attr(<span class="hljs-string">'id'</span>, <span class="hljs-string">'itad_btn'</span>).click(<span class="hljs-function">
-          -&gt;</span> scrapeGames(profile)
-        )</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'.itad_btn, #itad_dlg, .itad_close'</span>).remove()</pre></div></div>
             
         </li>
         
@@ -724,6 +733,57 @@ doesn’t have an <code>insert_button</code> member.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Simplify the following code</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> Array.isArray(profile)
+          profile = [profile]
+
+        <span class="hljs-keyword">for</span> scraper <span class="hljs-keyword">in</span> profile</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>We’ll need a closure to ensure click() calls the proper scraper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">do</span> <span class="hljs-function"><span class="hljs-params">(scraper)</span> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Use the <code>?</code> existential operator to die quietly if the scraper
+doesn’t have an <code>insert_button</code> member.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            scraper.insert_button?().addClass(<span class="hljs-string">'itad_btn'</span>).click(<span class="hljs-function">
+              -&gt;</span> scrapeGames(scraper)
+            )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>We only ever want to match one profile so break here</p>
 

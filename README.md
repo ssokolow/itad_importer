@@ -9,7 +9,7 @@ It is currently in **beta** and any bugs should be reported in the
 
 Currently supported vendors are:
 
-* [DotEmu](http://www.dotemu.com) (no wishlist support)
+* [DotEmu](http://www.dotemu.com)
 * [GOG.com](http://www.gog.com)
 * [Humble Store](http://www.humblebundle.com) (anything in your
   [Humble Library](https://www.humblebundle.com/home))

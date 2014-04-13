@@ -40,6 +40,15 @@ BUTTON_LABEL = "Export to ITAD"
 # Less overhead than instantiating a new jQuery object
 attr = (node, name) -> node.getAttribute(name)
 
+dotemu_add_button = (parent_selector) ->
+  $('<button></button>')
+  .html(BUTTON_LABEL).css({
+  #DotEmu doesn't have a general button style we can use
+  float: 'right'
+  marginRight: '5px'
+  })
+  .appendTo(parent_selector)
+
 # Common code to extract metadata from the GOG.com shelf and wishlist views
 gog_nonlist_parse = -> {
   # The shelf view mode only sees game IDs and slugs easily
@@ -78,30 +87,35 @@ shinyloot_insert_button = ->
 # Greasemonkey `@include` lines.
 scrapers =
   'www.dotemu.com' :
-    'https://www\\.dotemu\\.com/(en|fr|es)/user/?' :
-      # The store being imported from
-      'source_id': 'dotemu'
-      # Each scraper must have a `game_list` method which returns...
-      'game_list' : -> {
-        # ...one or both of `title` and `url`
-        title: attr(x, 'title')
-        # We're guaranteed an absolute URL if we use the DOM href property
-        url: x.href
-        # The stores which should be added to the user's "owned on" list
-        sources: ['dotemu']
-        } for x in $('div.field-title a')
+    # Each profile can be an object or a list of objects
+    'https://www\\.dotemu\\.com/(en|fr|es)/user/?' : [
+        # The store being imported from
+        'source_id': 'dotemu'
+        # Each scraper must have a `game_list` method which returns...
+        'game_list' : -> {
+          # ...one or both of `title` and `url`
+          title: attr(x, 'title')
+          # We're guaranteed an absolute URL if we use the DOM href property
+          url: x.href
+          # The stores which should be added to the user's "owned on" list
+          sources: ['dotemu']
+          } for x in $('div.my-games div.field-title a')
 
-      # Each scraper must have an `insert_button` member which adds
-      # a button to the DOM using `BUTTON_LABEL` and then returns
-      # a jQuery wrapper so the click handler can be bound.
-      'insert_button': ->
-        $('<button></button>')
-        .html(BUTTON_LABEL).css({
-        #DotEmu doesn't have a general button style we can use
-        float: 'right'
-        marginRight: '5px'
-        })
-        .appendTo('.my-games h2.pane-title')
+        # Each scraper must have an `insert_button` member which adds
+        # a button to the DOM using `BUTTON_LABEL` and then returns
+        # a jQuery wrapper so the click handler can be bound.
+        'insert_button': -> dotemu_add_button('div.my-games h2.pane-title')
+      ,
+        'source_id': 'dotemu'
+        'game_list' : ->
+          {
+          title: attr(x, 'title')
+          url: x.href
+          sources: ['dotemu']
+          } for x in $('div.user-wishlist .views-field-title-1 a')
+        'insert_button': -> dotemu_add_button('.user-wishlist h2.pane-title')
+        'is_wishlist': true
+      ]
 
   'secure.gog.com' :
     '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)' :

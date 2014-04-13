@@ -35,12 +35,19 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, attr, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, attr, dotemu_add_button, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
 
 attr = function(node, name) {
   return node.getAttribute(name);
+};
+
+dotemu_add_button = function(parent_selector) {
+  return $('<button></button>').html(BUTTON_LABEL).css({
+    float: 'right',
+    marginRight: '5px'
+  }).appendTo(parent_selector);
 };
 
 gog_nonlist_parse = function() {
@@ -77,29 +84,48 @@ shinyloot_insert_button = function() {
 
 scrapers = {
   'www.dotemu.com': {
-    'https://www\\.dotemu\\.com/(en|fr|es)/user/?': {
-      'source_id': 'dotemu',
-      'game_list': function() {
-        var x, _i, _len, _ref, _results;
-        _ref = $('div.field-title a');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          x = _ref[_i];
-          _results.push({
-            title: attr(x, 'title'),
-            url: x.href,
-            sources: ['dotemu']
-          });
+    'https://www\\.dotemu\\.com/(en|fr|es)/user/?': [
+      {
+        'source_id': 'dotemu',
+        'game_list': function() {
+          var x, _i, _len, _ref, _results;
+          _ref = $('div.my-games div.field-title a');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            x = _ref[_i];
+            _results.push({
+              title: attr(x, 'title'),
+              url: x.href,
+              sources: ['dotemu']
+            });
+          }
+          return _results;
+        },
+        'insert_button': function() {
+          return dotemu_add_button('div.my-games h2.pane-title');
         }
-        return _results;
-      },
-      'insert_button': function() {
-        return $('<button></button>').html(BUTTON_LABEL).css({
-          float: 'right',
-          marginRight: '5px'
-        }).appendTo('.my-games h2.pane-title');
+      }, {
+        'source_id': 'dotemu',
+        'game_list': function() {
+          var x, _i, _len, _ref, _results;
+          _ref = $('div.user-wishlist .views-field-title-1 a');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            x = _ref[_i];
+            _results.push({
+              title: attr(x, 'title'),
+              url: x.href,
+              sources: ['dotemu']
+            });
+          }
+          return _results;
+        },
+        'insert_button': function() {
+          return dotemu_add_button('.user-wishlist h2.pane-title');
+        },
+        'is_wishlist': true
       }
-    }
+    ]
   },
   'secure.gog.com': {
     '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)': {
