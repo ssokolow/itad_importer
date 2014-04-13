@@ -87,13 +87,13 @@ shinyloot_insert_button = ->
 # possibility of a build script which automatically generates the
 # Greasemonkey `@include` lines.
 scrapers =
-  'www.dotemu.com' :
+  'www.dotemu.com':
     # Each profile can be an object or a list of objects
-    'https://www\\.dotemu\\.com/(en|fr|es)/user/?' : [
+    'https://www\\.dotemu\\.com/(en|fr|es)/user/?': [
         # The store being imported from
         'source_id': 'dotemu'
         # Each scraper must have a `game_list` method which returns...
-        'game_list' : -> {
+        'game_list': -> {
           # ...one or both of `title` and `url`
           title: attr(x, 'title')
           # We're guaranteed an absolute URL if we use the DOM href property
@@ -108,7 +108,7 @@ scrapers =
         'insert_button': -> dotemu_add_button('div.my-games h2.pane-title')
       ,
         'source_id': 'dotemu'
-        'game_list' : ->
+        'game_list': ->
           {
           title: attr(x, 'title')
           url: x.href
@@ -118,10 +118,10 @@ scrapers =
         'is_wishlist': true
       ]
 
-  'secure.gog.com' :
-    '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)' :
+  'secure.gog.com':
+    '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'
-      'game_list' : ->
+      'game_list': ->
         if $('.shelf_container').length > 0
           gog_nonlist_parse()
         else if $('.games_list').length > 0
@@ -155,9 +155,9 @@ scrapers =
           # Prevent it from throwing off the other group
           .wrap('<span></span>')
           .appendTo('.list_header')
-    '^https://secure\\.gog\\.com/account/wishlist' :
+    '^https://secure\\.gog\\.com/account/wishlist':
       'source_id': 'gog'
-      'game_list' : gog_nonlist_parse
+      'game_list': gog_nonlist_parse
       'insert_button': ->
         # Borrow the styling from the games list since I couldn't find
         # anything better in GOG's own styling.
@@ -169,8 +169,8 @@ scrapers =
         .appendTo('.wlist_header')
       'is_wishlist': true
 
-  'groupees.com' :
-    'https?://(www\\.)?groupees\\.com/users/\\d+' :
+  'groupees.com':
+    'https?://(www\\.)?groupees\\.com/users/\\d+':
       'source_id': 'other'
       'game_list': -> {
         title: x.textContent.trim(),
@@ -182,10 +182,10 @@ scrapers =
           .html(BUTTON_LABEL + " (Selected Bundle)")
           .insertBefore("input[name='search']")
 
-  'www.humblebundle.com' :
-    'https://www\\.humblebundle\\.com/home/?' :
+  'www.humblebundle.com':
+    'https://www\\.humblebundle\\.com/home/?':
       'source_id': 'humblestore'
-      'game_list' : -> { title: x.textContent.trim(), sources: ['humblestore']
+      'game_list': -> { title: x.textContent.trim(), sources: ['humblestore']
         } for x in $('div.row').has(
         # Humble Library has no easy way to list only games
         ' .downloads.windows .download,
@@ -210,10 +210,10 @@ scrapers =
         .css({ float: 'right', fontSize: '14px', fontWeight: 'normal' })
         .prependTo('.base-main-wrapper h1')
 
-  'indiegamestand.com' :
-    'https://indiegamestand\\.com/wallet\\.php' :
+  'indiegamestand.com':
+    'https://indiegamestand\\.com/wallet\\.php':
       'source_id': 'indiegamestand'
-      'game_list' : -> {
+      'game_list': -> {
         # **Note:** IGS game URLs change during promos and some IGS wallet
         # entries may not have them (eg. entries just present to provide
         # a second steam key for some DLC from another entry)
@@ -233,18 +233,18 @@ scrapers =
         # their button styles are scoped to `#game_wallet`
         .appendTo('#game_wallet h2')
 
-  'www.shinyloot.com' :
-    'https?://www\\.shinyloot\\.com/m/games/?' :
+  'www.shinyloot.com':
+    'https?://www\\.shinyloot\\.com/m/games/?':
       'source_id': 'shinyloot'
-      'game_list' : -> {
+      'game_list': -> {
         url: $('.right-float a img', x).closest('a')[0].href
         title: $(x).prev('h3').text().trim()
         sources: ['shinyloot']
         } for x in $('#accordion .ui-widget-content')
       'insert_button': shinyloot_insert_button
-    'https?://www\\.shinyloot\\.com/m/wishlist/?' :
+    'https?://www\\.shinyloot\\.com/m/wishlist/?':
       'source_id': 'shinyloot'
-      'game_list' : -> {
+      'game_list': -> {
         url: $('.gameInfo + a', x)[0].href
         title: $('.gameName', x).text().trim()
         } for x in $('.gameItem')

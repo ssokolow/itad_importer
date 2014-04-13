@@ -218,7 +218,7 @@ Greasemonkey <code>@include</code> lines.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>scrapers =
-  <span class="hljs-string">'www.dotemu.com'</span> :</pre></div></div>
+  <span class="hljs-string">'www.dotemu.com'</span>:</pre></div></div>
             
         </li>
         
@@ -233,7 +233,7 @@ Greasemonkey <code>@include</code> lines.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">'https://www\\.dotemu\\.com/(en|fr|es)/user/?'</span> : [</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">'https://www\\.dotemu\\.com/(en|fr|es)/user/?'</span>: [</pre></div></div>
             
         </li>
         
@@ -263,7 +263,7 @@ Greasemonkey <code>@include</code> lines.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -329,7 +329,7 @@ a jQuery wrapper so the click handler can be bound.</p>
             <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span> dotemu_add_button(<span class="hljs-string">'div.my-games h2.pane-title'</span>)
       ,
         <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'dotemu'</span>
-        <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span>
+        <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
           {
           <span class="hljs-attribute">title</span>: attr(x, <span class="hljs-string">'title'</span>)
           <span class="hljs-attribute">url</span>: x.href
@@ -339,10 +339,10 @@ a jQuery wrapper so the click handler can be bound.</p>
         <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
       ]
 
-  <span class="hljs-string">'secure.gog.com'</span> :
-    <span class="hljs-string">'^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)'</span> :
+  <span class="hljs-string">'secure.gog.com'</span>:
+    <span class="hljs-string">'^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
-      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
         <span class="hljs-keyword">if</span> $(<span class="hljs-string">'.shelf_container'</span>).length &gt; <span class="hljs-number">0</span>
           gog_nonlist_parse()
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> $(<span class="hljs-string">'.games_list'</span>).length &gt; <span class="hljs-number">0</span>
@@ -428,9 +428,9 @@ of the same button</p>
             
             <div class="content"><div class='highlight'><pre>          .wrap(<span class="hljs-string">'&lt;span&gt;&lt;/span&gt;'</span>)
           .appendTo(<span class="hljs-string">'.list_header'</span>)
-    <span class="hljs-string">'^https://secure\\.gog\\.com/account/wishlist'</span> :
+    <span class="hljs-string">'^https://secure\\.gog\\.com/account/wishlist'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
-      <span class="hljs-string">'game_list'</span> : gog_nonlist_parse
+      <span class="hljs-string">'game_list'</span>: gog_nonlist_parse
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
             
         </li>
@@ -468,8 +468,8 @@ anything better in GOG’s own styling.</p>
         .appendTo(<span class="hljs-string">'.wlist_header'</span>)
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
-  <span class="hljs-string">'groupees.com'</span> :
-    <span class="hljs-string">'https?://(www\\.)?groupees\\.com/users/\\d+'</span> :
+  <span class="hljs-string">'groupees.com'</span>:
+    <span class="hljs-string">'https?://(www\\.)?groupees\\.com/users/\\d+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'other'</span>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
         <span class="hljs-attribute">title</span>: x.textContent.trim(),
@@ -481,10 +481,10 @@ anything better in GOG’s own styling.</p>
           .html(BUTTON_LABEL + <span class="hljs-string">" (Selected Bundle)"</span>)
           .insertBefore(<span class="hljs-string">"input[name='search']"</span>)
 
-  <span class="hljs-string">'www.humblebundle.com'</span> :
-    <span class="hljs-string">'https://www\\.humblebundle\\.com/home/?'</span> :
+  <span class="hljs-string">'www.humblebundle.com'</span>:
+    <span class="hljs-string">'https://www\\.humblebundle\\.com/home/?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
-      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> { <span class="hljs-attribute">title</span>: x.textContent.trim(), <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'humblestore'</span>]
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> { <span class="hljs-attribute">title</span>: x.textContent.trim(), <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'humblestore'</span>]
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.row'</span>).has(</pre></div></div>
             
         </li>
@@ -548,10 +548,10 @@ anything better in GOG’s own styling.</p>
         .css({ <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>, <span class="hljs-attribute">fontSize</span>: <span class="hljs-string">'14px'</span>, <span class="hljs-attribute">fontWeight</span>: <span class="hljs-string">'normal'</span> })
         .prependTo(<span class="hljs-string">'.base-main-wrapper h1'</span>)
 
-  <span class="hljs-string">'indiegamestand.com'</span> :
-    <span class="hljs-string">'https://indiegamestand\\.com/wallet\\.php'</span> :
+  <span class="hljs-string">'indiegamestand.com'</span>:
+    <span class="hljs-string">'https://indiegamestand\\.com/wallet\\.php'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'indiegamestand'</span>
-      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {</pre></div></div>
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -597,18 +597,18 @@ their button styles are scoped to <code>#game_wallet</code></p>
             
             <div class="content"><div class='highlight'><pre>        .appendTo(<span class="hljs-string">'#game_wallet h2'</span>)
 
-  <span class="hljs-string">'www.shinyloot.com'</span> :
-    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/games/?'</span> :
+  <span class="hljs-string">'www.shinyloot.com'</span>:
+    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/games/?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'shinyloot'</span>
-      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
         <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.right-float a img'</span>, x).closest(<span class="hljs-string">'a'</span>)[<span class="hljs-number">0</span>].href
         <span class="hljs-attribute">title</span>: $(x).prev(<span class="hljs-string">'h3'</span>).text().trim()
         <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'shinyloot'</span>]
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#accordion .ui-widget-content'</span>)
       <span class="hljs-string">'insert_button'</span>: shinyloot_insert_button
-    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/wishlist/?'</span> :
+    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/wishlist/?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'shinyloot'</span>
-      <span class="hljs-string">'game_list'</span> :<span class="hljs-function"> -&gt;</span> {
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
         <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.gameInfo + a'</span>, x)[<span class="hljs-number">0</span>].href
         <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.gameName'</span>, x).text().trim()
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.gameItem'</span>)
