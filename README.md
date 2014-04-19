@@ -17,7 +17,7 @@ Currently supported vendors are:
 * [IndieGameStand](http://www.indiegamestand.com)
 * [ShinyLoot](http://www.shinyloot.com)
 
-Pending a proper website, [screenshots](http://imgur.com/a/6FG6B) are available
+Pending a proper website, [screenshots](https://imgur.com/a/R7CwK) are available
 on imgur.
 
 ### Installation
