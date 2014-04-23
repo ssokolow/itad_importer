@@ -9,7 +9,6 @@ Copyright ©2014 Stephan Sokolow
 License: MIT (http://opensource.org/licenses/MIT)
 
 TODO:
-- Add support for wishlist importing too
 - Add a `@downloadURL` for the script
 
 Note: While we do not use GM_info, we must request it to force the userscript
