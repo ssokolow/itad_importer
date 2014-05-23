@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b1
+// @version 0.1b2
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -30,6 +30,7 @@ jQuery.
 // @match *://secure.gog.com/account*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
+// @match *://www.humblebundle.com/downloads?key=*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
@@ -201,7 +202,7 @@ scrapers = {
     }
   },
   'www.humblebundle.com': {
-    'https://www\\.humblebundle\\.com/home/?': {
+    'https://www\\.humblebundle\\.com/(home/?|downloads\\?key=.+)': {
       'source_id': 'humblestore',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
@@ -217,14 +218,23 @@ scrapers = {
         return _results;
       },
       'insert_button': function() {
-        var a, label;
+        var a, button, label;
         label = $('<span class="label"></span>').html(BUTTON_LABEL);
         a = $('<a class="a" href="#"></span>').html(BUTTON_LABEL).css('padding-left', '9px');
-        return $('<div class="flexbtn active noicon"></div>').append('<div class="right"></div>').append(label).append(a).css({
-          float: 'right',
-          fontSize: '14px',
-          fontWeight: 'normal'
-        }).prependTo('.base-main-wrapper h1');
+        button = $('<div class="flexbtn active noicon"></div>').append('<div class="right"></div>').append(label).append(a);
+        if (($('.staple.s4').length)) {
+          return button.css({
+            position: 'absolute',
+            top: '11px',
+            right: '17px'
+          }).replaceAll($('.staple.s4').first());
+        } else {
+          return button.css({
+            float: 'right',
+            fontSize: '14px',
+            fontWeight: 'normal'
+          }).prependTo('.base-main-wrapper h1');
+        }
       }
     }
   },
