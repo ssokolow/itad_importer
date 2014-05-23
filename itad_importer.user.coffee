@@ -28,6 +28,7 @@ jQuery.
 // @match *://secure.gog.com/account*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
+// @match *://www.humblebundle.com/downloads?key=*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
@@ -181,7 +182,7 @@ scrapers =
           .insertBefore("input[name='search']")
 
   'www.humblebundle.com':
-    'https://www\\.humblebundle\\.com/home/?':
+    'https://www\\.humblebundle\\.com/(home/?|downloads\\?key=.+)':
       'source_id': 'humblestore'
       'game_list': -> { title: x.textContent.trim(), sources: ['humblestore']
         } for x in $('div.row').has(
@@ -201,15 +202,23 @@ scrapers =
            # Apparently the `noicon` class isn't versatile enough
            .css('padding-left', '9px')
 
-        $('<div class="flexbtn active noicon"></div>')
+        button = $('<div class="flexbtn active noicon"></div>')
         .append('<div class="right"></div>')
         .append(label)
         .append(a)
-        .css
-          float: 'right',
-          fontSize: '14px',
-          fontWeight: 'normal'
-        .prependTo('.base-main-wrapper h1')
+
+        if ($('.staple.s4').length)
+          button.css
+            position: 'absolute'
+            top: '11px'
+            right: '17px'
+          .replaceAll($('.staple.s4').first())
+        else
+          button.css
+            float: 'right',
+            fontSize: '14px',
+            fontWeight: 'normal'
+          .prependTo('.base-main-wrapper h1')
 
   'indiegamestand.com':
     'https://indiegamestand\\.com/wallet\\.php':

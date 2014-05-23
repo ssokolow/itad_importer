@@ -12,8 +12,8 @@ Currently supported vendors are:
 * [DotEmu](http://www.dotemu.com)
 * [GOG.com](http://www.gog.com)
 * [Groupees](http://groupees.com/) (direct downloads in bundles tab only)
-* [Humble Store](http://www.humblebundle.com) (anything in your
-  [Humble Library](https://www.humblebundle.com/home))
+* [Humble Store](http://www.humblebundle.com) (anything with a Humble purchase
+  page or in your [Humble Library](https://www.humblebundle.com/home))
 * [IndieGameStand](http://www.indiegamestand.com)
 * [ShinyLoot](http://www.shinyloot.com)
 
