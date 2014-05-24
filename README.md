@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/ssokolow/itad_importer.png?label=ready&title=Ready)](https://waffle.io/ssokolow/itad_importer)
 ## Collection Import Script for IsThereAnyDeal.com
 
 This userscript adds "Export to ITAD" buttons to online game vendors who do
