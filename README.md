@@ -1,6 +1,6 @@
 ## Collection Import Script for IsThereAnyDeal.com
 
-[![Issues Ready to be Worked on](https://badge.waffle.io/ssokolow/itad_importer.png?label=ready&title=Ready)](https://waffle.io/ssokolow/itad_importer)
+[![Issues Ready to be Worked on](https://badge.waffle.io/ssokolow/itad_importer.png?label=confirmed&title=Ready)](https://waffle.io/ssokolow/itad_importer)
 
 This userscript adds "Export to ITAD" buttons to online game vendors who do
 not provide a way for sites like IsThereAnyDeal.com to query user game lists
