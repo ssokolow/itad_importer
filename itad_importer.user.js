@@ -28,6 +28,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://secure.gog.com/account*
+// @match *://secure.gog.com/checkout*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
@@ -36,9 +37,11 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, attr, dotemu_add_button, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, ITAD_12X12, attr, dotemu_add_button, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
+
+ITAD_12X12 = "data:image/png;base64,\niVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAZlBMVEUEbrIEbrIJcbQLcrQefboo\ng70rhb4thr8vh78zicA6jcNCksVLl8hWnctZn8xdoc1ipM9ipc9kptB5stZ6staCt9mHutqJu9ud\nxuGozeSrz+W72OrA2+zJ4O7U5vLX6PPn8fj3+vyC0mvkAAAAAXRSTlMAQObYZgAAAFdJREFUCB0F\nwYkCgUAABcA3CpElRyRH6/9/0kwCQALtZSwNglN9Pt5LR+jqGuelEaYbeBXh04P7KMwDeF6E8l1h\nW1vh8PsO/bWeiGPdl/kzdYjdBkACQP5LygQ7CM8T6wAAAABJRU5ErkJggg==";
 
 attr = function(node, name) {
   return node.getAttribute(name);
@@ -129,6 +132,29 @@ scrapers = {
     ]
   },
   'secure.gog.com': {
+    '^https://secure\\.gog\\.com/checkout/ah24z9jvv7l\\?R.+': {
+      'source_id': 'gog',
+      'game_list': function() {
+        var x, _i, _len, _ref, _results;
+        _ref = $('.receipt__content .game-item');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push({
+            id: $(x).attr('id').substring(2),
+            title: $('.game-title-link', x).text().trim(),
+            sources: ['gog']
+          });
+        }
+        return _results;
+      },
+      'insert_button': function() {
+        return $("<span class='social-btn'></span>").html("<img class=\"social-icon\" src=\"" + ITAD_12X12 + "\"\nalt='ITAD' style=\"width: 12px\">Export").css({
+          position: 'relative',
+          top: -6
+        }).prependTo($('.receipt__social').filter(':first'));
+      }
+    },
     '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)': {
       'source_id': 'gog',
       'game_list': function() {

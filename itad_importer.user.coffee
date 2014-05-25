@@ -26,6 +26,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://secure.gog.com/account*
+// @match *://secure.gog.com/checkout*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
@@ -37,6 +38,13 @@ jQuery.
 
 # This string will be interpreted as raw HTML
 BUTTON_LABEL = "Export to ITAD"
+
+ITAD_12X12 = """data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAZlBMVEUEbrIEbrIJcbQLcrQefboo
+g70rhb4thr8vh78zicA6jcNCksVLl8hWnctZn8xdoc1ipM9ipc9kptB5stZ6staCt9mHutqJu9ud
+xuGozeSrz+W72OrA2+zJ4O7U5vLX6PPn8fj3+vyC0mvkAAAAAXRSTlMAQObYZgAAAFdJREFUCB0F
+wYkCgUAABcA3CpElRyRH6/9/0kwCQALtZSwNglN9Pt5LR+jqGuelEaYbeBXh04P7KMwDeF6E8l1h
+W1vh8PsO/bWeiGPdl/kzdYjdBkACQP5LygQ7CM8T6wAAAABJRU5ErkJggg=="""
 
 # Less overhead than instantiating a new jQuery object
 attr = (node, name) -> node.getAttribute(name)
@@ -117,6 +125,24 @@ scrapers =
       ]
 
   'secure.gog.com':
+    '^https://secure\\.gog\\.com/checkout/ah24z9jvv7l\\?R.+':
+      'source_id': 'gog'
+      'game_list': -> {
+        id: $(x).attr('id').substring(2)
+        title: $('.game-title-link', x).text().trim()
+        sources: ['gog']
+      } for x in $('.receipt__content .game-item')
+
+      'insert_button': ->
+        $("<span class='social-btn'></span>")
+          .html("""<img class=\"social-icon\" src=\"#{ITAD_12X12}\"
+                   alt='ITAD' style="width: 12px">Export""")
+          .css
+            # If you can figure out how to do this properly, be my guest
+            position: 'relative'
+            top: -6
+          .prependTo($('.receipt__social').filter(':first'))
+
     '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'
       'game_list': ->
