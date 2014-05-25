@@ -32,12 +32,13 @@ jQuery.
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
+// @match *://www.humblebundle.com/s?key=*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, ITAD_12X12, attr, dotemu_add_button, gog_nonlist_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, ITAD_12X12, attr, dotemu_add_button, gog_nonlist_parse, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -64,6 +65,27 @@ gog_nonlist_parse = function() {
       id: attr(x, 'data-gameid'),
       url: 'http://www.gog.com/en/game/' + attr(x, 'data-gameindex'),
       sources: ['gog']
+    });
+  }
+  return _results;
+};
+
+humble_make_button = function() {
+  var a, button, label;
+  label = $('<span class="label"></span>').html(BUTTON_LABEL);
+  a = $('<a class="a" href="#"></span>').html(BUTTON_LABEL).css('padding-left', '9px');
+  return button = $('<div class="flexbtn active noicon"></div>').append('<div class="right"></div>').append(label).append(a);
+};
+
+humble_parse = function() {
+  var x, _i, _len, _ref, _results;
+  _ref = $('div.row').has(' .downloads.windows .download, .downloads.linux .download, .downloads.mac .download, .downloads.android .download').find('div.title');
+  _results = [];
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    x = _ref[_i];
+    _results.push({
+      title: x.textContent.trim(),
+      sources: ['humblestore']
     });
   }
   return _results;
@@ -228,39 +250,29 @@ scrapers = {
     }
   },
   'www.humblebundle.com': {
-    'https://www\\.humblebundle\\.com/(home/?|downloads\\?key=.+)': {
+    'https://www\\.humblebundle\\.com/home/?': {
       'source_id': 'humblestore',
-      'game_list': function() {
-        var x, _i, _len, _ref, _results;
-        _ref = $('div.row').has(' .downloads.windows .download, .downloads.linux .download, .downloads.mac .download, .downloads.android .download').find('div.title');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          x = _ref[_i];
-          _results.push({
-            title: x.textContent.trim(),
-            sources: ['humblestore']
-          });
-        }
-        return _results;
-      },
+      'game_list': humble_parse,
       'insert_button': function() {
-        var a, button, label;
-        label = $('<span class="label"></span>').html(BUTTON_LABEL);
-        a = $('<a class="a" href="#"></span>').html(BUTTON_LABEL).css('padding-left', '9px');
-        button = $('<div class="flexbtn active noicon"></div>').append('<div class="right"></div>').append(label).append(a);
-        if (($('.staple.s4').length)) {
-          return button.css({
-            position: 'absolute',
-            top: '11px',
-            right: '17px'
-          }).replaceAll($('.staple.s4').first());
-        } else {
-          return button.css({
-            float: 'right',
-            fontSize: '14px',
-            fontWeight: 'normal'
-          }).prependTo('.base-main-wrapper h1');
-        }
+        return humble_make_button().css({
+          float: 'right',
+          fontSize: '14px',
+          fontWeight: 'normal'
+        }).prependTo('.base-main-wrapper h1');
+      }
+    },
+    'https://www\\.humblebundle\\.com/(download)?s\\?key=.+': {
+      'source_id': 'humblestore',
+      'game_list': humble_parse,
+      'insert_button': function() {
+        var parent;
+        parent = $('.js-gamelist-holder').parents('.whitebox');
+        parent.find('.staple.s4').remove();
+        return humble_make_button().css({
+          position: 'absolute',
+          top: 11,
+          right: 17
+        }).appendTo(parent);
       }
     }
   },

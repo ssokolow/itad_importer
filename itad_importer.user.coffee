@@ -30,6 +30,7 @@ jQuery.
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
+// @match *://www.humblebundle.com/s?key=*
 // @match *://indiegamestand.com/wallet.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
@@ -64,6 +65,28 @@ gog_nonlist_parse = -> {
   url: ('http://www.gog.com/en/game/' + attr(x, 'data-gameindex'))
   sources: ['gog']
 } for x in $('[data-gameindex]')
+
+humble_make_button = ->
+  # Humble Library uses very weird button markup
+  label = $('<span class="label"></span>').html(BUTTON_LABEL)
+  a = $('<a class="a" href="#"></span>')
+     .html(BUTTON_LABEL)
+     # Apparently the `noicon` class isn't versatile enough
+     .css('padding-left', '9px')
+
+  button = $('<div class="flexbtn active noicon"></div>')
+  .append('<div class="right"></div>')
+  .append(label)
+  .append(a)
+
+humble_parse = -> { title: x.textContent.trim(), sources: ['humblestore']
+  } for x in $('div.row').has(
+  # Humble Library has no easy way to list only games
+  ' .downloads.windows .download,
+    .downloads.linux .download,
+    .downloads.mac .download,
+    .downloads.android .download'
+  ).find('div.title')
 
 shinyloot_insert_button = ->
   $('<button></button>')
@@ -208,43 +231,29 @@ scrapers =
           .insertBefore("input[name='search']")
 
   'www.humblebundle.com':
-    'https://www\\.humblebundle\\.com/(home/?|downloads\\?key=.+)':
+    'https://www\\.humblebundle\\.com/home/?':
       'source_id': 'humblestore'
-      'game_list': -> { title: x.textContent.trim(), sources: ['humblestore']
-        } for x in $('div.row').has(
-        # Humble Library has no easy way to list only games
-        ' .downloads.windows .download,
-          .downloads.linux .download,
-          .downloads.mac .download,
-          .downloads.android .download'
-        ).find('div.title')
-
-
+      'game_list': humble_parse
       'insert_button': ->
-        # Humble Library uses very weird button markup
-        label = $('<span class="label"></span>').html(BUTTON_LABEL)
-        a = $('<a class="a" href="#"></span>')
-           .html(BUTTON_LABEL)
-           # Apparently the `noicon` class isn't versatile enough
-           .css('padding-left', '9px')
+        humble_make_button().css
+          float: 'right',
+          fontSize: '14px',
+          fontWeight: 'normal'
+        .prependTo('.base-main-wrapper h1')
 
-        button = $('<div class="flexbtn active noicon"></div>')
-        .append('<div class="right"></div>')
-        .append(label)
-        .append(a)
+    'https://www\\.humblebundle\\.com/(download)?s\\?key=.+':
+      'source_id': 'humblestore'
+      'game_list': humble_parse
+      'insert_button': ->
+        parent = $('.js-gamelist-holder').parents('.whitebox')
+        parent.find('.staple.s4').remove()
 
-        if ($('.staple.s4').length)
-          button.css
-            position: 'absolute'
-            top: '11px'
-            right: '17px'
-          .replaceAll($('.staple.s4').first())
-        else
-          button.css
-            float: 'right',
-            fontSize: '14px',
-            fontWeight: 'normal'
-          .prependTo('.base-main-wrapper h1')
+        humble_make_button().css
+          position: 'absolute'
+          top: 11
+          right: 17
+        .appendTo(parent)
+
 
   'indiegamestand.com':
     'https://indiegamestand\\.com/wallet\\.php':
