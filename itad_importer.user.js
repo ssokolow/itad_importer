@@ -154,7 +154,7 @@ scrapers = {
     ]
   },
   'secure.gog.com': {
-    '^https://secure\\.gog\\.com/checkout/ah24z9jvv7l\\?R.+': {
+    '^https://secure\\.gog\\.com/checkout/.+\\?R.+': {
       'source_id': 'gog',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
