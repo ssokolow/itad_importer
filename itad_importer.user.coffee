@@ -17,7 +17,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b4
+// @version 0.1b5
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -25,6 +25,7 @@ jQuery.
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
 // @match *://www.dotemu.com/*
+// @match *://fireflowergames.com/my-lists/*
 // @match *://secure.gog.com/account*
 // @match *://secure.gog.com/checkout*
 // @match *://groupees.com/users/*
@@ -146,6 +147,30 @@ scrapers =
         'insert_button': -> dotemu_add_button('.user-wishlist h2.pane-title')
         'is_wishlist': true
       ]
+
+  'fireflowergames.com':
+    '^http://fireflowergames\\.com/my-lists/(edit-my|view-a)-list/\\?.+':
+      'source_id': 'fireflower'
+      'game_list': ->
+        results = $('table.wl-table tbody td.check-column input:checked')
+          .parents('tr').find('td.product-name a')
+
+        if (!results.length)
+          results = $('table.wl-table td.product-name a')
+
+        {
+          title: $(x).text().trim()
+          url: x.href
+          sources: ['fireflower']
+        } for x in results
+      'insert_button': ->
+        # XXX: If you can debug the broken behaviour with <button>, please do.
+        # I don't have time.
+        $('<a class="button"></a>')
+          .html(BUTTON_LABEL)
+          .wrap('<td></td>')
+          .appendTo($('table.wl-actions-table tbody:first').find('tr:last'))
+      'is_wishlist': true
 
   'secure.gog.com':
     '^https://secure\\.gog\\.com/checkout/.+\\?R.+':
