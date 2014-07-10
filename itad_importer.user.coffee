@@ -173,7 +173,7 @@ scrapers =
       'is_wishlist': true
 
   'secure.gog.com':
-    '^https://secure\\.gog\\.com/checkout/.+\\?R.+':
+    '^https://secure\\.gog\\.com/checkout/.+':
       'source_id': 'gog'
       'game_list': -> {
         id: $(x).attr('id').substring(2)

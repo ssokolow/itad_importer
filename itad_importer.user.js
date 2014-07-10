@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b4
+// @version 0.1b5
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -181,7 +181,7 @@ scrapers = {
     }
   },
   'secure.gog.com': {
-    '^https://secure\\.gog\\.com/checkout/.+\\?R.+': {
+    '^https://secure\\.gog\\.com/checkout/.+': {
       'source_id': 'gog',
       'game_list': function() {
         var x, _i, _len, _ref, _results;

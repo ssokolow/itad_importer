@@ -49,7 +49,7 @@ jQuery.
 
 <span class="hljs-regexp">//</span> ==UserScript==
 <span class="hljs-regexp">//</span> <span class="hljs-property">@name</span> IsThereAnyDeal.com Collection Importer
-<span class="hljs-regexp">//</span> <span class="hljs-property">@version</span> <span class="hljs-number">0.1</span>b4
+<span class="hljs-regexp">//</span> <span class="hljs-property">@version</span> <span class="hljs-number">0.1</span>b5
 <span class="hljs-regexp">//</span> <span class="hljs-property">@namespace</span> <span class="hljs-attribute">http</span>:<span class="hljs-regexp">//i</span>sthereanydeal.com/
 <span class="hljs-regexp">//</span> <span class="hljs-property">@description</span> Adds buttons to various sites to <span class="hljs-reserved">export</span> your game lists to ITAD
 <span class="hljs-regexp">//</span> <span class="hljs-property">@icon</span> <span class="hljs-attribute">http</span>:<span class="hljs-regexp">//</span>s3-eu-west-<span class="hljs-number">1.</span>amazonaws.com/itad/images/banners/<span class="hljs-number">50</span>x50.gif
@@ -446,7 +446,7 @@ I don’t have time.</p>
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
   <span class="hljs-string">'secure.gog.com'</span>:
-    <span class="hljs-string">'^https://secure\\.gog\\.com/checkout/.+\\?R.+'</span>:
+    <span class="hljs-string">'^https://secure\\.gog\\.com/checkout/.+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
         <span class="hljs-attribute">id</span>: $(x).attr(<span class="hljs-string">'id'</span>).substring(<span class="hljs-number">2</span>)
