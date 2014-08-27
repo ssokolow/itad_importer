@@ -59,14 +59,6 @@ dotemu_add_button = (parent_selector) ->
     marginRight: '5px'
   .appendTo(parent_selector)
 
-# Common code to extract metadata from the GOG.com shelf and wishlist views
-gog_nonlist_parse = -> {
-  # The shelf view mode only sees game IDs and slugs easily
-  id: attr(x, 'data-gameid')
-  url: ('http://www.gog.com/en/game/' + attr(x, 'data-gameindex'))
-  sources: ['gog']
-} for x in $('[data-gameindex]')
-
 humble_make_button = ->
   # Humble Library uses very weird button markup
   label = $('<span class="label"></span>').html(BUTTON_LABEL)
@@ -190,7 +182,11 @@ scrapers =
       'source_id': 'gog'
       'game_list': ->
         if $('.shelf_container').length > 0
-          gog_nonlist_parse()
+          { # The shelf view mode only sees game IDs and slugs easily
+            id: attr(x, 'data-gameid')
+            url: ('http://www.gog.com/en/game/' + attr(x, 'data-gameindex'))
+            sources: ['gog']
+          } for x in $('.shelf_game')
         else if $('.games_list').length > 0
           {
             id: $(x).closest('.game-item').attr('id').substring(8)
@@ -223,7 +219,13 @@ scrapers =
           .appendTo('.list_header')
     '^https://www\\.gog\\.com/account/wishlist':
       'source_id': 'gog'
-      'game_list': gog_nonlist_parse
+      'game_list': ->
+        {
+          id: $(x).closest('.game-item').attr('id').substring(2)
+          # The list view mode only sees game titles easily
+          title: x.textContent.trim()
+          sources: ['gog']
+        } for x in $('.game-title-link')
       'insert_button': ->
         # Borrow the styling from the games list since I couldn't find
         # anything better in GOG's own styling.

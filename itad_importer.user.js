@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b5
+// @version 0.1b6
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -39,7 +39,7 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, ITAD_12X12, attr, dotemu_add_button, gog_nonlist_parse, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, ITAD_12X12, attr, dotemu_add_button, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -54,21 +54,6 @@ dotemu_add_button = function(parent_selector) {
     float: 'right',
     marginRight: '5px'
   }).appendTo(parent_selector);
-};
-
-gog_nonlist_parse = function() {
-  var x, _i, _len, _ref, _results;
-  _ref = $('[data-gameindex]');
-  _results = [];
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    x = _ref[_i];
-    _results.push({
-      id: attr(x, 'data-gameid'),
-      url: 'http://www.gog.com/en/game/' + attr(x, 'data-gameindex'),
-      sources: ['gog']
-    });
-  }
-  return _results;
 };
 
 humble_make_button = function() {
@@ -203,21 +188,31 @@ scrapers = {
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)': {
       'source_id': 'gog',
       'game_list': function() {
-        var x, _i, _len, _ref, _results;
+        var x, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
         if ($('.shelf_container').length > 0) {
-          return gog_nonlist_parse();
-        } else if ($('.games_list').length > 0) {
-          _ref = $('.game-title-link');
+          _ref = $('.shelf_game');
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             x = _ref[_i];
             _results.push({
+              id: attr(x, 'data-gameid'),
+              url: 'http://www.gog.com/en/game/' + attr(x, 'data-gameindex'),
+              sources: ['gog']
+            });
+          }
+          return _results;
+        } else if ($('.games_list').length > 0) {
+          _ref1 = $('.game-title-link');
+          _results1 = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            x = _ref1[_j];
+            _results1.push({
               id: $(x).closest('.game-item').attr('id').substring(8),
               title: x.textContent.trim(),
               sources: ['gog']
             });
           }
-          return _results;
+          return _results1;
         }
       },
       'insert_button': function() {
@@ -239,7 +234,20 @@ scrapers = {
     },
     '^https://www\\.gog\\.com/account/wishlist': {
       'source_id': 'gog',
-      'game_list': gog_nonlist_parse,
+      'game_list': function() {
+        var x, _i, _len, _ref, _results;
+        _ref = $('.game-title-link');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push({
+            id: $(x).closest('.game-item').attr('id').substring(2),
+            title: x.textContent.trim(),
+            sources: ['gog']
+          });
+        }
+        return _results;
+      },
       'insert_button': function() {
         return $("<span class='list_btn'></span>").css({
           float: 'right',
