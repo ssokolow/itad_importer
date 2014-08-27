@@ -17,7 +17,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b5
+// @version 0.1b6
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -27,7 +27,7 @@ jQuery.
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
 // @match *://www.gog.com/account*
-// @match *://www.gog.com/checkout*
+// @match *://www.gog.com/order/status/*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
@@ -173,23 +173,18 @@ scrapers =
       'is_wishlist': true
 
   'www.gog.com':
-    '^https://www\\.gog\\.com/checkout/.+':
+    '^https://www\\.gog\\.com/order/status/.+':
       'source_id': 'gog'
       'game_list': -> {
-        id: $(x).attr('id').substring(2)
-        title: $('.game-title-link', x).text().trim()
+        title: $(x).text().trim()
         sources: ['gog']
-      } for x in $('.receipt__content .game-item')
+      } for x in $('.order__hero-unit p strong')
 
       'insert_button': ->
-        $("<span class='social-btn'></span>")
-          .html("""<img class=\"social-icon\" src=\"#{ITAD_12X12}\"
-                   alt='ITAD' style="width: 12px">Export""")
-          .css
-            # If you can figure out how to do this properly, be my guest
-            position: 'relative'
-            top: -6
-          .prependTo($('.receipt__social').filter(':first'))
+        $("<a class='_dropdown__item ng-scope'></a>")
+          .html("On ITAD")
+          .prependTo($('.order-message__actions ._dropdown__items')
+            .filter(':first'))
 
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'

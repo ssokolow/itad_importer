@@ -29,7 +29,7 @@ jQuery.
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
 // @match *://www.gog.com/account*
-// @match *://www.gog.com/checkout*
+// @match *://www.gog.com/order/status/*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
@@ -181,27 +181,23 @@ scrapers = {
     }
   },
   'www.gog.com': {
-    '^https://www\\.gog\\.com/checkout/.+': {
+    '^https://www\\.gog\\.com/order/status/.+': {
       'source_id': 'gog',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
-        _ref = $('.receipt__content .game-item');
+        _ref = $('.order__hero-unit p strong');
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           x = _ref[_i];
           _results.push({
-            id: $(x).attr('id').substring(2),
-            title: $('.game-title-link', x).text().trim(),
+            title: $(x).text().trim(),
             sources: ['gog']
           });
         }
         return _results;
       },
       'insert_button': function() {
-        return $("<span class='social-btn'></span>").html("<img class=\"social-icon\" src=\"" + ITAD_12X12 + "\"\nalt='ITAD' style=\"width: 12px\">Export").css({
-          position: 'relative',
-          top: -6
-        }).prependTo($('.receipt__social').filter(':first'));
+        return $("<a class='_dropdown__item ng-scope'></a>").html("On ITAD").prependTo($('.order-message__actions ._dropdown__items').filter(':first'));
       }
     },
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)': {
