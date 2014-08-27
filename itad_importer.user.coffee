@@ -26,8 +26,8 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
-// @match *://secure.gog.com/account*
-// @match *://secure.gog.com/checkout*
+// @match *://www.gog.com/account*
+// @match *://www.gog.com/checkout*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
@@ -172,8 +172,8 @@ scrapers =
           .appendTo($('table.wl-actions-table tbody:first').find('tr:last'))
       'is_wishlist': true
 
-  'secure.gog.com':
-    '^https://secure\\.gog\\.com/checkout/.+':
+  'www.gog.com':
+    '^https://www\\.gog\\.com/checkout/.+':
       'source_id': 'gog'
       'game_list': -> {
         id: $(x).attr('id').substring(2)
@@ -191,7 +191,7 @@ scrapers =
             top: -6
           .prependTo($('.receipt__social').filter(':first'))
 
-    '^https://secure\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
+    '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'
       'game_list': ->
         if $('.shelf_container').length > 0
@@ -226,7 +226,7 @@ scrapers =
           # Prevent it from throwing off the other group
           .wrap('<span></span>')
           .appendTo('.list_header')
-    '^https://secure\\.gog\\.com/account/wishlist':
+    '^https://www\\.gog\\.com/account/wishlist':
       'source_id': 'gog'
       'game_list': gog_nonlist_parse
       'insert_button': ->
