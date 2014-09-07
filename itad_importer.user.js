@@ -28,6 +28,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
+// @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
 // @match *://groupees.com/users/*
@@ -39,11 +40,13 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, ITAD_12X12, attr, dotemu_add_button, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button;
 
 BUTTON_LABEL = "Export to ITAD";
 
 ITAD_12X12 = "data:image/png;base64,\niVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAZlBMVEUEbrIEbrIJcbQLcrQefboo\ng70rhb4thr8vh78zicA6jcNCksVLl8hWnctZn8xdoc1ipM9ipc9kptB5stZ6staCt9mHutqJu9ud\nxuGozeSrz+W72OrA2+zJ4O7U5vLX6PPn8fj3+vyC0mvkAAAAAXRSTlMAQObYZgAAAFdJREFUCB0F\nwYkCgUAABcA3CpElRyRH6/9/0kwCQALtZSwNglN9Pt5LR+jqGuelEaYbeBXh04P7KMwDeF6E8l1h\nW1vh8PsO/bWeiGPdl/kzdYjdBkACQP5LygQ7CM8T6wAAAABJRU5ErkJggg==";
+
+ITAD_14X14_GRAY = "data:image/png;base64,\niVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAMAAAAolt3jAAAAdVBMVEUEbrKTlaCTlZ+TlZ+UlqCY\nmaSYmqWcnqednqieoKmfoaugoqulprCvsLivsbiwsrmztLuztby2uL7BwsjDxcrExcvIyc7V1trW\n1trX2Nvn5+rp6evx8vP19fb39/j4+Pn5+fr7+/v7+/z8/Pz8/P39/f3///8J+FboAAAAJHRSTlMA\ny+rw8PHx8fHx8vLy9PT09PT19vf39/n5+fz8/f3+/v7+/v695LIzAAAAcUlEQVQIHQXBhwGCQAAE\nsHui2FHsBeyy/4gmSQGgJKWCeTNFVQJNN9yH2xJB+z3WZuf3kjDuD+B8I6wfIzAbpsLuCrg3QtsD\n9TAXJq8tOHYEl9+W0eHbEPaf06u/PvoWsXmuTNrdegwp1QJAVZICQMkf1qQG7Yh+Z60AAAAASUVO\nRK5CYII=";
 
 attr = function(node, name) {
   return node.getAttribute(name);
@@ -163,6 +166,29 @@ scrapers = {
         return $('<a class="button"></a>').html(BUTTON_LABEL).wrap('<td></td>').appendTo($('table.wl-actions-table tbody:first').find('tr:last'));
       },
       'is_wishlist': true
+    }
+  },
+  'www.flyingbundle.com': {
+    'https?://www\\.flyingbundle\\.com/users/account': {
+      'source_id': 'flying_bundle',
+      'game_list': function() {
+        var x, _i, _len, _ref, _results;
+        _ref = $(".div_btn_download[href^='/users/sources']").parents('li').find(':first');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push({
+            title: $(x).text(),
+            sources: 'flying_bundle'
+          });
+        }
+        return _results;
+      },
+      'insert_button': function() {
+        var li;
+        li = $("<li></li>").appendTo('.legenda_points ul');
+        return $('<a href="#">' + BUTTON_LABEL + ' <img src="' + ITAD_14X14_GRAY + '" /></a>').css('text-transform', 'uppercase').wrap("<li></li>").appendTo(li);
+      }
     }
   },
   'www.gog.com': {

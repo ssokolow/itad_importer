@@ -58,6 +58,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
+// @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
 // @match *://groupees.com/users/*
@@ -102,7 +103,16 @@ iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAZlBMVEUEbrIEbrIJcbQLcrQefboo
 g70rhb4thr8vh78zicA6jcNCksVLl8hWnctZn8xdoc1ipM9ipc9kptB5stZ6staCt9mHutqJu9ud
 xuGozeSrz+W72OrA2+zJ4O7U5vLX6PPn8fj3+vyC0mvkAAAAAXRSTlMAQObYZgAAAFdJREFUCB0F
 wYkCgUAABcA3CpElRyRH6/9/0kwCQALtZSwNglN9Pt5LR+jqGuelEaYbeBXh04P7KMwDeF6E8l1h
-W1vh8PsO/bWeiGPdl/kzdYjdBkACQP5LygQ7CM8T6wAAAABJRU5ErkJggg=="""</span></pre></div></div>
+W1vh8PsO/bWeiGPdl/kzdYjdBkACQP5LygQ7CM8T6wAAAABJRU5ErkJggg=="""</span>
+
+ITAD_14X14_GRAY = <span class="hljs-string">"""data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAMAAAAolt3jAAAAdVBMVEUEbrKTlaCTlZ+TlZ+UlqCY
+maSYmqWcnqednqieoKmfoaugoqulprCvsLivsbiwsrmztLuztby2uL7BwsjDxcrExcvIyc7V1trW
+1trX2Nvn5+rp6evx8vP19fb39/j4+Pn5+fr7+/v7+/z8/Pz8/P39/f3///8J+FboAAAAJHRSTlMA
+y+rw8PHx8fHx8vLy9PT09PT19vf39/n5+fz8/f3+/v7+/v695LIzAAAAcUlEQVQIHQXBhwGCQAAE
+sHui2FHsBeyy/4gmSQGgJKWCeTNFVQJNN9yH2xJB+z3WZuf3kjDuD+B8I6wfIzAbpsLuCrg3QtsD
+9TAXJq8tOHYEl9+W0eHbEPaf06u/PvoWsXmuTNrdegwp1QJAVZICQMkf1qQG7Yh+Z60AAAAASUVO
+RK5CYII="""</span></pre></div></div>
             
         </li>
         
@@ -411,6 +421,23 @@ I don’t have time.</p>
           .wrap(<span class="hljs-string">'&lt;td&gt;&lt;/td&gt;'</span>)
           .appendTo($(<span class="hljs-string">'table.wl-actions-table tbody:first'</span>).find(<span class="hljs-string">'tr:last'</span>))
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
+
+  <span class="hljs-string">'www.flyingbundle.com'</span>:
+    <span class="hljs-string">'https?://www\\.flyingbundle\\.com/users/account'</span>:
+      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'flying_bundle'</span>
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
+        <span class="hljs-attribute">title</span>: $(x).text()
+        <span class="hljs-attribute">sources</span>: <span class="hljs-string">'flying_bundle'</span>
+      } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">".div_btn_download[href^='/users/sources']"</span>
+      ).parents(<span class="hljs-string">'li'</span>).find(<span class="hljs-string">':first'</span>)
+      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+        li = $(<span class="hljs-string">"&lt;li&gt;&lt;/li&gt;"</span>
+        ).appendTo(<span class="hljs-string">'.legenda_points ul'</span>)
+        $(<span class="hljs-string">'&lt;a href="#"&gt;'</span> + BUTTON_LABEL + <span class="hljs-string">' &lt;img src="'</span> + ITAD_14X14_GRAY +
+          <span class="hljs-string">'" /&gt;&lt;/a&gt;'</span>)
+          .css(<span class="hljs-string">'text-transform'</span>, <span class="hljs-string">'uppercase'</span>)
+          .wrap(<span class="hljs-string">"&lt;li&gt;&lt;/li&gt;"</span>)
+          .appendTo(li)
 
   <span class="hljs-string">'www.gog.com'</span>:
     <span class="hljs-string">'^https://www\\.gog\\.com/order/status/.+'</span>:

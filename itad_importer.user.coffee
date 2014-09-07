@@ -26,6 +26,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
+// @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
 // @match *://groupees.com/users/*
@@ -47,6 +48,15 @@ g70rhb4thr8vh78zicA6jcNCksVLl8hWnctZn8xdoc1ipM9ipc9kptB5stZ6staCt9mHutqJu9ud
 xuGozeSrz+W72OrA2+zJ4O7U5vLX6PPn8fj3+vyC0mvkAAAAAXRSTlMAQObYZgAAAFdJREFUCB0F
 wYkCgUAABcA3CpElRyRH6/9/0kwCQALtZSwNglN9Pt5LR+jqGuelEaYbeBXh04P7KMwDeF6E8l1h
 W1vh8PsO/bWeiGPdl/kzdYjdBkACQP5LygQ7CM8T6wAAAABJRU5ErkJggg=="""
+
+ITAD_14X14_GRAY = """data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAMAAAAolt3jAAAAdVBMVEUEbrKTlaCTlZ+TlZ+UlqCY
+maSYmqWcnqednqieoKmfoaugoqulprCvsLivsbiwsrmztLuztby2uL7BwsjDxcrExcvIyc7V1trW
+1trX2Nvn5+rp6evx8vP19fb39/j4+Pn5+fr7+/v7+/z8/Pz8/P39/f3///8J+FboAAAAJHRSTlMA
+y+rw8PHx8fHx8vLy9PT09PT19vf39/n5+fz8/f3+/v7+/v695LIzAAAAcUlEQVQIHQXBhwGCQAAE
+sHui2FHsBeyy/4gmSQGgJKWCeTNFVQJNN9yH2xJB+z3WZuf3kjDuD+B8I6wfIzAbpsLuCrg3QtsD
+9TAXJq8tOHYEl9+W0eHbEPaf06u/PvoWsXmuTNrdegwp1QJAVZICQMkf1qQG7Yh+Z60AAAAASUVO
+RK5CYII="""
 
 # Less overhead than instantiating a new jQuery object
 attr = (node, name) -> node.getAttribute(name)
@@ -163,6 +173,23 @@ scrapers =
           .wrap('<td></td>')
           .appendTo($('table.wl-actions-table tbody:first').find('tr:last'))
       'is_wishlist': true
+
+  'www.flyingbundle.com':
+    'https?://www\\.flyingbundle\\.com/users/account':
+      'source_id': 'flying_bundle'
+      'game_list': -> {
+        title: $(x).text()
+        sources: 'flying_bundle'
+      } for x in $(".div_btn_download[href^='/users/sources']"
+      ).parents('li').find(':first')
+      'insert_button': ->
+        li = $("<li></li>"
+        ).appendTo('.legenda_points ul')
+        $('<a href="#">' + BUTTON_LABEL + ' <img src="' + ITAD_14X14_GRAY +
+          '" /></a>')
+          .css('text-transform', 'uppercase')
+          .wrap("<li></li>")
+          .appendTo(li)
 
   'www.gog.com':
     '^https://www\\.gog\\.com/order/status/.+':
