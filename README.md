@@ -12,7 +12,7 @@ It is currently in **beta** and any bugs should be reported in the
 Currently supported vendors are:
 
 * [DotEmu](http://www.dotemu.com)
-* [FireFlower Games](http://fireflowergames.com/) (whislists only)
+* [FireFlower Games](http://fireflowergames.com/) (wishlists only)
 * [Flying Bundle](http://www.flyingbundle.com/) (direct downloads only)
 * [GOG.com](http://www.gog.com)
 * [Groupees](http://groupees.com/) (direct downloads in bundles tab only)
