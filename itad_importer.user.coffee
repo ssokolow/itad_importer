@@ -197,7 +197,7 @@ scrapers =
       'game_list': -> {
         title: $(x).text().trim()
         sources: ['gog']
-      } for x in $('.order__hero-unit p strong')
+      } for x in $('.order__hero-unit ul.summary-list li')
 
       'insert_button': ->
         $("<a class='_dropdown__item ng-scope'></a>")

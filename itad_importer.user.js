@@ -196,7 +196,7 @@ scrapers = {
       'source_id': 'gog',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
-        _ref = $('.order__hero-unit p strong');
+        _ref = $('.order__hero-unit ul.summary-list li');
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           x = _ref[_i];
