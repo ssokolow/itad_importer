@@ -34,6 +34,7 @@ jQuery.
 // @match *://www.humblebundle.com/downloads?key=*
 // @match *://www.humblebundle.com/s?key=*
 // @match *://indiegamestand.com/wallet.php
+// @match *://indiegamestand.com/wishlist.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
@@ -326,6 +327,41 @@ scrapers =
         # This would look nicer if floated right in `.titles` but
         # their button styles are scoped to `#game_wallet`
         .appendTo('#game_wallet h2')
+    'https://indiegamestand\\.com/wishlist\\.php':
+      'source_id': 'indiegamestand'
+      'game_list': ->
+        {
+          url: $('.game-thumb', x)?.closest('a')?[0]?.href
+          title: $('.game_details h3', x).text().trim()
+          sources: ['indiegamestand']
+        } for x in $('#store_browse_game_list .game_list_item')
+      'is_wishlist': true
+
+      'insert_button': ->
+        innerDiv = $("<div></div>").css
+          paddingLeft: '10px'
+          background: ('url("images/icon-arrow.png") no-repeat scroll ' +
+                      '155px 45% transparent')
+
+        $('<div class="request key"></div>')
+        .html(BUTTON_LABEL).wrapInner(innerDiv).css # IGS CSS
+          display: 'inline-block'
+          verticalAlign: 'middle'
+          float: 'right'
+          width: '170px'
+          height: '21px'
+          background: ('url("images/btn-bg-blue-longer.png") ' +
+                       'no-repeat scroll 0px 0px transparent')
+          lineHeight: '21px'
+          color: '#FFF'
+          whiteSpace: 'nowrap'
+          marginLeft: '1em'
+          marginBottom: '4px'
+          fontSize: '12px'
+          cursor: 'pointer'
+        .css # Our CSS
+          margin: '11px 5px auto auto'
+        .appendTo('#store_browse_game_list .header')
 
   'www.shinyloot.com':
     'https?://www\\.shinyloot\\.com/m/games/?':

@@ -36,6 +36,7 @@ jQuery.
 // @match *://www.humblebundle.com/downloads?key=*
 // @match *://www.humblebundle.com/s?key=*
 // @match *://indiegamestand.com/wallet.php
+// @match *://indiegamestand.com/wishlist.php
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
@@ -356,6 +357,48 @@ scrapers = {
           marginLeft: '1em',
           verticalAlign: 'middle'
         }).appendTo('#game_wallet h2');
+      }
+    },
+    'https://indiegamestand\\.com/wishlist\\.php': {
+      'source_id': 'indiegamestand',
+      'game_list': function() {
+        var x, _i, _len, _ref, _ref1, _ref2, _ref3, _results;
+        _ref = $('#store_browse_game_list .game_list_item');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push({
+            url: (_ref1 = $('.game-thumb', x)) != null ? (_ref2 = _ref1.closest('a')) != null ? (_ref3 = _ref2[0]) != null ? _ref3.href : void 0 : void 0 : void 0,
+            title: $('.game_details h3', x).text().trim(),
+            sources: ['indiegamestand']
+          });
+        }
+        return _results;
+      },
+      'is_wishlist': true,
+      'insert_button': function() {
+        var innerDiv;
+        innerDiv = $("<div></div>").css({
+          paddingLeft: '10px',
+          background: 'url("images/icon-arrow.png") no-repeat scroll ' + '155px 45% transparent'
+        });
+        return $('<div class="request key"></div>').html(BUTTON_LABEL).wrapInner(innerDiv).css({
+          display: 'inline-block',
+          verticalAlign: 'middle',
+          float: 'right',
+          width: '170px',
+          height: '21px',
+          background: 'url("images/btn-bg-blue-longer.png") ' + 'no-repeat scroll 0px 0px transparent',
+          lineHeight: '21px',
+          color: '#FFF',
+          whiteSpace: 'nowrap',
+          marginLeft: '1em',
+          marginBottom: '4px',
+          fontSize: '12px',
+          cursor: 'pointer'
+        }).css({
+          margin: '11px 5px auto auto'
+        }).appendTo('#store_browse_game_list .header');
       }
     }
   },
