@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b7
+// @version 0.1b8
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -31,7 +31,7 @@ jQuery.
 // @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
-// @match *://groupees.com/users/*
+// @match *://groupees.com/purchases
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
 // @match *://www.humblebundle.com/s?key=*
@@ -285,11 +285,11 @@ scrapers = {
     }
   },
   'groupees.com': {
-    'https?://(www\\.)?groupees\\.com/users/\\d+': {
+    'https?://(www\\.)?groupees\\.com/purchases': {
       'source_id': 'other',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
-        _ref = $('.product .download-dropdown').parents('.details').find('h3');
+        _ref = $('.product ul.dropdown-menu').parents('.details').find('h3');
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           x = _ref[_i];
@@ -303,7 +303,7 @@ scrapers = {
       'insert_button': function() {
         return $("<button></button>").css({
           float: 'right'
-        }).addClass('button').html(BUTTON_LABEL + " (Selected Bundle)").insertBefore("input[name='search']");
+        }).addClass('button btn btn-primary').html(BUTTON_LABEL + " (Selected Bundle)").insertBefore("input[name='search']");
       }
     }
   },

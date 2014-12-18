@@ -49,7 +49,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b7
+// @version 0.1b8
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -61,7 +61,7 @@ jQuery.
 // @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
-// @match *://groupees.com/users/*
+// @match *://groupees.com/purchases
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
 // @match *://www.humblebundle.com/s?key=*
@@ -605,17 +605,17 @@ anything better in GOG’s own styling.</p>
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
   <span class="hljs-string">'groupees.com'</span>:
-    <span class="hljs-string">'https?://(www\\.)?groupees\\.com/users/\\d+'</span>:
+    <span class="hljs-string">'https?://(www\\.)?groupees\\.com/purchases'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'other'</span>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
         {
           <span class="hljs-attribute">title</span>: x.textContent.trim(),
           <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'other'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product .download-dropdown'</span>)
+        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product ul.dropdown-menu'</span>)
                     .parents(<span class="hljs-string">'.details'</span>).find(<span class="hljs-string">'h3'</span>)
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
         $(<span class="hljs-string">"&lt;button&gt;&lt;/button&gt;"</span>)
-          .css({ <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span> }).addClass(<span class="hljs-string">'button'</span>)
+          .css({ <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span> }).addClass(<span class="hljs-string">'button btn btn-primary'</span>)
           .html(BUTTON_LABEL + <span class="hljs-string">" (Selected Bundle)"</span>)
           .insertBefore(<span class="hljs-string">"input[name='search']"</span>)
 
