@@ -32,6 +32,7 @@ jQuery.
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
 // @match *://groupees.com/purchases
+// @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
 // @match *://www.humblebundle.com/s?key=*
@@ -285,7 +286,7 @@ scrapers = {
     }
   },
   'groupees.com': {
-    'https?://(www\\.)?groupees\\.com/purchases': {
+    'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)': {
       'source_id': 'other',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
