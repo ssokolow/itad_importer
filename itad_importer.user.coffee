@@ -293,7 +293,7 @@ scrapers =
             break
           page++
         {
-          title: x,
+          title: x.textContent.trim(),
           sources: ['other']
         } for x in results
       'insert_button': ->

@@ -321,7 +321,7 @@ scrapers = {
         for (i = 0, len = results.length; i < len; i++) {
           x = results[i];
           results1.push({
-            title: x,
+            title: x.textContent.trim(),
             sources: ['other']
           });
         }
