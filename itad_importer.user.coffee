@@ -270,15 +270,36 @@ scrapers =
     'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)':
       'source_id': 'other'
       'game_list': ->
+        results = []
+        CSRF = $('[name=csrf-token]').attr('content').trim()
+        end = false
+        page = 1
+        loop
+          $.ajax(
+            url: 'https://groupees.com/users/' + ProfileApp.user.id + '/more_entries?page=' + page + '&kind=games&filters%5Bkey%5D%5B%5D=drm-free'
+            async: false
+            headers: 'x-csrf-token': CSRF).done((data) ->
+            if data.length > 0
+              $.each data, (idx, item) ->
+                results.push JSON.parse(item).title
+                return
+            else
+              end = true
+            return
+          ).fail ->
+            end = true
+            return
+          if end
+            break
+          page++
         {
           title: x.textContent.trim(),
           sources: ['other']
-        } for x in $('.product ul.dropdown-menu')
-                    .parents('.details').find('h3')
+        } for x in results
       'insert_button': ->
         $("<button></button>")
           .css({ float: 'right' }).addClass('button btn btn-primary')
-          .html(BUTTON_LABEL + " (Selected Bundle)")
+          .html(BUTTON_LABEL)
           .insertBefore("input[name='search']")
 
   'www.humblebundle.com':
