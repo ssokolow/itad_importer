@@ -60,6 +60,12 @@ sHui2FHsBeyy/4gmSQGgJKWCeTNFVQJNN9yH2xJB+z3WZuf3kjDuD+B8I6wfIzAbpsLuCrg3QtsD
 9TAXJq8tOHYEl9+W0eHbEPaf06u/PvoWsXmuTNrdegwp1QJAVZICQMkf1qQG7Yh+Z60AAAAASUVO
 RK5CYII="""
 
+# Cache reused objects
+# Source: http://stackoverflow.com/a/196991
+underscore_re = /_/g
+word_re = /\b\w+/g
+titlecase_cb = (s) -> s.charAt(0).toUpperCase() + s.substr(1).toLowerCase()
+
 # Less overhead than instantiating a new jQuery object
 attr = (node, name) -> node.getAttribute(name)
 
@@ -212,10 +218,14 @@ scrapers =
       'game_list': ->
         if $('.shelf_container').length > 0
           { # The shelf view mode only sees game IDs and slugs easily
+            # ...but we need a title for unrecognized entries
             id: attr(x, 'data-gameid')
+            title: attr(x, 'data-gameindex')
+                      .replace(underscore_re, ' ')
+                      .replace(word_re, titlecase_cb)
             url: ('http://www.gog.com/en/game/' + attr(x, 'data-gameindex'))
             sources: ['gog']
-          } for x in $('.shelf_game')
+          } for x in $('#shelfGamesListAll .shelf_game:not(.empty)')
         else if $('.games_list').length > 0
           {
             id: $(x).closest('.game-item').attr('id').substring(8)

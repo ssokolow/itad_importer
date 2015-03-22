@@ -42,13 +42,21 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button;
+var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
 
 BUTTON_LABEL = "Export to ITAD";
 
 ITAD_12X12 = "data:image/png;base64,\niVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAZlBMVEUEbrIEbrIJcbQLcrQefboo\ng70rhb4thr8vh78zicA6jcNCksVLl8hWnctZn8xdoc1ipM9ipc9kptB5stZ6staCt9mHutqJu9ud\nxuGozeSrz+W72OrA2+zJ4O7U5vLX6PPn8fj3+vyC0mvkAAAAAXRSTlMAQObYZgAAAFdJREFUCB0F\nwYkCgUAABcA3CpElRyRH6/9/0kwCQALtZSwNglN9Pt5LR+jqGuelEaYbeBXh04P7KMwDeF6E8l1h\nW1vh8PsO/bWeiGPdl/kzdYjdBkACQP5LygQ7CM8T6wAAAABJRU5ErkJggg==";
 
 ITAD_14X14_GRAY = "data:image/png;base64,\niVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAMAAAAolt3jAAAAdVBMVEUEbrKTlaCTlZ+TlZ+UlqCY\nmaSYmqWcnqednqieoKmfoaugoqulprCvsLivsbiwsrmztLuztby2uL7BwsjDxcrExcvIyc7V1trW\n1trX2Nvn5+rp6evx8vP19fb39/j4+Pn5+fr7+/v7+/z8/Pz8/P39/f3///8J+FboAAAAJHRSTlMA\ny+rw8PHx8fHx8vLy9PT09PT19vf39/n5+fz8/f3+/v7+/v695LIzAAAAcUlEQVQIHQXBhwGCQAAE\nsHui2FHsBeyy/4gmSQGgJKWCeTNFVQJNN9yH2xJB+z3WZuf3kjDuD+B8I6wfIzAbpsLuCrg3QtsD\n9TAXJq8tOHYEl9+W0eHbEPaf06u/PvoWsXmuTNrdegwp1QJAVZICQMkf1qQG7Yh+Z60AAAAASUVO\nRK5CYII=";
+
+underscore_re = /_/g;
+
+word_re = /\b\w+/g;
+
+titlecase_cb = function(s) {
+  return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();
+};
 
 attr = function(node, name) {
   return node.getAttribute(name);
@@ -218,12 +226,13 @@ scrapers = {
       'game_list': function() {
         var x, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
         if ($('.shelf_container').length > 0) {
-          _ref = $('.shelf_game');
+          _ref = $('#shelfGamesListAll .shelf_game:not(.empty)');
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             x = _ref[_i];
             _results.push({
               id: attr(x, 'data-gameid'),
+              title: attr(x, 'data-gameindex').replace(underscore_re, ' ').replace(word_re, titlecase_cb),
               url: 'http://www.gog.com/en/game/' + attr(x, 'data-gameindex'),
               sources: ['gog']
             });
