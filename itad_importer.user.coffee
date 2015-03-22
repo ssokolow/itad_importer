@@ -241,7 +241,7 @@ scrapers =
           # button group because their style won't round both ends
           # of the same button
           $("<span class='list_btn'></span>")
-          .css({ float: 'right', borderRadius: '9px' })
+          .css({ float: 'right', borderRadius: '9px 0 0 9px' })
           .html(BUTTON_LABEL)
           # Prevent it from throwing off the other group
           .wrap('<span></span>')

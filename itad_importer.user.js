@@ -255,7 +255,7 @@ scrapers = {
         } else if ($('.games_list').length > 0) {
           return $("<span class='list_btn'></span>").css({
             float: 'right',
-            borderRadius: '9px'
+            borderRadius: '9px 0 0 9px'
           }).html(BUTTON_LABEL).wrap('<span></span>').appendTo('.list_header');
         }
       }
