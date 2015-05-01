@@ -287,7 +287,7 @@ scrapers =
                     .parents('.details').find('h3')
       'insert_button': ->
         $("<button></button>")
-          .css({ float: 'right' }).addClass('button btn btn-primary')
+          .css({ float: 'right' }).addClass('button btn btn-sm btn-primary')
           .html(BUTTON_LABEL + " (Selected Bundle)")
           .insertBefore("input[name='search']")
 

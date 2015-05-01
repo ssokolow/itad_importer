@@ -313,7 +313,7 @@ scrapers = {
       'insert_button': function() {
         return $("<button></button>").css({
           float: 'right'
-        }).addClass('button btn btn-primary').html(BUTTON_LABEL + " (Selected Bundle)").insertBefore("input[name='search']");
+        }).addClass('button btn btn-sm btn-primary').html(BUTTON_LABEL + " (Selected Bundle)").insertBefore("input[name='search']");
       }
     }
   },
