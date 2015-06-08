@@ -318,6 +318,49 @@ scrapers = {
     }
   },
   'www.humblebundle.com': {
+    'https://www\\.humblebundle\\.com/home/library/?': {
+      'source_id': 'humblestore',
+      'game_list': function() {
+        var x, _i, _len, _ref, _results;
+        _ref = $('.subproduct-selector h2');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push({
+            title: x.textContent.trim(),
+            sources: ['humblestore']
+          });
+        }
+        return _results;
+      },
+      'insert_button': function() {
+        var button, config, observer;
+        config = {
+          childList: true,
+          subtree: true
+        };
+        button = $('<button class="download-button"></button>').html(BUTTON_LABEL).css({
+          display: 'inline',
+          border: '1px solid #CCC',
+          background: '#F1F3F6',
+          padding: '5px 10px 5px 10px',
+          marginLeft: '10px'
+        });
+        observer = new MutationObserver(function(mutations) {
+          return mutations.forEach(function(mutation) {
+            var found, tnode_cls;
+            tnode_cls = mutation.target.getAttribute("class");
+            found = $(".top-controls", mutation.target);
+            if (found.length > 0) {
+              observer.disconnect();
+              return button.appendTo(found);
+            }
+          });
+        });
+        observer.observe(document.querySelector('.js-library-holder'), config);
+        return button;
+      }
+    },
     'https://www\\.humblebundle\\.com/home/?': {
       'source_id': 'humblestore',
       'game_list': humble_parse,

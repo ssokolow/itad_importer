@@ -656,6 +656,64 @@ anything better in GOG’s own styling.</p>
           .insertBefore(<span class="hljs-string">"input[name='search']"</span>)
 
   <span class="hljs-string">'www.humblebundle.com'</span>:
+    <span class="hljs-string">'https://www\\.humblebundle\\.com/home/library/?'</span>:
+      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
+        <span class="hljs-attribute">title</span>: x.textContent.trim(), <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'humblestore'</span>]
+      } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.subproduct-selector h2'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>TODO: Figure out how to filter out non-games again
+TODO: Figure out how to tap their Backbone.js store</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+        config = { <span class="hljs-attribute">childList</span>: <span class="hljs-literal">true</span>, <span class="hljs-attribute">subtree</span>: <span class="hljs-literal">true</span> }
+        button = $(<span class="hljs-string">'&lt;button class="download-button"&gt;&lt;/button&gt;'</span>)
+          .html(BUTTON_LABEL)
+          .css</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>I wish they wouldn’t make their CSS rules so specific</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-attribute">display</span>: <span class="hljs-string">'inline'</span>,
+            <span class="hljs-attribute">border</span>: <span class="hljs-string">'1px solid #CCC'</span>,
+            <span class="hljs-attribute">background</span>: <span class="hljs-string">'#F1F3F6'</span>,
+            <span class="hljs-attribute">padding</span>: <span class="hljs-string">'5px 10px 5px 10px'</span>,
+            <span class="hljs-attribute">marginLeft</span>: <span class="hljs-string">'10px'</span>,
+
+        observer = <span class="hljs-keyword">new</span> MutationObserver(<span class="hljs-function"><span class="hljs-params">(mutations)</span> -&gt;</span>
+          mutations.forEach(<span class="hljs-function"><span class="hljs-params">(mutation)</span> -&gt;</span>
+            tnode_cls = mutation.target.getAttribute(<span class="hljs-string">"class"</span>)
+            found = $(<span class="hljs-string">".top-controls"</span>, mutation.target)
+            <span class="hljs-keyword">if</span> found.length &gt; <span class="hljs-number">0</span>
+              observer.disconnect()
+              button.appendTo(found)
+          )
+        )
+        observer.observe(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.js-library-holder'</span>), config)
+        <span class="hljs-keyword">return</span> button
+
     <span class="hljs-string">'https://www\\.humblebundle\\.com/home/?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
       <span class="hljs-string">'game_list'</span>: humble_parse
@@ -689,11 +747,11 @@ anything better in GOG’s own styling.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><strong>Note:</strong> IGS game URLs change during promos and some IGS wallet
 entries may not have them (eg. entries just present to provide
@@ -716,11 +774,11 @@ a second steam key for some DLC from another entry)</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>This would look nicer if floated right in <code>.titles</code> but
 their button styles are scoped to <code>#game_wallet</code></p>
@@ -787,11 +845,11 @@ their button styles are scoped to <code>#game_wallet</code></p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Callback for the button</p>
 
@@ -811,11 +869,11 @@ their button styles are scoped to <code>#game_wallet</code></p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><strong>TODO:</strong> Figure out why attempting to use an iframe for non-HTTPS sites
 navigates the top-level window.</p>
@@ -828,11 +886,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Submit the form data</p>
 
@@ -851,11 +909,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
 
@@ -866,11 +924,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Resolve and call the correct profile</p>
 <p>It seems we don’t need an explicit <code>if location.host of scrapers</code>
@@ -893,11 +951,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Allow reloading the script without reloading the page for RAD</p>
 
@@ -908,11 +966,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Simplify the following code</p>
 
@@ -926,11 +984,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>We’ll need a closure to ensure click() calls the proper scraper</p>
 
@@ -941,11 +999,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Use the <code>?</code> existential operator to die quietly if the scraper
 doesn’t have an <code>insert_button</code> member.</p>
@@ -958,11 +1016,11 @@ doesn’t have an <code>insert_button</code> member.</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>We only ever want to match one profile so break here</p>
 

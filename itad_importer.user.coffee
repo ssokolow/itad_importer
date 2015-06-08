@@ -292,6 +292,38 @@ scrapers =
           .insertBefore("input[name='search']")
 
   'www.humblebundle.com':
+    'https://www\\.humblebundle\\.com/home/library/?':
+      'source_id': 'humblestore'
+      'game_list': -> {
+        title: x.textContent.trim(), sources: ['humblestore']
+      } for x in $('.subproduct-selector h2')
+      # TODO: Figure out how to filter out non-games again
+      # TODO: Figure out how to tap their Backbone.js store
+
+      'insert_button': ->
+        config = { childList: true, subtree: true }
+        button = $('<button class="download-button"></button>')
+          .html(BUTTON_LABEL)
+          .css
+            # I wish they wouldn't make their CSS rules so specific
+            display: 'inline',
+            border: '1px solid #CCC',
+            background: '#F1F3F6',
+            padding: '5px 10px 5px 10px',
+            marginLeft: '10px',
+
+        observer = new MutationObserver((mutations) ->
+          mutations.forEach((mutation) ->
+            tnode_cls = mutation.target.getAttribute("class")
+            found = $(".top-controls", mutation.target)
+            if found.length > 0
+              observer.disconnect()
+              button.appendTo(found)
+          )
+        )
+        observer.observe(document.querySelector('.js-library-holder'), config)
+        return button
+
     'https://www\\.humblebundle\\.com/home/?':
       'source_id': 'humblestore'
       'game_list': humble_parse
