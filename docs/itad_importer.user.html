@@ -476,169 +476,18 @@ I don’t have time.</p>
     <span class="hljs-string">'^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-        <span class="hljs-keyword">if</span> $(<span class="hljs-string">'.shelf_container'</span>).length &gt; <span class="hljs-number">0</span>
-          { <span class="hljs-comment"># The shelf view mode only sees game IDs and slugs easily</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>…but we need a title for unrecognized entries</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attribute">id</span>: attr(x, <span class="hljs-string">'data-gameid'</span>)
-            <span class="hljs-attribute">title</span>: attr(x, <span class="hljs-string">'data-gameindex'</span>)
-                      .replace(underscore_re, <span class="hljs-string">' '</span>)
-                      .replace(word_re, titlecase_cb)
-            <span class="hljs-attribute">url</span>: (<span class="hljs-string">'http://www.gog.com/en/game/'</span> + attr(x, <span class="hljs-string">'data-gameindex'</span>))
-            <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
-          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#shelfGamesListAll .shelf_game:not(.empty)'</span>)
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> $(<span class="hljs-string">'.games_list'</span>).length &gt; <span class="hljs-number">0</span>
-          {
-            <span class="hljs-attribute">id</span>: $(x).closest(<span class="hljs-string">'.game-item'</span>).attr(<span class="hljs-string">'id'</span>).substring(<span class="hljs-number">8</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>The list view mode only sees game titles easily</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attribute">title</span>: x.textContent.trim()
-            <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
-          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.game-title-link'</span>)
+        {
+          <span class="hljs-attribute">id</span>: attr(x, <span class="hljs-string">'gog-product'</span>)
+          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
+        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product-row'</span>)
 
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        <span class="hljs-keyword">if</span> $(<span class="hljs-string">'.shelf_container'</span>).length &gt; <span class="hljs-number">0</span>
-          $(<span class="hljs-string">"&lt;span class='shelf_btn'&gt;&lt;/button&gt;"</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Use GOG’s style but tweak it and force <em>both</em> ends round</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>          .css
-            <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
-            <span class="hljs-attribute">borderRadius</span>: <span class="hljs-string">'9px'</span>
-            <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0.7</span>
-            <span class="hljs-attribute">marginTop</span>: <span class="hljs-string">'15px'</span>
-            <span class="hljs-attribute">marginRight</span>: <span class="hljs-string">'-32px'</span>
-          .html(BUTTON_LABEL)
-          .prependTo($(<span class="hljs-string">'.shelf_header'</span>).filter(<span class="hljs-string">':first'</span>))
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> $(<span class="hljs-string">'.games_list'</span>).length &gt; <span class="hljs-number">0</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>Use GOG’s style class but force it to be its own tweaked
-button group because their style won’t round both ends
-of the same button</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>          $(<span class="hljs-string">"&lt;span class='list_btn'&gt;&lt;/span&gt;"</span>)
-          .css({ <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>, <span class="hljs-attribute">borderRadius</span>: <span class="hljs-string">'9px 0 0 9px'</span> })
-          .html(BUTTON_LABEL)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>Prevent it from throwing off the other group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>          .wrap(<span class="hljs-string">'&lt;span&gt;&lt;/span&gt;'</span>)
-          .appendTo(<span class="hljs-string">'.list_header'</span>)
-    <span class="hljs-string">'^https://www\\.gog\\.com/account/wishlist'</span>:
-      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-        {
-          <span class="hljs-attribute">id</span>: $(x).closest(<span class="hljs-string">'.game-item'</span>).attr(<span class="hljs-string">'id'</span>).substring(<span class="hljs-number">2</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>The list view mode only sees game titles easily</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-attribute">title</span>: x.textContent.trim()
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.game-title-link'</span>)
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>Borrow the styling from the games list since I couldn’t find
-anything better in GOG’s own styling.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">"&lt;span class='list_btn'&gt;&lt;/span&gt;"</span>)
-        .css({ <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>, <span class="hljs-attribute">borderRadius</span>: <span class="hljs-string">'9px'</span> })
-        .html(BUTTON_LABEL)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Prevent it from throwing off the other group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .wrap(<span class="hljs-string">'&lt;span&gt;&lt;/span&gt;'</span>)
-        .appendTo(<span class="hljs-string">'.wlist_header'</span>)
-      <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
+        $(<span class="hljs-string">"&lt;span&gt;&lt;/span&gt;"</span>)
+        .css
+          <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
+          <span class="hljs-attribute">cursor</span>: <span class="hljs-string">'pointer'</span>
+        .html(BUTTON_LABEL + <span class="hljs-string">" (This Page)"</span>)
+        .prependTo($(<span class="hljs-string">'.collection-header'</span>).filter(<span class="hljs-string">':first'</span>))
 
   <span class="hljs-string">'groupees.com'</span>:
     <span class="hljs-string">'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)'</span>:
@@ -665,11 +514,11 @@ anything better in GOG’s own styling.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>TODO: Figure out how to filter out non-games again
 TODO: Figure out how to tap their Backbone.js store</p>
@@ -686,11 +535,11 @@ TODO: Figure out how to tap their Backbone.js store</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>I wish they wouldn’t make their CSS rules so specific</p>
 
@@ -747,11 +596,11 @@ TODO: Figure out how to tap their Backbone.js store</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>Note:</strong> IGS game URLs change during promos and some IGS wallet
 entries may not have them (eg. entries just present to provide
@@ -774,11 +623,11 @@ a second steam key for some DLC from another entry)</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>This would look nicer if floated right in <code>.titles</code> but
 their button styles are scoped to <code>#game_wallet</code></p>
@@ -845,11 +694,11 @@ their button styles are scoped to <code>#game_wallet</code></p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Callback for the button</p>
 
@@ -869,11 +718,11 @@ their button styles are scoped to <code>#game_wallet</code></p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><strong>TODO:</strong> Figure out why attempting to use an iframe for non-HTTPS sites
 navigates the top-level window.</p>
@@ -886,11 +735,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Submit the form data</p>
 
@@ -909,11 +758,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
 
@@ -924,11 +773,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Resolve and call the correct profile</p>
 <p>It seems we don’t need an explicit <code>if location.host of scrapers</code>
@@ -951,11 +800,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Allow reloading the script without reloading the page for RAD</p>
 
@@ -966,11 +815,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Simplify the following code</p>
 
@@ -984,11 +833,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>We’ll need a closure to ensure click() calls the proper scraper</p>
 
@@ -999,11 +848,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Use the <code>?</code> existential operator to die quietly if the scraper
 doesn’t have an <code>insert_button</code> member.</p>
@@ -1016,11 +865,11 @@ doesn’t have an <code>insert_button</code> member.</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>We only ever want to match one profile so break here</p>
 

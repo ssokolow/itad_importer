@@ -216,65 +216,18 @@ scrapers =
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'
       'game_list': ->
-        if $('.shelf_container').length > 0
-          { # The shelf view mode only sees game IDs and slugs easily
-            # ...but we need a title for unrecognized entries
-            id: attr(x, 'data-gameid')
-            title: attr(x, 'data-gameindex')
-                      .replace(underscore_re, ' ')
-                      .replace(word_re, titlecase_cb)
-            url: ('http://www.gog.com/en/game/' + attr(x, 'data-gameindex'))
-            sources: ['gog']
-          } for x in $('#shelfGamesListAll .shelf_game:not(.empty)')
-        else if $('.games_list').length > 0
-          {
-            id: $(x).closest('.game-item').attr('id').substring(8)
-            # The list view mode only sees game titles easily
-            title: x.textContent.trim()
-            sources: ['gog']
-          } for x in $('.game-title-link')
+        {
+          id: attr(x, 'gog-product')
+          sources: ['gog']
+        } for x in $('.product-row')
 
       'insert_button': ->
-        if $('.shelf_container').length > 0
-          $("<span class='shelf_btn'></button>")
-          # Use GOG's style but tweak it and force *both* ends round
-          .css
-            float: 'right'
-            borderRadius: '9px'
-            opacity: 0.7
-            marginTop: '15px'
-            marginRight: '-32px'
-          .html(BUTTON_LABEL)
-          .prependTo($('.shelf_header').filter(':first'))
-        else if $('.games_list').length > 0
-          # Use GOG's style class but force it to be its own tweaked
-          # button group because their style won't round both ends
-          # of the same button
-          $("<span class='list_btn'></span>")
-          .css({ float: 'right', borderRadius: '9px 0 0 9px' })
-          .html(BUTTON_LABEL)
-          # Prevent it from throwing off the other group
-          .wrap('<span></span>')
-          .appendTo('.list_header')
-    '^https://www\\.gog\\.com/account/wishlist':
-      'source_id': 'gog'
-      'game_list': ->
-        {
-          id: $(x).closest('.game-item').attr('id').substring(2)
-          # The list view mode only sees game titles easily
-          title: x.textContent.trim()
-          sources: ['gog']
-        } for x in $('.game-title-link')
-      'insert_button': ->
-        # Borrow the styling from the games list since I couldn't find
-        # anything better in GOG's own styling.
-        $("<span class='list_btn'></span>")
-        .css({ float: 'right', borderRadius: '9px' })
-        .html(BUTTON_LABEL)
-        # Prevent it from throwing off the other group
-        .wrap('<span></span>')
-        .appendTo('.wlist_header')
-      'is_wishlist': true
+        $("<span></span>")
+        .css
+          float: 'right'
+          cursor: 'pointer'
+        .html(BUTTON_LABEL + " (This Page)")
+        .prependTo($('.collection-header').filter(':first'))
 
   'groupees.com':
     'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)':

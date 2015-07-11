@@ -224,74 +224,24 @@ scrapers = {
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)': {
       'source_id': 'gog',
       'game_list': function() {
-        var x, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
-        if ($('.shelf_container').length > 0) {
-          _ref = $('#shelfGamesListAll .shelf_game:not(.empty)');
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            x = _ref[_i];
-            _results.push({
-              id: attr(x, 'data-gameid'),
-              title: attr(x, 'data-gameindex').replace(underscore_re, ' ').replace(word_re, titlecase_cb),
-              url: 'http://www.gog.com/en/game/' + attr(x, 'data-gameindex'),
-              sources: ['gog']
-            });
-          }
-          return _results;
-        } else if ($('.games_list').length > 0) {
-          _ref1 = $('.game-title-link');
-          _results1 = [];
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            x = _ref1[_j];
-            _results1.push({
-              id: $(x).closest('.game-item').attr('id').substring(8),
-              title: x.textContent.trim(),
-              sources: ['gog']
-            });
-          }
-          return _results1;
-        }
-      },
-      'insert_button': function() {
-        if ($('.shelf_container').length > 0) {
-          return $("<span class='shelf_btn'></button>").css({
-            float: 'right',
-            borderRadius: '9px',
-            opacity: 0.7,
-            marginTop: '15px',
-            marginRight: '-32px'
-          }).html(BUTTON_LABEL).prependTo($('.shelf_header').filter(':first'));
-        } else if ($('.games_list').length > 0) {
-          return $("<span class='list_btn'></span>").css({
-            float: 'right',
-            borderRadius: '9px 0 0 9px'
-          }).html(BUTTON_LABEL).wrap('<span></span>').appendTo('.list_header');
-        }
-      }
-    },
-    '^https://www\\.gog\\.com/account/wishlist': {
-      'source_id': 'gog',
-      'game_list': function() {
         var x, _i, _len, _ref, _results;
-        _ref = $('.game-title-link');
+        _ref = $('.product-row');
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           x = _ref[_i];
           _results.push({
-            id: $(x).closest('.game-item').attr('id').substring(2),
-            title: x.textContent.trim(),
+            id: attr(x, 'gog-product'),
             sources: ['gog']
           });
         }
         return _results;
       },
       'insert_button': function() {
-        return $("<span class='list_btn'></span>").css({
+        return $("<span></span>").css({
           float: 'right',
-          borderRadius: '9px'
-        }).html(BUTTON_LABEL).wrap('<span></span>').appendTo('.wlist_header');
-      },
-      'is_wishlist': true
+          cursor: 'pointer'
+        }).html(BUTTON_LABEL + " (This Page)").prependTo($('.collection-header').filter(':first'));
+      }
     }
   },
   'groupees.com': {
