@@ -231,6 +231,7 @@ scrapers = {
           x = _ref[_i];
           _results.push({
             id: attr(x, 'gog-product'),
+            title: $('.product-title', x).text(),
             sources: ['gog']
           });
         }

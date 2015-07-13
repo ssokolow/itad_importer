@@ -478,6 +478,7 @@ I don’t have time.</p>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
         {
           <span class="hljs-attribute">id</span>: attr(x, <span class="hljs-string">'gog-product'</span>)
+          <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.product-title'</span>, x).text()
           <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product-row'</span>)
 

@@ -218,6 +218,7 @@ scrapers =
       'game_list': ->
         {
           id: attr(x, 'gog-product')
+          title: $('.product-title', x).text()
           sources: ['gog']
         } for x in $('.product-row')
 
