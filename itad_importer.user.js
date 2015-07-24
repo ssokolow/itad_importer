@@ -7,7 +7,7 @@ CoffeeScript source file available (and documented) at:
 
   https://github.com/ssokolow/itad_importer
 
-Copyright ©2014 Stephan Sokolow
+Copyright ©2014-2015 Stephan Sokolow
 License: MIT (http://opensource.org/licenses/MIT)
 
 TODO:
@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b8
+// @version 0.1b9
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
