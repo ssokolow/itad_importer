@@ -462,12 +462,15 @@ I don’t have time.</p>
   <span class="hljs-string">'www.gog.com'</span>:
     <span class="hljs-string">'^https://www\\.gog\\.com/order/status/.+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
-        <span class="hljs-attribute">title</span>: $(x).text().trim()
-        <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
-      } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.order__hero-unit ul.summary-list li'</span>)
+      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
+        <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"game_list called for GOG order status page"</span>)
+        {
+          <span class="hljs-attribute">title</span>: $(x).text().trim()
+          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
+        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.order__hero-unit ul.summary-list li'</span>)
 
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+        <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"insert_button called for GOG order status page"</span>)
         $(<span class="hljs-string">"&lt;a class='_dropdown__item ng-scope'&gt;&lt;/a&gt;"</span>)
           .html(<span class="hljs-string">"On ITAD"</span>)
           .prependTo($(<span class="hljs-string">'.order-message__actions ._dropdown__items'</span>)
@@ -476,6 +479,7 @@ I don’t have time.</p>
     <span class="hljs-string">'^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
+        <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"game_list called for GOG collection page"</span>)
         {
           <span class="hljs-attribute">id</span>: attr(x, <span class="hljs-string">'gog-product'</span>)
           <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.product-title'</span>, x).text()
@@ -483,6 +487,7 @@ I don’t have time.</p>
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product-row'</span>)
 
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+        <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"insert_button called for GOG collection page"</span>)
         $(<span class="hljs-string">"&lt;span&gt;&lt;/span&gt;"</span>)
         .css
           <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
@@ -860,7 +865,10 @@ doesn’t have an <code>insert_button</code> member.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            scraper.insert_button?().addClass(<span class="hljs-string">'itad_btn'</span>).click <span class="hljs-function">-&gt;</span>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Inserting ITAD button for source ID: "</span> +
+                        scraper.source_id)
+            scraper.insert_button?().addClass(<span class="hljs-string">'itad_btn'</span>).click <span class="hljs-function">-&gt;</span>
+              <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"ITAD button clicked"</span>)
               scrapeGames(scraper)</pre></div></div>
             
         </li>

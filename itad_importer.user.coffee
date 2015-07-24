@@ -202,12 +202,15 @@ scrapers =
   'www.gog.com':
     '^https://www\\.gog\\.com/order/status/.+':
       'source_id': 'gog'
-      'game_list': -> {
-        title: $(x).text().trim()
-        sources: ['gog']
-      } for x in $('.order__hero-unit ul.summary-list li')
+      'game_list': ->
+        console.debug("game_list called for GOG order status page")
+        {
+          title: $(x).text().trim()
+          sources: ['gog']
+        } for x in $('.order__hero-unit ul.summary-list li')
 
       'insert_button': ->
+        console.debug("insert_button called for GOG order status page")
         $("<a class='_dropdown__item ng-scope'></a>")
           .html("On ITAD")
           .prependTo($('.order-message__actions ._dropdown__items')
@@ -216,6 +219,7 @@ scrapers =
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'
       'game_list': ->
+        console.debug("game_list called for GOG collection page")
         {
           id: attr(x, 'gog-product')
           title: $('.product-title', x).text()
@@ -223,6 +227,7 @@ scrapers =
         } for x in $('.product-row')
 
       'insert_button': ->
+        console.debug("insert_button called for GOG collection page")
         $("<span></span>")
         .css
           float: 'right'
@@ -438,7 +443,10 @@ $ ->
           do (scraper) ->
             # Use the `?` existential operator to die quietly if the scraper
             # doesn't have an `insert_button` member.
+            console.log("Inserting ITAD button for source ID: " +
+                        scraper.source_id)
             scraper.insert_button?().addClass('itad_btn').click ->
+              console.log("ITAD button clicked")
               scrapeGames(scraper)
 
         # We only ever want to match one profile so break here

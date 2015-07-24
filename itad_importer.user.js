@@ -206,6 +206,7 @@ scrapers = {
       'source_id': 'gog',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
+        console.debug("game_list called for GOG order status page");
         _ref = $('.order__hero-unit ul.summary-list li');
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -218,6 +219,7 @@ scrapers = {
         return _results;
       },
       'insert_button': function() {
+        console.debug("insert_button called for GOG order status page");
         return $("<a class='_dropdown__item ng-scope'></a>").html("On ITAD").prependTo($('.order-message__actions ._dropdown__items').filter(':first'));
       }
     },
@@ -225,6 +227,7 @@ scrapers = {
       'source_id': 'gog',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
+        console.debug("game_list called for GOG collection page");
         _ref = $('.product-row');
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -238,6 +241,7 @@ scrapers = {
         return _results;
       },
       'insert_button': function() {
+        console.debug("insert_button called for GOG collection page");
         return $("<span></span>").css({
           float: 'right',
           cursor: 'pointer'
@@ -487,7 +491,9 @@ $(function() {
           profile = [profile];
         }
         _fn = function(scraper) {
+          console.log("Inserting ITAD button for source ID: " + scraper.source_id);
           return typeof scraper.insert_button === "function" ? scraper.insert_button().addClass('itad_btn').click(function() {
+            console.log("ITAD button clicked");
             return scrapeGames(scraper);
           }) : void 0;
         };
