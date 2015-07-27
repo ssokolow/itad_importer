@@ -557,16 +557,23 @@ TODO: Figure out how to tap their Backbone.js store</p>
             <span class="hljs-attribute">padding</span>: <span class="hljs-string">'5px 10px 5px 10px'</span>,
             <span class="hljs-attribute">marginLeft</span>: <span class="hljs-string">'10px'</span>,
 
-        observer = <span class="hljs-keyword">new</span> MutationObserver(<span class="hljs-function"><span class="hljs-params">(mutations)</span> -&gt;</span>
-          mutations.forEach(<span class="hljs-function"><span class="hljs-params">(mutation)</span> -&gt;</span>
-            tnode_cls = mutation.target.getAttribute(<span class="hljs-string">"class"</span>)
-            found = $(<span class="hljs-string">".top-controls"</span>, mutation.target)
-            <span class="hljs-keyword">if</span> found.length &gt; <span class="hljs-number">0</span>
-              observer.disconnect()
-              button.appendTo(found)
+        found_early = $(<span class="hljs-string">".top-controls"</span>)
+        <span class="hljs-keyword">if</span> found_early.length &gt; <span class="hljs-number">0</span>
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Inserting button immediately."</span>)
+          button.appendTo(found_early)
+        <span class="hljs-keyword">else</span>
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Using MutationObserver for deferred button insertion."</span>)
+          observer = <span class="hljs-keyword">new</span> MutationObserver(<span class="hljs-function"><span class="hljs-params">(mutations)</span> -&gt;</span>
+            mutations.forEach(<span class="hljs-function"><span class="hljs-params">(mutation)</span> -&gt;</span>
+              tnode_cls = mutation.target.getAttribute(<span class="hljs-string">"class"</span>)
+              found = $(<span class="hljs-string">".top-controls"</span>, mutation.target)
+              <span class="hljs-keyword">if</span> found.length &gt; <span class="hljs-number">0</span>
+                observer.disconnect()
+                button.appendTo(found)
+            )
           )
-        )
-        observer.observe(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.js-library-holder'</span>), config)
+          observer.observe(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.js-library-holder'</span>),
+                           config)
         <span class="hljs-keyword">return</span> button
 
     <span class="hljs-string">'https://www\\.humblebundle\\.com/home/?'</span>:

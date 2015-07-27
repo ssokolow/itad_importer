@@ -289,7 +289,7 @@ scrapers = {
         return _results;
       },
       'insert_button': function() {
-        var button, config, observer;
+        var button, config, found_early, observer;
         config = {
           childList: true,
           subtree: true
@@ -301,18 +301,25 @@ scrapers = {
           padding: '5px 10px 5px 10px',
           marginLeft: '10px'
         });
-        observer = new MutationObserver(function(mutations) {
-          return mutations.forEach(function(mutation) {
-            var found, tnode_cls;
-            tnode_cls = mutation.target.getAttribute("class");
-            found = $(".top-controls", mutation.target);
-            if (found.length > 0) {
-              observer.disconnect();
-              return button.appendTo(found);
-            }
+        found_early = $(".top-controls");
+        if (found_early.length > 0) {
+          console.log("Inserting button immediately.");
+          button.appendTo(found_early);
+        } else {
+          console.log("Using MutationObserver for deferred button insertion.");
+          observer = new MutationObserver(function(mutations) {
+            return mutations.forEach(function(mutation) {
+              var found, tnode_cls;
+              tnode_cls = mutation.target.getAttribute("class");
+              found = $(".top-controls", mutation.target);
+              if (found.length > 0) {
+                observer.disconnect();
+                return button.appendTo(found);
+              }
+            });
           });
-        });
-        observer.observe(document.querySelector('.js-library-holder'), config);
+          observer.observe(document.querySelector('.js-library-holder'), config);
+        }
         return button;
       }
     },

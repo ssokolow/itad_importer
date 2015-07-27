@@ -271,16 +271,23 @@ scrapers =
             padding: '5px 10px 5px 10px',
             marginLeft: '10px',
 
-        observer = new MutationObserver((mutations) ->
-          mutations.forEach((mutation) ->
-            tnode_cls = mutation.target.getAttribute("class")
-            found = $(".top-controls", mutation.target)
-            if found.length > 0
-              observer.disconnect()
-              button.appendTo(found)
+        found_early = $(".top-controls")
+        if found_early.length > 0
+          console.log("Inserting button immediately.")
+          button.appendTo(found_early)
+        else
+          console.log("Using MutationObserver for deferred button insertion.")
+          observer = new MutationObserver((mutations) ->
+            mutations.forEach((mutation) ->
+              tnode_cls = mutation.target.getAttribute("class")
+              found = $(".top-controls", mutation.target)
+              if found.length > 0
+                observer.disconnect()
+                button.appendTo(found)
+            )
           )
-        )
-        observer.observe(document.querySelector('.js-library-holder'), config)
+          observer.observe(document.querySelector('.js-library-holder'),
+                           config)
         return button
 
     'https://www\\.humblebundle\\.com/home/?':
