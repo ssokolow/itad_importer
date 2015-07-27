@@ -244,7 +244,10 @@ scrapers = {
         console.debug("insert_button called for GOG collection page");
         return $("<span></span>").css({
           float: 'right',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          position: 'relative',
+          marginBottom: '-2em',
+          zIndex: 999
         }).html(BUTTON_LABEL + " (This Page)").prependTo($('.collection-header').filter(':first'));
       }
     }

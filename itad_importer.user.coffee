@@ -232,6 +232,10 @@ scrapers =
         .css
           float: 'right'
           cursor: 'pointer'
+          # TODO: Replace the following hacks with whatever GOG uses
+          position: 'relative'
+          marginBottom: '-2em'
+          zIndex: 999
         .html(BUTTON_LABEL + " (This Page)")
         .prependTo($('.collection-header').filter(':first'))
 
