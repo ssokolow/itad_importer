@@ -247,7 +247,7 @@ scrapers = {
           cursor: 'pointer',
           position: 'relative',
           marginBottom: '-2em',
-          zIndex: 999
+          zIndex: 1
         }).html(BUTTON_LABEL + " (This Page)").prependTo($('.collection-header').filter(':first'));
       }
     }
