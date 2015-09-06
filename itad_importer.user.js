@@ -466,7 +466,7 @@ scrapeGames = function(scraper_obj) {
     json: JSON.stringify(scraper_obj.game_list()),
     source: scraper_obj.source_id
   };
-  url = scraper_obj.is_wishlist != null ? 'http://isthereanydeal.com/outside/user/wait/3rdparty' : 'http://isthereanydeal.com/outside/user/collection/3rdparty';
+  url = scraper_obj.is_wishlist != null ? 'https://isthereanydeal.com/outside/user/wait/3rdparty' : 'https://isthereanydeal.com/outside/user/collection/3rdparty';
   form = $("<form id='itad_submitter' method='POST' />").attr('action', url);
   params['returnTo'] = location.href;
   form.css({

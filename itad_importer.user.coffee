@@ -404,9 +404,9 @@ scrapeGames = (scraper_obj) ->
   }
 
   url = if scraper_obj.is_wishlist?
-    'http://isthereanydeal.com/outside/user/wait/3rdparty'
+    'https://isthereanydeal.com/outside/user/wait/3rdparty'
   else
-    'http://isthereanydeal.com/outside/user/collection/3rdparty'
+    'https://isthereanydeal.com/outside/user/collection/3rdparty'
 
   # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
   # navigates the top-level window.
