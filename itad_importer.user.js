@@ -42,7 +42,7 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
+var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -67,6 +67,13 @@ dotemu_add_button = function(parent_selector) {
     float: 'right',
     marginRight: '5px'
   }).appendTo(parent_selector);
+};
+
+gog_prepare_title = function(elem) {
+  var dom;
+  dom = $('.product-title', elem).clone();
+  $('._product-flag', dom).remove();
+  return dom.text();
 };
 
 humble_make_button = function() {
@@ -234,7 +241,7 @@ scrapers = {
           x = _ref[_i];
           _results.push({
             id: attr(x, 'gog-product'),
-            title: $('.product-title', x).text(),
+            title: gog_prepare_title(x),
             sources: ['gog']
           });
         }

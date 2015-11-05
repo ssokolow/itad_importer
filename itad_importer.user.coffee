@@ -77,6 +77,11 @@ dotemu_add_button = (parent_selector) ->
     marginRight: '5px'
   .appendTo(parent_selector)
 
+gog_prepare_title = (elem) ->
+  dom = $('.product-title', elem).clone()
+  $('._product-flag', dom).remove()
+  dom.text()
+
 humble_make_button = ->
   # Humble Library uses very weird button markup
   label = $('<span class="label"></span>').html(BUTTON_LABEL)
@@ -222,7 +227,7 @@ scrapers =
         console.debug("game_list called for GOG collection page")
         {
           id: attr(x, 'gog-product')
-          title: $('.product-title', x).text()
+          title: gog_prepare_title(x)
           sources: ['gog']
         } for x in $('.product-row')
 

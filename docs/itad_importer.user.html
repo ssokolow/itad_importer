@@ -170,6 +170,11 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
     <span class="hljs-attribute">marginRight</span>: <span class="hljs-string">'5px'</span>
   .appendTo(parent_selector)
 <span class="hljs-function">
+<span class="hljs-title">gog_prepare_title</span> = <span class="hljs-params">(elem)</span> -&gt;</span>
+  dom = $(<span class="hljs-string">'.product-title'</span>, elem).clone()
+  $(<span class="hljs-string">'._product-flag'</span>, dom).remove()
+  dom.text()
+<span class="hljs-function">
 <span class="hljs-title">humble_make_button</span> = -&gt;</span></pre></div></div>
             
         </li>
@@ -482,7 +487,7 @@ I don’t have time.</p>
         <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"game_list called for GOG collection page"</span>)
         {
           <span class="hljs-attribute">id</span>: attr(x, <span class="hljs-string">'gog-product'</span>)
-          <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.product-title'</span>, x).text()
+          <span class="hljs-attribute">title</span>: gog_prepare_title(x)
           <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product-row'</span>)
 
