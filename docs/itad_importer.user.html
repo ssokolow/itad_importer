@@ -49,7 +49,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b11
+// @version 0.1b12
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -60,6 +60,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
+// @match *://flyingbundle.com/users/account
 // @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
@@ -449,8 +450,8 @@ I don’t have time.</p>
           .appendTo($(<span class="hljs-string">'table.wl-actions-table tbody:first'</span>).find(<span class="hljs-string">'tr:last'</span>))
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
-  <span class="hljs-string">'www.flyingbundle.com'</span>:
-    <span class="hljs-string">'https?://www\\.flyingbundle\\.com/users/account'</span>:
+  <span class="hljs-string">'flyingbundle.com'</span>:
+    <span class="hljs-string">'https?://(www\\.)?flyingbundle\\.com/users/account'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'flying_bundle'</span>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
         <span class="hljs-attribute">title</span>: $(x).text()
@@ -726,7 +727,11 @@ their button styles are scoped to <code>#game_wallet</code></p>
           <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.gameName'</span>, x).text().trim()
         } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.gameItem'</span>)
       <span class="hljs-string">'insert_button'</span>: shinyloot_insert_button
-      <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span></pre></div></div>
+      <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
+
+scrapers[<span class="hljs-string">'www.flyingbundle.com'</span>] = scrapers[<span class="hljs-string">'flyingbundle.com'</span>]
+scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span class="hljs-string">'groupees.com'</span>]
+.</pre></div></div>
             
         </li>
         

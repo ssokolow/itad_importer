@@ -17,7 +17,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b11
+// @version 0.1b12
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -28,6 +28,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
+// @match *://flyingbundle.com/users/account
 // @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
@@ -189,8 +190,8 @@ scrapers =
           .appendTo($('table.wl-actions-table tbody:first').find('tr:last'))
       'is_wishlist': true
 
-  'www.flyingbundle.com':
-    'https?://www\\.flyingbundle\\.com/users/account':
+  'flyingbundle.com':
+    'https?://(www\\.)?flyingbundle\\.com/users/account':
       'source_id': 'flying_bundle'
       'game_list': -> {
         title: $(x).text()
@@ -403,6 +404,9 @@ scrapers =
       'insert_button': shinyloot_insert_button
       'is_wishlist': true
 
+scrapers['www.flyingbundle.com'] = scrapers['flyingbundle.com']
+scrapers['www.groupees.com'] = scrapers['groupees.com']
+.
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {

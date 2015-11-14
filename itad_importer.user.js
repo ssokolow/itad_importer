@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b11
+// @version 0.1b12
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -30,6 +30,7 @@ jQuery.
 //
 // @match *://www.dotemu.com/*
 // @match *://fireflowergames.com/my-lists/*
+// @match *://flyingbundle.com/users/account
 // @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
@@ -44,7 +45,7 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
+var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -187,8 +188,8 @@ scrapers = {
       'is_wishlist': true
     }
   },
-  'www.flyingbundle.com': {
-    'https?://www\\.flyingbundle\\.com/users/account': {
+  'flyingbundle.com': {
+    'https?://(www\\.)?flyingbundle\\.com/users/account': {
       'source_id': 'flying_bundle',
       'game_list': function() {
         var x, _i, _len, _ref, _results;
@@ -469,7 +470,9 @@ scrapers = {
   }
 };
 
-scrapeGames = function(scraper_obj) {
+scrapers['www.flyingbundle.com'] = scrapers['flyingbundle.com'];
+
+scrapers['www.groupees.com'] = scrapers['groupees.com'].scrapeGames = function(scraper_obj) {
   var form, params, url;
   params = {
     json: JSON.stringify(scraper_obj.game_list()),
