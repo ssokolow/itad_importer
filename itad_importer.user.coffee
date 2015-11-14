@@ -17,7 +17,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b12
+// @version 0.1b13
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -406,7 +406,7 @@ scrapers =
 
 scrapers['www.flyingbundle.com'] = scrapers['flyingbundle.com']
 scrapers['www.groupees.com'] = scrapers['groupees.com']
-.
+
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {

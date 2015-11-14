@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b12
+// @version 0.1b13
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -45,7 +45,7 @@ jQuery.
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
  */
-var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
+var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -472,7 +472,9 @@ scrapers = {
 
 scrapers['www.flyingbundle.com'] = scrapers['flyingbundle.com'];
 
-scrapers['www.groupees.com'] = scrapers['groupees.com'].scrapeGames = function(scraper_obj) {
+scrapers['www.groupees.com'] = scrapers['groupees.com'];
+
+scrapeGames = function(scraper_obj) {
   var form, params, url;
   params = {
     json: JSON.stringify(scraper_obj.game_list()),
