@@ -17,13 +17,12 @@ Currently supported vendors are:
 * [GOG.com](http://www.gog.com) (collection only. Wishlists supported by ITAD
   directly.)
 * [Groupees](http://groupees.com/) (direct downloads in bundles tab only)
-* [Humble Store](http://www.humblebundle.com) (Bug: Import via whole-collection
+* [Humble Store](http://www.humblebundle.com) ([Bug:](https://github.com/ssokolow/itad_importer/issues/14) Import via whole-collection
   view includes Steam-only purchases)
 * [IndieGameStand](http://www.indiegamestand.com)
 * [ShinyLoot](http://www.shinyloot.com)
 
-Pending a proper website, [screenshots](https://imgur.com/a/R7CwK) are available
-on imgur.
+See the [screenshot sheet](https://raw.githubusercontent.com/ssokolow/itad_importer/master/screenshots/1.png) for a reference as to where the added buttons should appear.
 
 ### Installation
 
@@ -34,7 +33,7 @@ on imgur.
 2. Restart Firefox
 3. Install the [userscript](https://greasyfork.org/en/scripts/13887-isthereanydeal-com-collection-importer)
 
-(Installation via GreasyFork is recommended to ensure automatic updates
+(Installation [via GreasyFork](https://greasyfork.org/en/scripts/13887-isthereanydeal-com-collection-importer) is recommended to ensure automatic updates
 function as reliably as possible.)
 
 ### Development
