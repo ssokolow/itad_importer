@@ -32,11 +32,10 @@ on imgur.
    ([Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
    in Chrome should also work but hasn't yet been tested)
 2. Restart Firefox
-3. Install the [userscript](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
+3. Install the [userscript](https://greasyfork.org/en/scripts/13887-isthereanydeal-com-collection-importer)
 
-(This script will be uploaded to userscript repositories like
-[Greasy Fork](https://greasyfork.org/) once it is reasonably apparent that
-rapid patching is no longer a concern.)
+(Installation via GreasyFork is recommended to ensure automatic updates
+function as reliably as possible.)
 
 ### Development
 
@@ -47,7 +46,7 @@ generated JavaScript may or may not be accepted at the developers' discretion.
 
 The official method for developing this script is as follows:
 
-1. Install the [release version](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
+1. Install the [release version](https://greasyfork.org/en/scripts/13887-isthereanydeal-com-collection-importer)
    of the script in Firefox
 2. Install [Node.js](http://nodejs.org/)
 3. Run `npm install`
@@ -69,7 +68,7 @@ can also be used:
   <kbd>Ctrl</kbd>+<kbd>A</kbd> followed by <kbd>Ctrl</kbd>+<kbd>C</kbd> to
   quickly copy everything.
  4. Install the
-  [release version](https://github.com/ssokolow/itad_importer/raw/master/itad_importer.user.js)
+  [release version](https://greasyfork.org/en/scripts/13887-isthereanydeal-com-collection-importer)
   of the script and use Greasemonkey's edit button to open up the version it's
   using so you can test changes simply by copying JS from "Try CoffeeScript" to
   the editor, saving, and reloading the page in the browser.
