@@ -219,6 +219,12 @@ scrapers =
 
       'insert_button': ->
         console.debug("insert_button called for GOG order status page")
+        $(".order-article__btn-pointer-wrapper .order-article__btn-pointer")
+          .css({
+            marginTop: -4,
+            zIndex: 20,
+          })
+        $('.order-article__dropdown-items').css('z-index', 10)
         $("<a class='_dropdown__item ng-scope'></a>")
           .html("On ITAD")
           .prependTo($('.order-message__actions ._dropdown__items')

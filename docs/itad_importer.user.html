@@ -479,6 +479,12 @@ I don’t have time.</p>
 
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
         <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"insert_button called for GOG order status page"</span>)
+        $(<span class="hljs-string">".order-article__btn-pointer-wrapper .order-article__btn-pointer"</span>)
+          .css({
+            <span class="hljs-attribute">marginTop</span>: -<span class="hljs-number">4</span>,
+            <span class="hljs-attribute">zIndex</span>: <span class="hljs-number">20</span>,
+          })
+        $(<span class="hljs-string">'.order-article__dropdown-items'</span>).css(<span class="hljs-string">'z-index'</span>, <span class="hljs-number">10</span>)
         $(<span class="hljs-string">"&lt;a class='_dropdown__item ng-scope'&gt;&lt;/a&gt;"</span>)
           .html(<span class="hljs-string">"On ITAD"</span>)
           .prependTo($(<span class="hljs-string">'.order-message__actions ._dropdown__items'</span>)
