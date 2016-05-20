@@ -19,7 +19,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b13
+// @version 0.1b14
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -217,12 +217,12 @@ scrapers = {
       'game_list': function() {
         var x, _i, _len, _ref, _results;
         console.debug("game_list called for GOG order status page");
-        _ref = $('.order__hero-unit ul.summary-list li');
+        _ref = $('.order + .container .product-row');
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           x = _ref[_i];
           _results.push({
-            title: $(x).text().trim(),
+            title: gog_prepare_title(x),
             sources: ['gog']
           });
         }

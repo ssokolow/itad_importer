@@ -49,7 +49,7 @@ jQuery.
 
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b13
+// @version 0.1b14
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -473,9 +473,9 @@ I don’t have time.</p>
       <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
         <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"game_list called for GOG order status page"</span>)
         {
-          <span class="hljs-attribute">title</span>: $(x).text().trim()
+          <span class="hljs-attribute">title</span>: gog_prepare_title(x)
           <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.order__hero-unit ul.summary-list li'</span>)
+        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.order + .container .product-row'</span>)
 
       <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
         <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"insert_button called for GOG order status page"</span>)
