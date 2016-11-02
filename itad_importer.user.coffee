@@ -1,20 +1,4 @@
 ### IsThereAnyDeal.com Collection Importer
-
-Any patches to this script should be made against the original
-CoffeeScript source file available (and documented) at:
-
-  https://github.com/ssokolow/itad_importer
-
-Copyright ©2014-2015 Stephan Sokolow
-License: MIT (http://opensource.org/licenses/MIT)
-
-TODO:
-- Add a `@downloadURL` for the script
-
-Note: While we do not use GM_info, we must request it to force the userscript
-to be isolated from the page so its jQuery doesn't collide with the site's
-jQuery.
-
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
 // @version 0.1b14
@@ -42,6 +26,23 @@ jQuery.
 // @match *://www.shinyloot.com/m/games*
 // @match *://www.shinyloot.com/m/wishlist*
 // ==/UserScript==
+
+Any patches to this script should be made against the original
+CoffeeScript source file available (and documented) at:
+
+  https://github.com/ssokolow/itad_importer
+
+Copyright ©2014-2015 Stephan Sokolow
+License: MIT (http://opensource.org/licenses/MIT)
+
+TODO:
+- Add a `@downloadURL` for the script
+
+Note: While we do not use GM_info, we must request it to force the userscript
+to be isolated from the page so its jQuery doesn't collide with the site's
+jQuery.
+
+
 ###
 
 # This string will be interpreted as raw HTML
