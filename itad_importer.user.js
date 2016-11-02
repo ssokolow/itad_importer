@@ -3,7 +3,7 @@
 /* IsThereAnyDeal.com Collection Importer
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b14
+// @version 0.1b15
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
