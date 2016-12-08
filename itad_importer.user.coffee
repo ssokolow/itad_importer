@@ -1,7 +1,7 @@
 ### IsThereAnyDeal.com Collection Importer
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b15
+// @version 0.1b16
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -16,7 +16,7 @@
 // @match *://www.flyingbundle.com/users/account
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
-// @match *://groupees.com/purchases
+// @match *://groupees.com/purchases*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
 // @match *://www.humblebundle.com/downloads?key=*
