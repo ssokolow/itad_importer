@@ -99,14 +99,15 @@ humble_make_button = ->
   .append(label)
   .append(a)
 
-humble_parse = -> { title: x.textContent.trim(), sources: ['humblestore']
-  } for x in $('div.row').has(
-  # Humble Library has no easy way to list only games
-  ' .downloads.windows .download,
-    .downloads.linux .download,
-    .downloads.mac .download,
-    .downloads.android .download'
-  ).find('div.title')
+humble_parse = (cb) ->
+  cb(({ title: x.textContent.trim(), sources: ['humblestore']
+    } for x in $('div.row')).has(
+    # Humble Library has no easy way to list only games
+    ' .downloads.windows .download,
+      .downloads.linux .download,
+      .downloads.mac .download,
+      .downloads.android .download'
+    ).find('div.title'))
 
 shinyloot_insert_button = ->
   $('<button></button>')
@@ -141,15 +142,15 @@ scrapers =
         # The store being imported from
         'source_id': 'dotemu'
         # Each scraper must have a `game_list` method which returns...
-        'game_list': ->
-          {
+        'game_list': (cb) ->
+          cb({
             # ...one or both of `title` and `url`
             title: attr(x, 'title')
             # We're guaranteed an absolute URL if we use the DOM href property
             url: x.href
             # The stores which should be added to the user's "owned on" list
             sources: ['dotemu']
-          } for x in $('div.my-games div.field-title a')
+          } for x in $('div.my-games div.field-title a'))
 
         # Each scraper must have an `insert_button` member which adds
         # a button to the DOM using `BUTTON_LABEL` and then returns
@@ -157,12 +158,12 @@ scrapers =
         'insert_button': -> dotemu_add_button('div.my-games h2.pane-title')
       ,
         'source_id': 'dotemu'
-        'game_list': ->
-          {
+        'game_list': (cb) ->
+          cb({
             title: attr(x, 'title')
             url: x.href
             sources: ['dotemu']
-          } for x in $('div.user-wishlist .views-field-title-1 a')
+          } for x in $('div.user-wishlist .views-field-title-1 a'))
         'insert_button': -> dotemu_add_button('.user-wishlist h2.pane-title')
         'is_wishlist': true
       ]
@@ -170,18 +171,18 @@ scrapers =
   'fireflowergames.com':
     '^http://fireflowergames\\.com/my-lists/(edit-my|view-a)-list/\\?.+':
       'source_id': 'fireflower'
-      'game_list': ->
+      'game_list': (cb) ->
         results = $('table.wl-table tbody td.check-column input:checked')
           .parents('tr').find('td.product-name a')
 
         if (!results.length)
           results = $('table.wl-table td.product-name a')
 
-        {
+        cb({
           title: $(x).text().trim()
           url: x.href
           sources: ['fireflower']
-        } for x in results
+        } for x in results)
       'insert_button': ->
         # XXX: If you can debug the broken behaviour with <button>, please do.
         # I don't have time.
@@ -194,11 +195,11 @@ scrapers =
   'flyingbundle.com':
     'https?://(www\\.)?flyingbundle\\.com/users/account':
       'source_id': 'flying_bundle'
-      'game_list': -> {
+      'game_list': (cb) -> cb({
         title: $(x).text()
         sources: 'flying_bundle'
       } for x in $(".div_btn_download[href^='/users/sources']"
-      ).parents('li').find(':first')
+      ).parents('li').find(':first'))
       'insert_button': ->
         li = $("<li></li>"
         ).appendTo('.legenda_points ul')
@@ -211,12 +212,12 @@ scrapers =
   'www.gog.com':
     '^https://www\\.gog\\.com/order/status/.+':
       'source_id': 'gog'
-      'game_list': ->
+      'game_list': (cb) ->
         console.debug("game_list called for GOG order status page")
-        {
+        cb({
           title: gog_prepare_title(x)
           sources: ['gog']
-        } for x in $('.order + .container .product-row')
+        } for x in $('.order + .container .product-row'))
 
       'insert_button': ->
         console.debug("insert_button called for GOG order status page")
@@ -233,13 +234,13 @@ scrapers =
 
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'
-      'game_list': ->
+      'game_list': (cb) ->
         console.debug("game_list called for GOG collection page")
-        {
+        cb({
           id: attr(x, 'gog-product')
           title: gog_prepare_title(x)
           sources: ['gog']
-        } for x in $('.product-row')
+        } for x in $('.product-row'))
 
       'insert_button': ->
         console.debug("insert_button called for GOG collection page")
@@ -257,12 +258,12 @@ scrapers =
   'groupees.com':
     'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)':
       'source_id': 'other'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           title: x.textContent.trim(),
           sources: ['other']
         } for x in $('.product ul.dropdown-menu')
-                    .parents('.details').find('h3')
+                    .parents('.details').find('h3'))
       'insert_button': ->
         $("<button></button>")
           .css({ float: 'right' }).addClass('button btn btn-sm btn-primary')
@@ -272,9 +273,9 @@ scrapers =
   'www.humblebundle.com':
     'https://www\\.humblebundle\\.com/home/library/?':
       'source_id': 'humblestore'
-      'game_list': -> {
+      'game_list': (cb) -> cb({
         title: x.textContent.trim(), sources: ['humblestore']
-      } for x in $('.subproduct-selector h2')
+      } for x in $('.subproduct-selector h2'))
       # TODO: Figure out how to filter out non-games again
       # TODO: Figure out how to tap their Backbone.js store
 
@@ -336,15 +337,15 @@ scrapers =
   'indiegamestand.com':
     'https://indiegamestand\\.com/wallet\\.php':
       'source_id': 'indiegamestand'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           # **Note:** IGS game URLs change during promos and some IGS wallet
           # entries may not have them (eg. entries just present to provide
           # a second steam key for some DLC from another entry)
           url: $('.game-thumb', x)?.closest('a')?[0]?.href
           title: $('.game-title', x).text().trim()
           sources: ['indiegamestand']
-        } for x in $('#wallet_contents .line-item')
+        } for x in $('#wallet_contents .line-item'))
 
       'insert_button': ->
         $('<div class="request key"></div>')
@@ -357,12 +358,12 @@ scrapers =
         .appendTo('#game_wallet h2')
     'https://indiegamestand\\.com/wishlist\\.php':
       'source_id': 'indiegamestand'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           url: $('.game-thumb', x)?.closest('a')?[0]?.href
           title: $('.game_details h3', x).text().trim()
           sources: ['indiegamestand']
-        } for x in $('#store_browse_game_list .game_list_item')
+        } for x in $('#store_browse_game_list .game_list_item'))
       'is_wishlist': true
 
       'insert_button': ->
@@ -394,20 +395,20 @@ scrapers =
   'www.shinyloot.com':
     'https?://www\\.shinyloot\\.com/m/games/?':
       'source_id': 'shinyloot'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           url: $('.right-float a img', x).closest('a')[0].href
           title: $(x).prev('h3').text().trim()
           sources: ['shinyloot']
-        } for x in $('#accordion .ui-widget-content')
+        } for x in $('#accordion .ui-widget-content'))
       'insert_button': shinyloot_insert_button
     'https?://www\\.shinyloot\\.com/m/wishlist/?':
       'source_id': 'shinyloot'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           url: $('.gameInfo + a', x)[0].href
           title: $('.gameName', x).text().trim()
-        } for x in $('.gameItem')
+        } for x in $('.gameItem'))
       'insert_button': shinyloot_insert_button
       'is_wishlist': true
 
@@ -416,31 +417,37 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 
 # Callback for the button
 scrapeGames = (scraper_obj) ->
-  params = {
-    json: JSON.stringify(scraper_obj.game_list()),
-    source: scraper_obj.source_id
-  }
+  
+  scraper_obj.game_list( (game_list) ->
 
-  url = if scraper_obj.is_wishlist?
-    'https://isthereanydeal.com/outside/user/wait/3rdparty'
-  else
-    'https://isthereanydeal.com/outside/user/collection/3rdparty'
+    params = {
+      json: JSON.stringify(game_list),
+      source: scraper_obj.source_id
+    }
 
-  # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
-  # navigates the top-level window.
-  form = $("<form id='itad_submitter' method='POST' />").attr('action', url)
-  params['returnTo'] = location.href
+    url = if scraper_obj.is_wishlist?
+      'https://isthereanydeal.com/outside/user/wait/3rdparty'
+    else
+      'https://isthereanydeal.com/outside/user/collection/3rdparty'
+  
+    # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
+    # navigates the top-level window.
+    form = $("<form id='itad_submitter' method='POST' />").attr('action', url)
+    params['returnTo'] = location.href
+  
+    # Submit the form data
+    form.css({ display: 'none' })
+    $.each params, (key, value) ->
+      $("<input type='hidden' />")
+        .attr("name", key)
+        .attr("value", value)
+        .appendTo(form)
+    $(document.body).append(form)
+  
+    form.submit()
+  )
+  
 
-  # Submit the form data
-  form.css({ display: 'none' })
-  $.each params, (key, value) ->
-    $("<input type='hidden' />")
-      .attr("name", key)
-      .attr("value", value)
-      .appendTo(form)
-  $(document.body).append(form)
-
-  form.submit()
 
 # CoffeeScript shorthand for `$(document).ready(function() {`
 $ ->
