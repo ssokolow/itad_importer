@@ -44,7 +44,8 @@ Note: While we do not use GM_info, we must request it to force the userscript
 to be isolated from the page so its jQuery doesn't collide with the site's
 jQuery.
  */
-var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re;
+var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse_single, humble_read_library, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 BUTTON_LABEL = "Export to ITAD";
 
@@ -85,7 +86,7 @@ humble_make_button = function() {
   return button = $('<div class="flexbtn active noicon"></div>').append('<div class="right"></div>').append(label).append(a);
 };
 
-humble_parse = function(cb) {
+humble_parse_single = function(cb) {
   var x;
   return cb(((function() {
     var i, len, ref, results1;
@@ -100,6 +101,115 @@ humble_parse = function(cb) {
     }
     return results1;
   })()).has(' .downloads.windows .download, .downloads.linux .download, .downloads.mac .download, .downloads.android .download').find('div.title'));
+};
+
+
+/*
+ * Use website's model objects to collect and process game data.
+ *
+ *  Because the actual data isn't easily accessible, this creates
+ *  a new instance of the model object, and probably re-downloads
+ *  all the game information, so should only be run when the import
+ *  button is pressed, to prevent slowdowns of the website.
+ */
+
+humble_read_library = function(cb) {
+  return requirejs(['downloadPages/orderCollection'], function(OrderCollection) {
+    var addItem, g, hasApp, items, list, name, orderList, orderModels, processOrder, srcs;
+    orderList = (function() {
+      var i, len, results1;
+      results1 = [];
+      for (i = 0, len = gamekeys.length; i < len; i++) {
+        g = gamekeys[i];
+        results1.push({
+          gamekey: g
+        });
+      }
+      return results1;
+    })();
+    orderModels = new OrderCollection(orderList);
+    items = {};
+    hasApp = function(subProduct) {
+      var download, i, len, ref, ref1;
+      ref = subProduct.downloads;
+      for (i = 0, len = ref.length; i < len; i++) {
+        download = ref[i];
+        if ((ref1 = download.platform) === 'windows' || ref1 === 'mac' || ref1 === 'linux') {
+          return true;
+        }
+      }
+      return false;
+    };
+    addItem = function(name, source) {
+      var sources;
+      if (name in items) {
+        sources = items[name];
+        if (!(indexOf.call(sources, source) >= 0)) {
+          return sources.push(source);
+        }
+      } else {
+        return items[name] = [source];
+      }
+    };
+    processOrder = function(orderModel) {
+      var i, j, keyType, len, len1, ref, ref1, subProduct, subProductHumanName, subProductLFN, tpkHumanName, tpkLFN, tpkLFNAttr, tpkModel;
+      ref = orderModel.getSubProducts();
+      for (i = 0, len = ref.length; i < len; i++) {
+        subProduct = ref[i];
+        subProductHumanName = subProduct.human_name;
+        if (subProduct.library_family_name) {
+          subProductLFN = subProduct.library_family_name;
+        } else {
+          subProductLFN = "";
+        }
+        if (subProductLFN === 'hidden') {
+          return;
+        }
+        if (hasApp(subProduct)) {
+          addItem(subProductHumanName, 'humblestore');
+        }
+      }
+      ref1 = orderModel.getTpkModels();
+      for (j = 0, len1 = ref1.length; j < len1; j++) {
+        tpkModel = ref1[j];
+        tpkLFNAttr = tpkModel.get('library_family_name');
+        tpkLFN = tpkLFNAttr ? tpkLFNAttr : "";
+        keyType = tpkModel.get('key_type');
+        tpkHumanName = tpkModel.get('human_name');
+        if (!tpkHumanName) {
+          tpkHumanName = orderModel.getProduct().human_name;
+        }
+        if (tpkLFN === 'hidden') {
+          return;
+        }
+        addItem(tpkHumanName, keyType);
+      }
+    };
+    orderModels.forEach(function(orderModel) {
+      if (orderModel.loaded) {
+        return processOrder(orderModel);
+      } else {
+        return orderModel.fetch({
+          success: function(fetched) {
+            return processOrder(orderModel);
+          }
+        });
+      }
+    });
+    list = (function() {
+      var results1;
+      results1 = [];
+      for (name in items) {
+        srcs = items[name];
+        results1.push({
+          title: name,
+          sources: srcs
+        });
+      }
+      return results1;
+    })();
+    return cb(list);
+  });
 };
 
 shinyloot_insert_button = function() {
@@ -369,7 +479,7 @@ scrapers = {
     },
     'https://www\\.humblebundle\\.com/home/?': {
       'source_id': 'humblestore',
-      'game_list': humble_parse,
+      'game_list': humble_read_library,
       'insert_button': function() {
         return humble_make_button().css({
           float: 'right',
@@ -380,7 +490,7 @@ scrapers = {
     },
     'https://www\\.humblebundle\\.com/(download)?s\\?key=.+': {
       'source_id': 'humblestore',
-      'game_list': humble_parse,
+      'game_list': humble_parse_single,
       'insert_button': function() {
         var parent;
         parent = $('.js-gamelist-holder').parents('.whitebox');

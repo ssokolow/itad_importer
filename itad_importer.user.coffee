@@ -99,7 +99,7 @@ humble_make_button = ->
   .append(label)
   .append(a)
 
-humble_parse = (cb) ->
+humble_parse_single = (cb) ->
   cb(({ title: x.textContent.trim(), sources: ['humblestore']
     } for x in $('div.row')).has(
     # Humble Library has no easy way to list only games
@@ -108,6 +108,87 @@ humble_parse = (cb) ->
       .downloads.mac .download,
       .downloads.android .download'
     ).find('div.title'))
+
+###
+# Use website's model objects to collect and process game data.
+#
+#  Because the actual data isn't easily accessible, this creates
+#  a new instance of the model object, and probably re-downloads
+#  all the game information, so should only be run when the import
+#  button is pressed, to prevent slowdowns of the website.
+###
+humble_read_library = (cb) ->
+  requirejs(['downloadPages/orderCollection'],
+    (OrderCollection) ->
+      orderList = ({gamekey: g} for g in gamekeys)
+      orderModels = new OrderCollection(orderList)
+
+      items = {}
+
+      hasApp = (subProduct) ->
+        for download in subProduct.downloads
+          if download.platform in ['windows', 'mac', 'linux']
+            return true
+        return false
+
+      addItem = (name, source) ->
+        if name of items
+          sources = items[name]
+          if !(source in sources)
+            sources.push(source)
+        else
+          items[name] = [source]
+
+
+      processOrder = (orderModel) ->
+        for subProduct in orderModel.getSubProducts()
+          subProductHumanName = subProduct.human_name
+          if subProduct.library_family_name
+            subProductLFN =  subProduct.library_family_name
+          else
+            subProductLFN = ""
+          if subProductLFN == 'hidden'
+            return
+          
+          #Direct downloads are marked as 'Humble Store' copies
+          if (hasApp(subProduct))
+            addItem(subProductHumanName, 'humblestore')
+
+
+        # 3rd party keys, try to use the origin of the key
+        # *TODO* try to mark keys as 'extra' when not redeemed
+        for tpkModel in orderModel.getTpkModels()
+          tpkLFNAttr = tpkModel.get('library_family_name')
+          tpkLFN =
+          if tpkLFNAttr
+            tpkLFNAttr
+          else
+            ""
+          keyType = tpkModel.get('key_type')
+          tpkHumanName = tpkModel.get('human_name')
+          if (!tpkHumanName)
+            tpkHumanName = orderModel.getProduct().human_name
+          if(tpkLFN == 'hidden')
+            return
+
+          addItem(tpkHumanName, keyType)
+
+
+      orderModels.forEach( (orderModel) ->
+        if (orderModel.loaded)
+          processOrder(orderModel)
+        else
+          orderModel.fetch({
+            success: (fetched) ->
+              processOrder(orderModel)
+            }))
+
+      list = ({title: name, sources: srcs} for name,srcs of items)
+      cb(list)
+  )
+
+
+
 
 shinyloot_insert_button = ->
   $('<button></button>')
@@ -312,7 +393,7 @@ scrapers =
 
     'https://www\\.humblebundle\\.com/home/?':
       'source_id': 'humblestore'
-      'game_list': humble_parse
+      'game_list': humble_read_library
       'insert_button': ->
         humble_make_button().css
           float: 'right',
@@ -322,7 +403,7 @@ scrapers =
 
     'https://www\\.humblebundle\\.com/(download)?s\\?key=.+':
       'source_id': 'humblestore'
-      'game_list': humble_parse
+      'game_list': humble_parse_single
       'insert_button': ->
         parent = $('.js-gamelist-holder').parents('.whitebox')
         parent.find('.staple.s4').remove()

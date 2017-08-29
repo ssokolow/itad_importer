@@ -216,7 +216,7 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
   .append(label)
   .append(a)
 <span class="hljs-function">
-<span class="hljs-title">humble_parse</span> = <span class="hljs-params">(cb)</span> -&gt;</span>
+<span class="hljs-title">humble_parse_single</span> = <span class="hljs-params">(cb)</span> -&gt;</span>
   cb(({ title: x.textContent.trim(), sources: [<span class="hljs-string">'humblestore'</span>]
     } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.row'</span>)).has(</pre></div></div>
             
@@ -237,11 +237,7 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
       .downloads.linux .download,
       .downloads.mac .download,
       .downloads.android .download'</span>
-    ).find(<span class="hljs-string">'div.title'</span>))
-<span class="hljs-function">
-<span class="hljs-title">shinyloot_insert_button</span> = -&gt;</span>
-  $(<span class="hljs-string">'&lt;button&gt;&lt;/button&gt;'</span>)
-  .html(BUTTON_LABEL).css</pre></div></div>
+    ).find(<span class="hljs-string">'div.title'</span>))</pre></div></div>
             
         </li>
         
@@ -251,6 +247,125 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>##
+Use website’s model objects to collect and process game data.</p>
+<p> Because the actual data isn’t easily accessible, this creates
+ a new instance of the model object, and probably re-downloads
+ all the game information, so should only be run when the import
+ button is pressed, to prevent slowdowns of the website.</p>
+<p>##</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">humble_read_library</span> = <span class="hljs-params">(cb)</span> -&gt;</span>
+  requirejs([<span class="hljs-string">'downloadPages/orderCollection'</span>],
+    <span class="hljs-function"><span class="hljs-params">(OrderCollection)</span> -&gt;</span>
+      orderList = ({gamekey: g} <span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> gamekeys)
+      orderModels = <span class="hljs-keyword">new</span> OrderCollection(orderList)
+
+      items = {}
+<span class="hljs-function">
+      <span class="hljs-title">hasApp</span> = <span class="hljs-params">(subProduct)</span> -&gt;</span>
+        <span class="hljs-keyword">for</span> download <span class="hljs-keyword">in</span> subProduct.downloads
+          <span class="hljs-keyword">if</span> download.platform <span class="hljs-keyword">in</span> [<span class="hljs-string">'windows'</span>, <span class="hljs-string">'mac'</span>, <span class="hljs-string">'linux'</span>]
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+<span class="hljs-function">
+      <span class="hljs-title">addItem</span> = <span class="hljs-params">(name, source)</span> -&gt;</span>
+        <span class="hljs-keyword">if</span> name <span class="hljs-keyword">of</span> items
+          sources = items[name]
+          <span class="hljs-keyword">if</span> !(source <span class="hljs-keyword">in</span> sources)
+            sources.push(source)
+        <span class="hljs-keyword">else</span>
+          items[name] = [source]
+<span class="hljs-function">
+
+      <span class="hljs-title">processOrder</span> = <span class="hljs-params">(orderModel)</span> -&gt;</span>
+        <span class="hljs-keyword">for</span> subProduct <span class="hljs-keyword">in</span> orderModel.getSubProducts()
+          subProductHumanName = subProduct.human_name
+          <span class="hljs-keyword">if</span> subProduct.library_family_name
+            subProductLFN =  subProduct.library_family_name
+          <span class="hljs-keyword">else</span>
+            subProductLFN = <span class="hljs-string">""</span>
+          <span class="hljs-keyword">if</span> subProductLFN == <span class="hljs-string">'hidden'</span>
+            <span class="hljs-keyword">return</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Direct downloads are marked as ‘Humble Store’ copies</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (hasApp(subProduct))
+            addItem(subProductHumanName, <span class="hljs-string">'humblestore'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>3rd party keys, try to use the origin of the key
+<em>TODO</em> try to mark keys as ‘extra’ when not redeemed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">for</span> tpkModel <span class="hljs-keyword">in</span> orderModel.getTpkModels()
+          tpkLFNAttr = tpkModel.get(<span class="hljs-string">'library_family_name'</span>)
+          tpkLFN =
+          <span class="hljs-keyword">if</span> tpkLFNAttr
+            tpkLFNAttr
+          <span class="hljs-keyword">else</span>
+            <span class="hljs-string">""</span>
+          keyType = tpkModel.get(<span class="hljs-string">'key_type'</span>)
+          tpkHumanName = tpkModel.get(<span class="hljs-string">'human_name'</span>)
+          <span class="hljs-keyword">if</span> (!tpkHumanName)
+            tpkHumanName = orderModel.getProduct().human_name
+          <span class="hljs-keyword">if</span>(tpkLFN == <span class="hljs-string">'hidden'</span>)
+            <span class="hljs-keyword">return</span>
+
+          addItem(tpkHumanName, keyType)
+
+
+      orderModels.forEach( <span class="hljs-function"><span class="hljs-params">(orderModel)</span> -&gt;</span>
+        <span class="hljs-keyword">if</span> (orderModel.loaded)
+          processOrder(orderModel)
+        <span class="hljs-keyword">else</span>
+          orderModel.fetch({
+            success: <span class="hljs-function"><span class="hljs-params">(fetched)</span> -&gt;</span>
+              processOrder(orderModel)
+            }))
+
+      list = ({title: name, sources: srcs} <span class="hljs-keyword">for</span> name,srcs <span class="hljs-keyword">of</span> items)
+      cb(list)
+  )
+<span class="hljs-function">
+
+
+
+<span class="hljs-title">shinyloot_insert_button</span> = -&gt;</span>
+  $(<span class="hljs-string">'&lt;button&gt;&lt;/button&gt;'</span>)
+  .html(BUTTON_LABEL).css</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>ShinyLoot’s buttons are a chimeric grab-bag and
 the nicest looking ones have site-provided CSS
@@ -276,11 +391,11 @@ that’s tied to markup using <code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Scrapers are looked up first by domain (lightweight) and then by
 a regex check on the URL (accurate).
@@ -296,11 +411,11 @@ Greasemonkey <code>@include</code> lines.</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Each profile can be an object or a list of objects</p>
 
@@ -311,11 +426,11 @@ Greasemonkey <code>@include</code> lines.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>The store being imported from</p>
 
@@ -326,11 +441,11 @@ Greasemonkey <code>@include</code> lines.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Each scraper must have a <code>game_list</code> method which returns…</p>
 
@@ -342,11 +457,11 @@ Greasemonkey <code>@include</code> lines.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>…one or both of <code>title</code> and <code>url</code></p>
 
@@ -357,11 +472,11 @@ Greasemonkey <code>@include</code> lines.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>We’re guaranteed an absolute URL if we use the DOM href property</p>
 
@@ -372,11 +487,11 @@ Greasemonkey <code>@include</code> lines.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>The stores which should be added to the user’s “owned on” list</p>
 
@@ -388,11 +503,11 @@ Greasemonkey <code>@include</code> lines.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Each scraper must have an <code>insert_button</code> member which adds
 a button to the DOM using <code>BUTTON_LABEL</code> and then returns
@@ -433,11 +548,11 @@ a jQuery wrapper so the click handler can be bound.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>XXX: If you can debug the broken behaviour with <button>, please do.
 I don’t have time.</p>
@@ -510,11 +625,11 @@ I don’t have time.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>TODO: Replace the following hacks with whatever GOG uses</p>
 
@@ -551,11 +666,11 @@ I don’t have time.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>TODO: Figure out how to filter out non-games again
 TODO: Figure out how to tap their Backbone.js store</p>
@@ -572,11 +687,11 @@ TODO: Figure out how to tap their Backbone.js store</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>I wish they wouldn’t make their CSS rules so specific</p>
 
@@ -609,7 +724,7 @@ TODO: Figure out how to tap their Backbone.js store</p>
 
     <span class="hljs-string">'https://www\\.humblebundle\\.com/home/?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
-      <span class="hljs-string">'game_list'</span>: humble_parse
+      <span class="hljs-string">'game_list'</span>: humble_read_library
       <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
         humble_make_button().css
           float: <span class="hljs-string">'right'</span>,
@@ -619,7 +734,7 @@ TODO: Figure out how to tap their Backbone.js store</p>
 
     <span class="hljs-string">'https://www\\.humblebundle\\.com/(download)?s\\?key=.+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
-      <span class="hljs-string">'game_list'</span>: humble_parse
+      <span class="hljs-string">'game_list'</span>: humble_parse_single
       <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
         parent = $(<span class="hljs-string">'.js-gamelist-holder'</span>).parents(<span class="hljs-string">'.whitebox'</span>)
         parent.find(<span class="hljs-string">'.staple.s4'</span>).remove()
@@ -640,11 +755,11 @@ TODO: Figure out how to tap their Backbone.js store</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><strong>Note:</strong> IGS game URLs change during promos and some IGS wallet
 entries may not have them (eg. entries just present to provide
@@ -667,11 +782,11 @@ a second steam key for some DLC from another entry)</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>This would look nicer if floated right in <code>.titles</code> but
 their button styles are scoped to <code>#game_wallet</code></p>
@@ -741,11 +856,11 @@ scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span c
         </li>
         
         
-        <li id="section-25">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Callback for the button</p>
 
@@ -768,11 +883,11 @@ scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span c
         </li>
         
         
-        <li id="section-26">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><strong>TODO:</strong> Figure out why attempting to use an iframe for non-HTTPS sites
 navigates the top-level window.</p>
@@ -785,11 +900,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Submit the form data</p>
 
@@ -809,11 +924,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
 
@@ -824,11 +939,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Resolve and call the correct profile</p>
 <p>It seems we don’t need an explicit <code>if location.host of scrapers</code>
@@ -851,11 +966,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Allow reloading the script without reloading the page for RAD</p>
 
@@ -866,11 +981,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Simplify the following code</p>
 
@@ -884,11 +999,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>We’ll need a closure to ensure click() calls the proper scraper</p>
 
@@ -899,11 +1014,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Use the <code>?</code> existential operator to die quietly if the scraper
 doesn’t have an <code>insert_button</code> member.</p>
@@ -919,11 +1034,11 @@ doesn’t have an <code>insert_button</code> member.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>We only ever want to match one profile so break here</p>
 
