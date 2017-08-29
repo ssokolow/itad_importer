@@ -86,27 +86,186 @@ gog_prepare_title = (elem) ->
   $('._product-flag', dom).remove()
   dom.text()
 
+# inject the buttons after the a tab gets populated
+humble_make_library_button = ->
+  button = $('<button class="download-button"></button>')
+    .html(BUTTON_LABEL)
+    .css
+      # I wish they wouldn't make their CSS rules so specific
+      display: 'inline',
+      border: '1px solid #CCC',
+      background: '#F1F3F6',
+      padding: '5px 10px 5px 10px',
+      marginLeft: '10px',
+
+  holders = [
+    {
+      tab: $("a.tabbar-tab[href$='library'"),
+      holder: $('.js-library-holder'),
+      insertSelector: '.top-controls'},
+    {
+      tab: $("a.tabbar-tab[href$='keys'"),
+      holder: $('.js-key-manager-holder'),
+      insertSelector: '.header .container:last'},
+    {
+      tab: $("a.tabbar-tab[href$='purchases'"),
+      holder: $('.js-purchase-holder'),
+      insertSelector: '.header .container:last'}]
+
+  updateButton = (holder, insertSelector) ->
+    found = holder.find(insertSelector)
+    if found.length > 0
+      found2 = found.find(".itad_btn")
+      if found2.length == 0
+#          console.log("Inserting button: " + holder.attr('class'))
+        observer.disconnect()
+        button.appendTo(found)
+        enableObserver(observer)
+#        else
+#          console.log("Button already inserted: " + holder.attr('class'))
+#      else
+#        console.log("Couldn't find insert point '" + insertSelector +
+#$          "' in " + holder.attr('class'))
+
+
+    observeConfig = { childList: true, subtree: true }
+
+    enableObserver = (observer) ->
+      observer.observe(h.holder[0], observeConfig) for h in holders
+
+    observer = new MutationObserver((mutations, observer) ->
+      mutations.forEach((mutation) ->
+        target = mutation.target
+        if !(target in (h.holder[0] for h in holders) )
+          return
+        holder = $(mutation.target)
+        console.log("mutation: " + holder.attr('class'))
+        insertSelector = holder.data('insertSelector')
+        updateButton(holder, insertSelector)
+
+        )
+      )
+
+    button_inserter = (tab, holder, insertSelector, prepend) ->
+      # store for observer's use
+      holder.data('insertSelector', insertSelector)
+
+      found_early = holder.find(insertSelector)
+      if found_early.length > 0
+        button.appendTo(found_early)
+
+      tab.on('click', ->
+        updateButton(holder, insertSelector)
+      )
+
+    button_inserter(h.tab, h.holder, h.insertSelector, false) for h in holders
+    enableObserver(observer)
+
+    return button
+
 humble_make_button = ->
   # Humble Library uses very weird button markup
   label = $('<span class="label"></span>').html(BUTTON_LABEL)
   a = $('<a class="a" href="#"></span>')
-     .html(BUTTON_LABEL)
-     # Apparently the `noicon` class isn't versatile enough
-     .css('padding-left', '9px')
+    .html(BUTTON_LABEL)
+    # Apparently the `noicon` class isn't versatile enough
+    .css('padding-left', '9px')
 
   button = $('<div class="flexbtn active noicon"></div>')
   .append('<div class="right"></div>')
   .append(label)
   .append(a)
 
-humble_parse = -> { title: x.textContent.trim(), sources: ['humblestore']
-  } for x in $('div.row').has(
-  # Humble Library has no easy way to list only games
-  ' .downloads.windows .download,
-    .downloads.linux .download,
-    .downloads.mac .download,
-    .downloads.android .download'
-  ).find('div.title')
+humble_parse_single = (cb) ->
+  cb(({ title: x.textContent.trim(), sources: ['humblestore']
+    } for x in $('div.row')).has(
+    # Humble Library has no easy way to list only games
+    ' .downloads.windows .download,
+      .downloads.linux .download,
+      .downloads.mac .download,
+      .downloads.android .download'
+    ).find('div.title'))
+
+###
+# Use website's model objects to collect and process game data.
+#
+#  Because the actual data isn't easily accessible, this creates
+#  a new instance of the model object, and probably re-downloads
+#  all the game information, so should only be run when the import
+#  button is pressed, to prevent slowdowns of the website.
+###
+humble_read_library = (cb) ->
+  requirejs(['downloadPages/orderCollection'],
+    (OrderCollection) ->
+      orderList = ({gamekey: g} for g in gamekeys)
+      orderModels = new OrderCollection(orderList)
+
+      items = {}
+
+      hasApp = (subProduct) ->
+        for download in subProduct.downloads
+          if download.platform in ['windows', 'mac', 'linux']
+            return true
+        return false
+
+      addItem = (name, source) ->
+        if name of items
+          sources = items[name]
+          if !(source in sources)
+            sources.push(source)
+        else
+          items[name] = [source]
+
+
+      processOrder = (orderModel) ->
+        for subProduct in orderModel.getSubProducts()
+          subProductHumanName = subProduct.human_name
+          if subProduct.library_family_name
+            subProductLFN =  subProduct.library_family_name
+          else
+            subProductLFN = ""
+          if subProductLFN == 'hidden'
+            return
+          
+          #Direct downloads are marked as 'Humble Store' copies
+          if (hasApp(subProduct))
+            addItem(subProductHumanName, 'humblestore')
+
+
+        # 3rd party keys, try to use the origin of the key
+        # *TODO* try to mark keys as 'extra' when not redeemed
+        for tpkModel in orderModel.getTpkModels()
+          tpkLFNAttr = tpkModel.get('library_family_name')
+          tpkLFN =
+          if tpkLFNAttr
+            tpkLFNAttr
+          else
+            ""
+          keyType = tpkModel.get('key_type')
+          tpkHumanName = tpkModel.get('human_name')
+          if (!tpkHumanName)
+            tpkHumanName = orderModel.getProduct().human_name
+          if(tpkLFN == 'hidden')
+            return
+
+          addItem(tpkHumanName, keyType)
+
+
+      orderModels.forEach( (orderModel) ->
+        if (orderModel.loaded)
+          processOrder(orderModel)
+        else
+          orderModel.fetch({
+            success: (fetched) ->
+              processOrder(orderModel)
+            }))
+
+      list = ({title: name, sources: srcs} for name,srcs of items)
+      cb(list)
+  )
+
+
+
 
 shinyloot_insert_button = ->
   $('<button></button>')
@@ -141,15 +300,15 @@ scrapers =
         # The store being imported from
         'source_id': 'dotemu'
         # Each scraper must have a `game_list` method which returns...
-        'game_list': ->
-          {
+        'game_list': (cb) ->
+          cb({
             # ...one or both of `title` and `url`
             title: attr(x, 'title')
             # We're guaranteed an absolute URL if we use the DOM href property
             url: x.href
             # The stores which should be added to the user's "owned on" list
             sources: ['dotemu']
-          } for x in $('div.my-games div.field-title a')
+          } for x in $('div.my-games div.field-title a'))
 
         # Each scraper must have an `insert_button` member which adds
         # a button to the DOM using `BUTTON_LABEL` and then returns
@@ -157,12 +316,12 @@ scrapers =
         'insert_button': -> dotemu_add_button('div.my-games h2.pane-title')
       ,
         'source_id': 'dotemu'
-        'game_list': ->
-          {
+        'game_list': (cb) ->
+          cb({
             title: attr(x, 'title')
             url: x.href
             sources: ['dotemu']
-          } for x in $('div.user-wishlist .views-field-title-1 a')
+          } for x in $('div.user-wishlist .views-field-title-1 a'))
         'insert_button': -> dotemu_add_button('.user-wishlist h2.pane-title')
         'is_wishlist': true
       ]
@@ -170,18 +329,18 @@ scrapers =
   'fireflowergames.com':
     '^http://fireflowergames\\.com/my-lists/(edit-my|view-a)-list/\\?.+':
       'source_id': 'fireflower'
-      'game_list': ->
+      'game_list': (cb) ->
         results = $('table.wl-table tbody td.check-column input:checked')
           .parents('tr').find('td.product-name a')
 
         if (!results.length)
           results = $('table.wl-table td.product-name a')
 
-        {
+        cb({
           title: $(x).text().trim()
           url: x.href
           sources: ['fireflower']
-        } for x in results
+        } for x in results)
       'insert_button': ->
         # XXX: If you can debug the broken behaviour with <button>, please do.
         # I don't have time.
@@ -194,11 +353,11 @@ scrapers =
   'flyingbundle.com':
     'https?://(www\\.)?flyingbundle\\.com/users/account':
       'source_id': 'flying_bundle'
-      'game_list': -> {
+      'game_list': (cb) -> cb({
         title: $(x).text()
         sources: 'flying_bundle'
       } for x in $(".div_btn_download[href^='/users/sources']"
-      ).parents('li').find(':first')
+      ).parents('li').find(':first'))
       'insert_button': ->
         li = $("<li></li>"
         ).appendTo('.legenda_points ul')
@@ -211,12 +370,12 @@ scrapers =
   'www.gog.com':
     '^https://www\\.gog\\.com/order/status/.+':
       'source_id': 'gog'
-      'game_list': ->
+      'game_list': (cb) ->
         console.debug("game_list called for GOG order status page")
-        {
+        cb({
           title: gog_prepare_title(x)
           sources: ['gog']
-        } for x in $('.order + .container .product-row')
+        } for x in $('.order + .container .product-row'))
 
       'insert_button': ->
         console.debug("insert_button called for GOG order status page")
@@ -233,13 +392,13 @@ scrapers =
 
     '^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)':
       'source_id': 'gog'
-      'game_list': ->
+      'game_list': (cb) ->
         console.debug("game_list called for GOG collection page")
-        {
+        cb({
           id: attr(x, 'gog-product')
           title: gog_prepare_title(x)
           sources: ['gog']
-        } for x in $('.product-row')
+        } for x in $('.product-row'))
 
       'insert_button': ->
         console.debug("insert_button called for GOG collection page")
@@ -257,12 +416,12 @@ scrapers =
   'groupees.com':
     'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)':
       'source_id': 'other'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           title: x.textContent.trim(),
           sources: ['other']
         } for x in $('.product ul.dropdown-menu')
-                    .parents('.details').find('h3')
+                    .parents('.details').find('h3'))
       'insert_button': ->
         $("<button></button>")
           .css({ float: 'right' }).addClass('button btn btn-sm btn-primary')
@@ -272,56 +431,22 @@ scrapers =
   'www.humblebundle.com':
     'https://www\\.humblebundle\\.com/home/library/?':
       'source_id': 'humblestore'
-      'game_list': -> {
+      'game_list': (cb) -> cb({
         title: x.textContent.trim(), sources: ['humblestore']
-      } for x in $('.subproduct-selector h2')
+      } for x in $('.subproduct-selector h2'))
       # TODO: Figure out how to filter out non-games again
       # TODO: Figure out how to tap their Backbone.js store
 
-      'insert_button': ->
-        config = { childList: true, subtree: true }
-        button = $('<button class="download-button"></button>')
-          .html(BUTTON_LABEL)
-          .css
-            # I wish they wouldn't make their CSS rules so specific
-            display: 'inline',
-            border: '1px solid #CCC',
-            background: '#F1F3F6',
-            padding: '5px 10px 5px 10px',
-            marginLeft: '10px',
-
-        found_early = $(".top-controls")
-        if found_early.length > 0
-          console.log("Inserting button immediately.")
-          button.appendTo(found_early)
-        else
-          console.log("Using MutationObserver for deferred button insertion.")
-          observer = new MutationObserver((mutations) ->
-            mutations.forEach((mutation) ->
-              tnode_cls = mutation.target.getAttribute("class")
-              found = $(".top-controls", mutation.target)
-              if found.length > 0
-                observer.disconnect()
-                button.appendTo(found)
-            )
-          )
-          observer.observe(document.querySelector('.js-library-holder'),
-                           config)
-        return button
+      'insert_button': humble_make_library_button
 
     'https://www\\.humblebundle\\.com/home/?':
       'source_id': 'humblestore'
-      'game_list': humble_parse
-      'insert_button': ->
-        humble_make_button().css
-          float: 'right',
-          fontSize: '14px',
-          fontWeight: 'normal'
-        .prependTo('.base-main-wrapper h1')
+      'game_list': humble_read_library
+      'insert_button': humble_make_library_button
 
     'https://www\\.humblebundle\\.com/(download)?s\\?key=.+':
       'source_id': 'humblestore'
-      'game_list': humble_parse
+      'game_list': humble_parse_single
       'insert_button': ->
         parent = $('.js-gamelist-holder').parents('.whitebox')
         parent.find('.staple.s4').remove()
@@ -336,15 +461,15 @@ scrapers =
   'indiegamestand.com':
     'https://indiegamestand\\.com/wallet\\.php':
       'source_id': 'indiegamestand'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           # **Note:** IGS game URLs change during promos and some IGS wallet
           # entries may not have them (eg. entries just present to provide
           # a second steam key for some DLC from another entry)
           url: $('.game-thumb', x)?.closest('a')?[0]?.href
           title: $('.game-title', x).text().trim()
           sources: ['indiegamestand']
-        } for x in $('#wallet_contents .line-item')
+        } for x in $('#wallet_contents .line-item'))
 
       'insert_button': ->
         $('<div class="request key"></div>')
@@ -357,12 +482,12 @@ scrapers =
         .appendTo('#game_wallet h2')
     'https://indiegamestand\\.com/wishlist\\.php':
       'source_id': 'indiegamestand'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           url: $('.game-thumb', x)?.closest('a')?[0]?.href
           title: $('.game_details h3', x).text().trim()
           sources: ['indiegamestand']
-        } for x in $('#store_browse_game_list .game_list_item')
+        } for x in $('#store_browse_game_list .game_list_item'))
       'is_wishlist': true
 
       'insert_button': ->
@@ -394,20 +519,20 @@ scrapers =
   'www.shinyloot.com':
     'https?://www\\.shinyloot\\.com/m/games/?':
       'source_id': 'shinyloot'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           url: $('.right-float a img', x).closest('a')[0].href
           title: $(x).prev('h3').text().trim()
           sources: ['shinyloot']
-        } for x in $('#accordion .ui-widget-content')
+        } for x in $('#accordion .ui-widget-content'))
       'insert_button': shinyloot_insert_button
     'https?://www\\.shinyloot\\.com/m/wishlist/?':
       'source_id': 'shinyloot'
-      'game_list': ->
-        {
+      'game_list': (cb) ->
+        cb({
           url: $('.gameInfo + a', x)[0].href
           title: $('.gameName', x).text().trim()
-        } for x in $('.gameItem')
+        } for x in $('.gameItem'))
       'insert_button': shinyloot_insert_button
       'is_wishlist': true
 
@@ -416,31 +541,37 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 
 # Callback for the button
 scrapeGames = (scraper_obj) ->
-  params = {
-    json: JSON.stringify(scraper_obj.game_list()),
-    source: scraper_obj.source_id
-  }
+  
+  scraper_obj.game_list( (game_list) ->
 
-  url = if scraper_obj.is_wishlist?
-    'https://isthereanydeal.com/outside/user/wait/3rdparty'
-  else
-    'https://isthereanydeal.com/outside/user/collection/3rdparty'
+    params = {
+      json: JSON.stringify(game_list),
+      source: scraper_obj.source_id
+    }
 
-  # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
-  # navigates the top-level window.
-  form = $("<form id='itad_submitter' method='POST' />").attr('action', url)
-  params['returnTo'] = location.href
+    url = if scraper_obj.is_wishlist?
+      'https://isthereanydeal.com/outside/user/wait/3rdparty'
+    else
+      'https://isthereanydeal.com/outside/user/collection/3rdparty'
+  
+    # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
+    # navigates the top-level window.
+    form = $("<form id='itad_submitter' method='POST' />").attr('action', url)
+    params['returnTo'] = location.href
+  
+    # Submit the form data
+    form.css({ display: 'none' })
+    $.each params, (key, value) ->
+      $("<input type='hidden' />")
+        .attr("name", key)
+        .attr("value", value)
+        .appendTo(form)
+    $(document.body).append(form)
+  
+    form.submit()
+  )
+  
 
-  # Submit the form data
-  form.css({ display: 'none' })
-  $.each params, (key, value) ->
-    $("<input type='hidden' />")
-      .attr("name", key)
-      .attr("value", value)
-      .appendTo(form)
-  $(document.body).append(form)
-
-  form.submit()
 
 # CoffeeScript shorthand for `$(document).ready(function() {`
 $ ->
