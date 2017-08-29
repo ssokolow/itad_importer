@@ -44,7 +44,7 @@ Note: While we do not use GM_info, we must request it to force the userscript
 to be isolated from the page so its jQuery doesn't collide with the site's
 jQuery.
  */
-var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_parse_single, humble_read_library, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re,
+var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, dotemu_add_button, gog_prepare_title, humble_make_button, humble_make_library_button, humble_parse_single, humble_read_library, scrapeGames, scrapers, shinyloot_insert_button, titlecase_cb, underscore_re, word_re,
   indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 BUTTON_LABEL = "Export to ITAD";
@@ -77,6 +77,95 @@ gog_prepare_title = function(elem) {
   dom = $('.product-title', elem).clone();
   $('._product-flag', dom).remove();
   return dom.text();
+};
+
+humble_make_library_button = function() {
+  var button, holders, updateButton;
+  button = $('<button class="download-button"></button>').html(BUTTON_LABEL).css({
+    display: 'inline',
+    border: '1px solid #CCC',
+    background: '#F1F3F6',
+    padding: '5px 10px 5px 10px',
+    marginLeft: '10px'
+  });
+  holders = [
+    {
+      tab: $("a.tabbar-tab[href$='library'"),
+      holder: $('.js-library-holder'),
+      insertSelector: '.top-controls'
+    }, {
+      tab: $("a.tabbar-tab[href$='keys'"),
+      holder: $('.js-key-manager-holder'),
+      insertSelector: '.header .container:last'
+    }, {
+      tab: $("a.tabbar-tab[href$='purchases'"),
+      holder: $('.js-purchase-holder'),
+      insertSelector: '.header .container:last'
+    }
+  ];
+  return updateButton = function(holder, insertSelector) {
+    var button_inserter, enableObserver, found, found2, h, i, len, observeConfig, observer;
+    found = holder.find(insertSelector);
+    if (found.length > 0) {
+      found2 = found.find(".itad_btn");
+      if (found2.length === 0) {
+        observer.disconnect();
+        button.appendTo(found);
+        enableObserver(observer);
+      }
+    }
+    observeConfig = {
+      childList: true,
+      subtree: true
+    };
+    enableObserver = function(observer) {
+      var h, i, len, results1;
+      results1 = [];
+      for (i = 0, len = holders.length; i < len; i++) {
+        h = holders[i];
+        results1.push(observer.observe(h.holder[0], observeConfig));
+      }
+      return results1;
+    };
+    observer = new MutationObserver(function(mutations, observer) {
+      return mutations.forEach(function(mutation) {
+        var h, target;
+        target = mutation.target;
+        if (!(indexOf.call((function() {
+          var i, len, results1;
+          results1 = [];
+          for (i = 0, len = holders.length; i < len; i++) {
+            h = holders[i];
+            results1.push(h.holder[0]);
+          }
+          return results1;
+        })(), target) >= 0)) {
+          return;
+        }
+        holder = $(mutation.target);
+        console.log("mutation: " + holder.attr('class'));
+        insertSelector = holder.data('insertSelector');
+        return updateButton(holder, insertSelector);
+      });
+    });
+    button_inserter = function(tab, holder, insertSelector, prepend) {
+      var found_early;
+      holder.data('insertSelector', insertSelector);
+      found_early = holder.find(insertSelector);
+      if (found_early.length > 0) {
+        button.appendTo(found_early);
+      }
+      return tab.on('click', function() {
+        return updateButton(holder, insertSelector);
+      });
+    };
+    for (i = 0, len = holders.length; i < len; i++) {
+      h = holders[i];
+      button_inserter(h.tab, h.holder, h.insertSelector, false);
+    }
+    enableObserver(observer);
+    return button;
+  };
 };
 
 humble_make_button = function() {
@@ -442,51 +531,12 @@ scrapers = {
           return results1;
         })());
       },
-      'insert_button': function() {
-        var button, config, found_early, observer;
-        config = {
-          childList: true,
-          subtree: true
-        };
-        button = $('<button class="download-button"></button>').html(BUTTON_LABEL).css({
-          display: 'inline',
-          border: '1px solid #CCC',
-          background: '#F1F3F6',
-          padding: '5px 10px 5px 10px',
-          marginLeft: '10px'
-        });
-        found_early = $(".top-controls");
-        if (found_early.length > 0) {
-          console.log("Inserting button immediately.");
-          button.appendTo(found_early);
-        } else {
-          console.log("Using MutationObserver for deferred button insertion.");
-          observer = new MutationObserver(function(mutations) {
-            return mutations.forEach(function(mutation) {
-              var found, tnode_cls;
-              tnode_cls = mutation.target.getAttribute("class");
-              found = $(".top-controls", mutation.target);
-              if (found.length > 0) {
-                observer.disconnect();
-                return button.appendTo(found);
-              }
-            });
-          });
-          observer.observe(document.querySelector('.js-library-holder'), config);
-        }
-        return button;
-      }
+      'insert_button': humble_make_library_button
     },
     'https://www\\.humblebundle\\.com/home/?': {
       'source_id': 'humblestore',
       'game_list': humble_read_library,
-      'insert_button': function() {
-        return humble_make_button().css({
-          float: 'right',
-          fontSize: '14px',
-          fontWeight: 'normal'
-        }).prependTo('.base-main-wrapper h1');
-      }
+      'insert_button': humble_make_library_button
     },
     'https://www\\.humblebundle\\.com/(download)?s\\?key=.+': {
       'source_id': 'humblestore',

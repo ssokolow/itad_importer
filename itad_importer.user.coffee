@@ -86,13 +86,90 @@ gog_prepare_title = (elem) ->
   $('._product-flag', dom).remove()
   dom.text()
 
+# inject the buttons after the a tab gets populated
+humble_make_library_button = ->
+  button = $('<button class="download-button"></button>')
+    .html(BUTTON_LABEL)
+    .css
+      # I wish they wouldn't make their CSS rules so specific
+      display: 'inline',
+      border: '1px solid #CCC',
+      background: '#F1F3F6',
+      padding: '5px 10px 5px 10px',
+      marginLeft: '10px',
+
+  holders = [
+    {
+      tab: $("a.tabbar-tab[href$='library'"),
+      holder: $('.js-library-holder'),
+      insertSelector: '.top-controls'},
+    {
+      tab: $("a.tabbar-tab[href$='keys'"),
+      holder: $('.js-key-manager-holder'),
+      insertSelector: '.header .container:last'},
+    {
+      tab: $("a.tabbar-tab[href$='purchases'"),
+      holder: $('.js-purchase-holder'),
+      insertSelector: '.header .container:last'}]
+
+  updateButton = (holder, insertSelector) ->
+    found = holder.find(insertSelector)
+    if found.length > 0
+      found2 = found.find(".itad_btn")
+      if found2.length == 0
+#          console.log("Inserting button: " + holder.attr('class'))
+        observer.disconnect()
+        button.appendTo(found)
+        enableObserver(observer)
+#        else
+#          console.log("Button already inserted: " + holder.attr('class'))
+#      else
+#        console.log("Couldn't find insert point '" + insertSelector +
+#$          "' in " + holder.attr('class'))
+
+
+    observeConfig = { childList: true, subtree: true }
+
+    enableObserver = (observer) ->
+      observer.observe(h.holder[0], observeConfig) for h in holders
+
+    observer = new MutationObserver((mutations, observer) ->
+      mutations.forEach((mutation) ->
+        target = mutation.target
+        if !(target in (h.holder[0] for h in holders) )
+          return
+        holder = $(mutation.target)
+        console.log("mutation: " + holder.attr('class'))
+        insertSelector = holder.data('insertSelector')
+        updateButton(holder, insertSelector)
+
+        )
+      )
+
+    button_inserter = (tab, holder, insertSelector, prepend) ->
+      # store for observer's use
+      holder.data('insertSelector', insertSelector)
+
+      found_early = holder.find(insertSelector)
+      if found_early.length > 0
+        button.appendTo(found_early)
+
+      tab.on('click', ->
+        updateButton(holder, insertSelector)
+      )
+
+    button_inserter(h.tab, h.holder, h.insertSelector, false) for h in holders
+    enableObserver(observer)
+
+    return button
+
 humble_make_button = ->
   # Humble Library uses very weird button markup
   label = $('<span class="label"></span>').html(BUTTON_LABEL)
   a = $('<a class="a" href="#"></span>')
-     .html(BUTTON_LABEL)
-     # Apparently the `noicon` class isn't versatile enough
-     .css('padding-left', '9px')
+    .html(BUTTON_LABEL)
+    # Apparently the `noicon` class isn't versatile enough
+    .css('padding-left', '9px')
 
   button = $('<div class="flexbtn active noicon"></div>')
   .append('<div class="right"></div>')
@@ -360,46 +437,12 @@ scrapers =
       # TODO: Figure out how to filter out non-games again
       # TODO: Figure out how to tap their Backbone.js store
 
-      'insert_button': ->
-        config = { childList: true, subtree: true }
-        button = $('<button class="download-button"></button>')
-          .html(BUTTON_LABEL)
-          .css
-            # I wish they wouldn't make their CSS rules so specific
-            display: 'inline',
-            border: '1px solid #CCC',
-            background: '#F1F3F6',
-            padding: '5px 10px 5px 10px',
-            marginLeft: '10px',
-
-        found_early = $(".top-controls")
-        if found_early.length > 0
-          console.log("Inserting button immediately.")
-          button.appendTo(found_early)
-        else
-          console.log("Using MutationObserver for deferred button insertion.")
-          observer = new MutationObserver((mutations) ->
-            mutations.forEach((mutation) ->
-              tnode_cls = mutation.target.getAttribute("class")
-              found = $(".top-controls", mutation.target)
-              if found.length > 0
-                observer.disconnect()
-                button.appendTo(found)
-            )
-          )
-          observer.observe(document.querySelector('.js-library-holder'),
-                           config)
-        return button
+      'insert_button': humble_make_library_button
 
     'https://www\\.humblebundle\\.com/home/?':
       'source_id': 'humblestore'
       'game_list': humble_read_library
-      'insert_button': ->
-        humble_make_button().css
-          float: 'right',
-          fontSize: '14px',
-          fontWeight: 'normal'
-        .prependTo('.base-main-wrapper h1')
+      'insert_button': humble_make_library_button
 
     'https://www\\.humblebundle\\.com/(download)?s\\?key=.+':
       'source_id': 'humblestore'
