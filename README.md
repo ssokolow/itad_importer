@@ -11,7 +11,6 @@ It is currently in **beta** and any bugs should be reported in the
 
 Currently supported vendors are:
 
-* [DotEmu](http://www.dotemu.com)
 * [FireFlower Games](http://fireflowergames.com/) (wishlists only)
 * [Flying Bundle](http://www.flyingbundle.com/) (direct downloads only)
 * [GOG.com](http://www.gog.com) (collection only. Wishlists supported by ITAD
@@ -19,8 +18,6 @@ Currently supported vendors are:
 * [Groupees](http://groupees.com/) (direct downloads in bundles tab only)
 * [Humble Store](http://www.humblebundle.com) ([Bug:](https://github.com/ssokolow/itad_importer/issues/14) Import via whole-collection
   view includes Steam-only purchases)
-* [IndieGameStand](http://www.indiegamestand.com)
-* [ShinyLoot](http://www.shinyloot.com)
 
 See the [screenshot sheet](https://raw.githubusercontent.com/ssokolow/itad_importer/master/screenshots/1.png) for a reference as to where the added buttons should appear.
 
