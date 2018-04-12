@@ -40,19 +40,22 @@ The authoritative copy of this script is the
 generated JavaScript may or may not be accepted at the developers' discretion.
 (We have to rewrite them in CoffeeScript, so they'll have to be worthwhile.)
 
-The official method for developing this script is as follows:
+At the moment, the official method for developing this script has yet to be
+updated for Quantum-era Firefox and is as follows:
 
-1. Install the [release version](https://greasyfork.org/en/scripts/13887-isthereanydeal-com-collection-importer)
+1. On a Unixy machine (eg. Linux), install Firefox 52 ESR and a version of
+   Greasemonkey old enough to store its scripts as bare files on disk.
+2. Install the [release version](https://greasyfork.org/en/scripts/13887-isthereanydeal-com-collection-importer)
    of the script in Firefox
-2. Install [Node.js](http://nodejs.org/)
-3. Run `npm install`
-4. Run `npm run-script develop`
-5. Saving changes to the CoffeeScript source will now regenerate the copy of
+3. Install [Node.js](http://nodejs.org/)
+4. Run `npm install`
+5. Run `npm run-script develop`
+6. Saving changes to the CoffeeScript source will now regenerate the copy of
    the script installed in Firefox.
-6. When you're finished, hit <kbd>Enter</kbd>
-7. The development script will regenerate the in-repository JavaScript and code
+7. When you're finished, hit <kbd>Enter</kbd>
+8. The development script will regenerate the in-repository JavaScript and code
    documentation before exiting.
-8. Commit the updated built files.
+9. Commit the updated built files.
 
 However, if you do not have a Unixy machine handy, this quick and dirty method
 can also be used:
