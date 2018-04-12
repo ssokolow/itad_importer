@@ -7,7 +7,6 @@
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
 // @license MIT
 // @supportURL https://github.com/ssokolow/itad_importer/issues
-// @grant GM_info
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
 // @match *://fireflowergames.com/my-lists/*
@@ -33,11 +32,6 @@ License: MIT (http://opensource.org/licenses/MIT)
 TODO:
 - Add a `@downloadURL` for the script
 
-Note: While we do not use GM_info, we must request it to force the userscript
-to be isolated from the page so its jQuery doesn't collide with the site's
-jQuery.
-
-
 ###
 
 # This string will be interpreted as raw HTML
@@ -59,6 +53,8 @@ sHui2FHsBeyy/4gmSQGgJKWCeTNFVQJNN9yH2xJB+z3WZuf3kjDuD+B8I6wfIzAbpsLuCrg3QtsD
 9TAXJq8tOHYEl9+W0eHbEPaf06u/PvoWsXmuTNrdegwp1QJAVZICQMkf1qQG7Yh+Z60AAAAASUVO
 RK5CYII="""
 
+# Prevent conflict between our jQuery and site jQuery without using @grant
+this.$ = this.jQuery = jQuery.noConflict(true)
 
 # Less overhead than instantiating a new jQuery object
 attr = (node, name) -> node.getAttribute(name)
