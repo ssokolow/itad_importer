@@ -31,48 +31,38 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>// ==UserScript==
-// @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b16
-// @namespace http://isthereanydeal.com/
-// @description Adds buttons to various sites to export your game lists to ITAD
-// @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
-// @license MIT
-// @supportURL https://github.com/ssokolow/itad_importer/issues
-// @grant GM_info
-// @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
-//
-// @match *://www.dotemu.com/*
-// @match *://fireflowergames.com/my-lists/*
-// @match *://flyingbundle.com/users/account
-// @match *://www.flyingbundle.com/users/account
-// @match *://www.gog.com/account*
-// @match *://www.gog.com/order/status/*
-// @match *://groupees.com/purchases*
-// @match *://groupees.com/users/*
-// @match *://www.humblebundle.com/home*
-// @match *://www.humblebundle.com/downloads?key=*
-// @match *://www.humblebundle.com/s?key=*
-// @match *://indiegamestand.com/wallet.php
-// @match *://indiegamestand.com/wishlist.php
-// @match *://www.shinyloot.com/m/games*
-// @match *://www.shinyloot.com/m/wishlist*
-// ==/UserScript==
+            <div class="content"><div class='highlight'><pre><span class="hljs-regexp">//</span> ==UserScript==
+<span class="hljs-regexp">//</span> @name IsThereAnyDeal.com Collection Importer
+<span class="hljs-regexp">//</span> @version <span class="hljs-number">0.1</span>b17
+<span class="hljs-regexp">//</span> @namespace http:<span class="hljs-regexp">//i</span>sthereanydeal.com/
+<span class="hljs-regexp">//</span> @description Adds buttons to various sites to <span class="hljs-keyword">export</span> your game lists to ITAD
+<span class="hljs-regexp">//</span> @icon http:<span class="hljs-regexp">//</span>s3-eu-west<span class="hljs-number">-1.</span>amazonaws.com/itad/images/banners/<span class="hljs-number">50</span>x50.gif
+<span class="hljs-regexp">//</span> @license MIT
+<span class="hljs-regexp">//</span> @supportURL https:<span class="hljs-regexp">//gi</span>thub.com/ssokolow/itad_importer/issues
+<span class="hljs-regexp">//</span> @require https:<span class="hljs-regexp">//</span>ajax.googleapis.com/ajax/libs/jquery/<span class="hljs-number">1.11</span><span class="hljs-number">.0</span>/jquery.min.js
+<span class="hljs-regexp">//</span>
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>fireflowergames.com<span class="hljs-regexp">/my-lists/</span>*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>flyingbundle.com/users/account*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>www.flyingbundle.com/users/account*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>www.gog.com/account*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>www.gog.com<span class="hljs-regexp">/order/status/</span>*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//g</span>roupees.com/purchases*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//g</span>roupees.com<span class="hljs-regexp">/users/</span>*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>www.humblebundle.com/home*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>www.humblebundle.com/downloads?key=*
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>www.humblebundle.com/s?key=*
+<span class="hljs-regexp">//</span> ==/UserScript==
 
-Any patches to this script should be made against the original
-CoffeeScript source file available (and documented) at:
+Any patches to <span class="hljs-keyword">this</span> script should be made against the original
+CoffeeScript source file available (<span class="hljs-keyword">and</span> documented) at:
 
-  https://github.com/ssokolow/itad_importer
+  https:<span class="hljs-regexp">//gi</span>thub.com/ssokolow/itad_importer
 
-Copyright ©2014-2015 Stephan Sokolow
-License: MIT (http://opensource.org/licenses/MIT)
+Copyright ©<span class="hljs-number">2014</span><span class="hljs-number">-2017</span> Stephan Sokolow
+License: MIT (http:<span class="hljs-regexp">//</span>opensource.org/licenses/MIT)
 
 TODO:
-- Add a `@downloadURL` for the script
-
-Note: While we do not use GM_info, we must request it to force the userscript
-to be isolated from the page so its jQuery doesn't collide with the site's
-jQuery.</pre></div></div>
+- Add a `<span class="javascript">@downloadURL</span>` <span class="hljs-keyword">for</span> the script</pre></div></div>
             
         </li>
         
@@ -83,7 +73,7 @@ jQuery.</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="-">#</h1>
+              <p>##</p>
 
             </div>
             
@@ -127,14 +117,11 @@ RK5CYII="""</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Cache reused objects
-Source: <a href="http://stackoverflow.com/a/196991">http://stackoverflow.com/a/196991</a></p>
+              <p>Prevent conflict between our jQuery and site jQuery without using @grant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>underscore_re = <span class="hljs-regexp">/_/g</span>
-word_re = <span class="hljs-regexp">/\b\w+/g</span>
-<span class="hljs-function"><span class="hljs-title">titlecase_cb</span> = <span class="hljs-params">(s)</span> -&gt;</span> s.charAt(<span class="hljs-number">0</span>).toUpperCase() + s.substr(<span class="hljs-number">1</span>).toLowerCase()</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">this</span>.$ = <span class="hljs-keyword">this</span>.jQuery = jQuery.noConflict(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -151,27 +138,6 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">attr</span> = <span class="hljs-params">(node, name)</span> -&gt;</span> node.getAttribute(name)
 <span class="hljs-function">
-<span class="hljs-title">dotemu_add_button</span> = <span class="hljs-params">(parent_selector)</span> -&gt;</span>
-  $(<span class="hljs-string">'&lt;button&gt;&lt;/button&gt;'</span>)
-  .html(BUTTON_LABEL).css</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>DotEmu doesn’t have a general button style we can use</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
-    <span class="hljs-attribute">marginRight</span>: <span class="hljs-string">'5px'</span>
-  .appendTo(parent_selector)
-<span class="hljs-function">
 <span class="hljs-title">gog_prepare_title</span> = <span class="hljs-params">(elem)</span> -&gt;</span>
   dom = $(<span class="hljs-string">'.product-title'</span>, elem).clone()
   $(<span class="hljs-string">'._product-flag'</span>, dom).remove()
@@ -182,11 +148,11 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Humble Library uses very weird button markup</p>
 
@@ -199,11 +165,11 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Apparently the <code>noicon</code> class isn’t versatile enough</p>
 
@@ -216,8 +182,31 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
   .append(label)
   .append(a)
 <span class="hljs-function">
-<span class="hljs-title">humble_parse</span> = -&gt;</span> { <span class="hljs-attribute">title</span>: x.textContent.trim(), <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'humblestore'</span>]
+<span class="hljs-title">humble_parse</span> = -&gt;</span> {
+  version: <span class="hljs-string">"02"</span>,
+  data: {
+    title: x.textContent.trim(),
+    copies: [{ type: <span class="hljs-string">'humblestore'</span> }]
   } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.row'</span>).has(</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Humble Library has no easy way to list only games</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">' .downloads.windows .download,
+      .downloads.linux .download,
+      .downloads.mac .download,
+      .downloads.android .download'</span>
+  ).find(<span class="hljs-string">'div.title'</span>)}</pre></div></div>
             
         </li>
         
@@ -228,59 +217,6 @@ word_re = <span class="hljs-regexp">/\b\w+/g</span>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Humble Library has no easy way to list only games</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-string">' .downloads.windows .download,
-    .downloads.linux .download,
-    .downloads.mac .download,
-    .downloads.android .download'</span>
-  ).find(<span class="hljs-string">'div.title'</span>)
-<span class="hljs-function">
-<span class="hljs-title">shinyloot_insert_button</span> = -&gt;</span>
-  $(<span class="hljs-string">'&lt;button&gt;&lt;/button&gt;'</span>)
-  .html(BUTTON_LABEL).css</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>ShinyLoot’s buttons are a chimeric grab-bag and
-the nicest looking ones have site-provided CSS
-that’s tied to markup using <code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code>.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">background</span>: <span class="hljs-string">'url("/images/filters/sort-background-inactive.png") '</span> +
-                <span class="hljs-string">'repeat-x scroll 0% 0% transparent'</span>
-    <span class="hljs-attribute">border</span>: <span class="hljs-string">'1px solid #666'</span>
-    <span class="hljs-attribute">borderRadius</span>: <span class="hljs-string">'2px'</span>
-    <span class="hljs-attribute">boxShadow</span>: <span class="hljs-string">'0px 1px 6px #777'</span>
-    <span class="hljs-attribute">color</span>: <span class="hljs-string">'#222'</span>
-    <span class="hljs-attribute">fontSize</span>: <span class="hljs-string">'12px'</span>
-    <span class="hljs-attribute">fontWeight</span>: <span class="hljs-string">'bold'</span>
-    <span class="hljs-attribute">fontFamily</span>: <span class="hljs-string">'Arial,Helvetica,Sans-serif'</span>
-    <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
-    <span class="hljs-attribute">padding</span>: <span class="hljs-string">'2px 8px'</span>
-    <span class="hljs-attribute">marginRight</span>: <span class="hljs-string">'-6px'</span>
-    <span class="hljs-attribute">verticalAlign</span>: <span class="hljs-string">'middle'</span>
-  .appendTo(<span class="hljs-string">'#content .header'</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
               <p>Scrapers are looked up first by domain (lightweight) and then by
 a regex check on the URL (accurate).
 This should allow for extremely robust scaling as well as enabling the
@@ -290,132 +226,10 @@ Greasemonkey <code>@include</code> lines.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>scrapers =
-  <span class="hljs-string">'www.dotemu.com'</span>:</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>Each profile can be an object or a list of objects</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">'https://www\\.dotemu\\.com/(en|fr|es)/user/?'</span>: [</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p>The store being imported from</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'dotemu'</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>Each scraper must have a <code>game_list</code> method which returns…</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-          {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>…one or both of <code>title</code> and <code>url</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attribute">title</span>: attr(x, <span class="hljs-string">'title'</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>We’re guaranteed an absolute URL if we use the DOM href property</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attribute">url</span>: x.href</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>The stores which should be added to the user’s “owned on” list</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'dotemu'</span>]
-          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.my-games div.field-title a'</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Each scraper must have an <code>insert_button</code> member which adds
-a button to the DOM using <code>BUTTON_LABEL</code> and then returns
-a jQuery wrapper so the click handler can be bound.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span> dotemu_add_button(<span class="hljs-string">'div.my-games h2.pane-title'</span>)
-      ,
-        <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'dotemu'</span>
-        <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-          {
-            <span class="hljs-attribute">title</span>: attr(x, <span class="hljs-string">'title'</span>)
-            <span class="hljs-attribute">url</span>: x.href
-            <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'dotemu'</span>]
-          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'div.user-wishlist .views-field-title-1 a'</span>)
-        <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span> dotemu_add_button(<span class="hljs-string">'.user-wishlist h2.pane-title'</span>)
-        <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
-      ]
-
   <span class="hljs-string">'fireflowergames.com'</span>:
     <span class="hljs-string">'^http://fireflowergames\\.com/my-lists/(edit-my|view-a)-list/\\?.+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'fireflower'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span>
         results = $(<span class="hljs-string">'table.wl-table tbody td.check-column input:checked'</span>)
           .parents(<span class="hljs-string">'tr'</span>).find(<span class="hljs-string">'td.product-name a'</span>)
 
@@ -423,20 +237,27 @@ a jQuery wrapper so the click handler can be bound.</p>
           results = $(<span class="hljs-string">'table.wl-table td.product-name a'</span>)
 
         {
-          <span class="hljs-attribute">title</span>: $(x).text().trim()
-          <span class="hljs-attribute">url</span>: x.href
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'fireflower'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> results
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+          version: <span class="hljs-string">"02"</span>,
+          data: {
+            title: $(x).text().trim()
+            url: x.href
+            copies: [{
+              type: <span class="hljs-string">'fireflower'</span>,
+              status: <span class="hljs-string">'redeemed'</span>,
+              owned: <span class="hljs-number">1</span>,
+            }]
+          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> results
+        }
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-19">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>XXX: If you can debug the broken behaviour with <button>, please do.
 I don’t have time.</p>
@@ -450,14 +271,25 @@ I don’t have time.</p>
       <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
   <span class="hljs-string">'flyingbundle.com'</span>:
-    <span class="hljs-string">'https?://(www\\.)?flyingbundle\\.com/users/account'</span>:
+    <span class="hljs-string">'https?://(www\\.)?flyingbundle\\.com/users/account#?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'flying_bundle'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
-        <span class="hljs-attribute">title</span>: $(x).text()
-        <span class="hljs-attribute">sources</span>: <span class="hljs-string">'flying_bundle'</span>
-      } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">".div_btn_download[href^='/users/sources']"</span>
-      ).parents(<span class="hljs-string">'li'</span>).find(<span class="hljs-string">':first'</span>)
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span> {
+        version: <span class="hljs-string">"02"</span>,
+        data: {
+          title: $(x).text(),
+          copies: [{
+            type: <span class="hljs-string">'Flying Bundle'</span>,
+            status: <span class="hljs-string">'redeemed'</span>,
+            owned: <span class="hljs-number">1</span>,
+            source: {
+              type: <span class="hljs-string">"s"</span>,
+              id: <span class="hljs-string">"other"</span>
+            }
+          }]
+        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">".div_btn_download[href^='/users/sources']"</span>
+        ).parents(<span class="hljs-string">'li'</span>).find(<span class="hljs-string">':first'</span>)
+      }
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
         li = $(<span class="hljs-string">"&lt;li&gt;&lt;/li&gt;"</span>
         ).appendTo(<span class="hljs-string">'.legenda_points ul'</span>)
         $(<span class="hljs-string">'&lt;a href="#"&gt;'</span> + BUTTON_LABEL + <span class="hljs-string">' &lt;img src="'</span> + ITAD_14X14_GRAY +
@@ -469,19 +301,26 @@ I don’t have time.</p>
   <span class="hljs-string">'www.gog.com'</span>:
     <span class="hljs-string">'^https://www\\.gog\\.com/order/status/.+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span>
         <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"game_list called for GOG order status page"</span>)
         {
-          <span class="hljs-attribute">title</span>: gog_prepare_title(x)
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.order + .container .product-row'</span>)
+          <span class="hljs-string">"version"</span>: <span class="hljs-string">"02"</span>,
+          <span class="hljs-string">"data"</span>: {
+            title: gog_prepare_title(x)
+            copies: [{
+              type: <span class="hljs-string">'gog'</span>,
+              status: <span class="hljs-string">'redeemed'</span>,
+              owned: <span class="hljs-number">1</span>,
+            }]
+          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.order + .container .product-row'</span>)
+        }
 
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
         <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"insert_button called for GOG order status page"</span>)
         $(<span class="hljs-string">".order-article__btn-pointer-wrapper .order-article__btn-pointer"</span>)
           .css({
-            <span class="hljs-attribute">marginTop</span>: -<span class="hljs-number">4</span>,
-            <span class="hljs-attribute">zIndex</span>: <span class="hljs-number">20</span>,
+            marginTop: <span class="hljs-number">-4</span>,
+            zIndex: <span class="hljs-number">20</span>,
           })
         $(<span class="hljs-string">'.order-article__dropdown-items'</span>).css(<span class="hljs-string">'z-index'</span>, <span class="hljs-number">10</span>)
         $(<span class="hljs-string">"&lt;a class='_dropdown__item ng-scope'&gt;&lt;/a&gt;"</span>)
@@ -491,70 +330,109 @@ I don’t have time.</p>
 
     <span class="hljs-string">'^https?://www\\.gog\\.com/account(/games(/(shelf|list))?)?/?(\\?|$)'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'gog'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span>
         <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"game_list called for GOG collection page"</span>)
         {
-          <span class="hljs-attribute">id</span>: attr(x, <span class="hljs-string">'gog-product'</span>)
-          <span class="hljs-attribute">title</span>: gog_prepare_title(x)
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'gog'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product-row'</span>)
-
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"insert_button called for GOG collection page"</span>)
-        $(<span class="hljs-string">"&lt;span&gt;&lt;/span&gt;"</span>)
-        .css
-          <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
-          <span class="hljs-attribute">cursor</span>: <span class="hljs-string">'pointer'</span></pre></div></div>
+          <span class="hljs-string">"version"</span>: <span class="hljs-string">"02"</span>,
+          <span class="hljs-string">"data"</span>: {</pre></div></div>
             
         </li>
         
         
-        <li id="section-20">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>id: attr(x, ‘gog-account-product’)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            title: gog_prepare_title(x)
+            copies: [{
+              type: <span class="hljs-string">'gog'</span>,
+              status: <span class="hljs-string">'redeemed'</span>,
+              owned: <span class="hljs-number">1</span>,
+            }]
+          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product-row'</span>)
+        }
+
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
+        <span class="hljs-built_in">console</span>.debug(<span class="hljs-string">"insert_button called for GOG collection page"</span>)
+        $(<span class="hljs-string">"&lt;span&gt;&lt;/span&gt;"</span>)
+        .css
+          float: <span class="hljs-string">'right'</span>
+          cursor: <span class="hljs-string">'pointer'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>TODO: Replace the following hacks with whatever GOG uses</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-attribute">position</span>: <span class="hljs-string">'relative'</span>
-          <span class="hljs-attribute">marginBottom</span>: <span class="hljs-string">'-2em'</span>
-          <span class="hljs-attribute">zIndex</span>: <span class="hljs-number">1</span>
+            <div class="content"><div class='highlight'><pre>          position: <span class="hljs-string">'relative'</span>
+          marginBottom: <span class="hljs-string">'-2em'</span>
+          zIndex: <span class="hljs-number">1</span>
         .html(BUTTON_LABEL + <span class="hljs-string">" (This Page)"</span>)
         .prependTo($(<span class="hljs-string">'.collection-header'</span>).filter(<span class="hljs-string">':first'</span>))
 
   <span class="hljs-string">'groupees.com'</span>:
     <span class="hljs-string">'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'other'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span>
         {
-          <span class="hljs-attribute">title</span>: x.textContent.trim(),
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'other'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product ul.dropdown-menu'</span>)
-                    .parents(<span class="hljs-string">'.details'</span>).find(<span class="hljs-string">'h3'</span>)
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+          <span class="hljs-string">"version"</span>: <span class="hljs-string">"02"</span>,
+          <span class="hljs-string">"data"</span>: {
+            title: x.textContent.trim(),
+            copies: [{
+              type: <span class="hljs-string">'Groupees.com'</span>,
+              status: <span class="hljs-string">'redeemed'</span>,
+              owned: <span class="hljs-number">1</span>,
+              source: {
+                type: <span class="hljs-string">"s"</span>,
+                id: <span class="hljs-string">"other"</span>
+              }
+            }]
+          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.product ul.dropdown-menu'</span>)
+                      .parents(<span class="hljs-string">'.details'</span>).find(<span class="hljs-string">'h3'</span>)
+        }
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
         $(<span class="hljs-string">"&lt;button&gt;&lt;/button&gt;"</span>)
-          .css({ <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span> }).addClass(<span class="hljs-string">'button btn btn-sm btn-primary'</span>)
+          .css({ float: <span class="hljs-string">'right'</span> }).addClass(<span class="hljs-string">'button btn btn-sm btn-primary'</span>)
           .html(BUTTON_LABEL + <span class="hljs-string">" (Selected Bundle)"</span>)
           .insertBefore(<span class="hljs-string">"input[name='search']"</span>)
 
   <span class="hljs-string">'www.humblebundle.com'</span>:
     <span class="hljs-string">'https://www\\.humblebundle\\.com/home/library/?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span> {
-        <span class="hljs-attribute">title</span>: x.textContent.trim(), <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'humblestore'</span>]
-      } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.subproduct-selector h2'</span>)</pre></div></div>
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span> {
+        <span class="hljs-string">"version"</span>: <span class="hljs-string">"02"</span>,
+        <span class="hljs-string">"data"</span>: {
+          title: x.textContent.trim(),
+          copies: [{
+            type: <span class="hljs-string">'humblestore'</span>,
+            status: <span class="hljs-string">'redeemed'</span>,
+            owned: <span class="hljs-number">1</span>,
+          }]
+        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.subproduct-selector h2'</span>)
+      }</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>TODO: Figure out how to filter out non-games again
 TODO: Figure out how to tap their Backbone.js store</p>
@@ -562,8 +440,8 @@ TODO: Figure out how to tap their Backbone.js store</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        config = { <span class="hljs-attribute">childList</span>: <span class="hljs-literal">true</span>, <span class="hljs-attribute">subtree</span>: <span class="hljs-literal">true</span> }
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
+        config = { childList: <span class="hljs-literal">true</span>, subtree: <span class="hljs-literal">true</span> }
         button = $(<span class="hljs-string">'&lt;button class="download-button"&gt;&lt;/button&gt;'</span>)
           .html(BUTTON_LABEL)
           .css</pre></div></div>
@@ -571,21 +449,21 @@ TODO: Figure out how to tap their Backbone.js store</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>I wish they wouldn’t make their CSS rules so specific</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attribute">display</span>: <span class="hljs-string">'inline'</span>,
-            <span class="hljs-attribute">border</span>: <span class="hljs-string">'1px solid #CCC'</span>,
-            <span class="hljs-attribute">background</span>: <span class="hljs-string">'#F1F3F6'</span>,
-            <span class="hljs-attribute">padding</span>: <span class="hljs-string">'5px 10px 5px 10px'</span>,
-            <span class="hljs-attribute">marginLeft</span>: <span class="hljs-string">'10px'</span>,
+            <div class="content"><div class='highlight'><pre>            display: <span class="hljs-string">'inline'</span>,
+            border: <span class="hljs-string">'1px solid #CCC'</span>,
+            background: <span class="hljs-string">'#F1F3F6'</span>,
+            padding: <span class="hljs-string">'5px 10px 5px 10px'</span>,
+            marginLeft: <span class="hljs-string">'10px'</span>,
 
         found_early = $(<span class="hljs-string">".top-controls"</span>)
         <span class="hljs-keyword">if</span> found_early.length &gt; <span class="hljs-number">0</span>
@@ -609,130 +487,25 @@ TODO: Figure out how to tap their Backbone.js store</p>
     <span class="hljs-string">'https://www\\.humblebundle\\.com/home/?'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
       <span class="hljs-string">'game_list'</span>: humble_parse
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
         humble_make_button().css
-          <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>,
-          <span class="hljs-attribute">fontSize</span>: <span class="hljs-string">'14px'</span>,
-          <span class="hljs-attribute">fontWeight</span>: <span class="hljs-string">'normal'</span>
+          float: <span class="hljs-string">'right'</span>,
+          fontSize: <span class="hljs-string">'14px'</span>,
+          fontWeight: <span class="hljs-string">'normal'</span>
         .prependTo(<span class="hljs-string">'.base-main-wrapper h1'</span>)
 
     <span class="hljs-string">'https://www\\.humblebundle\\.com/(download)?s\\?key=.+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'humblestore'</span>
       <span class="hljs-string">'game_list'</span>: humble_parse
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span>
         parent = $(<span class="hljs-string">'.js-gamelist-holder'</span>).parents(<span class="hljs-string">'.whitebox'</span>)
         parent.find(<span class="hljs-string">'.staple.s4'</span>).remove()
 
         humble_make_button().css
-          <span class="hljs-attribute">position</span>: <span class="hljs-string">'absolute'</span>
-          <span class="hljs-attribute">top</span>: <span class="hljs-number">11</span>
-          <span class="hljs-attribute">right</span>: <span class="hljs-number">17</span>
+          position: <span class="hljs-string">'absolute'</span>
+          top: <span class="hljs-number">11</span>
+          right: <span class="hljs-number">17</span>
         .appendTo(parent)
-
-
-  <span class="hljs-string">'indiegamestand.com'</span>:
-    <span class="hljs-string">'https://indiegamestand\\.com/wallet\\.php'</span>:
-      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'indiegamestand'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-        {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p><strong>Note:</strong> IGS game URLs change during promos and some IGS wallet
-entries may not have them (eg. entries just present to provide
-a second steam key for some DLC from another entry)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.game-thumb'</span>, x)?.closest(<span class="hljs-string">'a'</span>)?[<span class="hljs-number">0</span>]?.href
-          <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.game-title'</span>, x).text().trim()
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'indiegamestand'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#wallet_contents .line-item'</span>)
-
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        $(<span class="hljs-string">'&lt;div class="request key"&gt;&lt;/div&gt;'</span>)
-        .html(BUTTON_LABEL).wrapInner(<span class="hljs-string">"&lt;div&gt;&lt;/div&gt;"</span>).css
-          <span class="hljs-attribute">display</span>: <span class="hljs-string">'inline-block'</span>
-          <span class="hljs-attribute">marginLeft</span>: <span class="hljs-string">'1em'</span>
-          <span class="hljs-attribute">verticalAlign</span>: <span class="hljs-string">'middle'</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>This would look nicer if floated right in <code>.titles</code> but
-their button styles are scoped to <code>#game_wallet</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .appendTo(<span class="hljs-string">'#game_wallet h2'</span>)
-    <span class="hljs-string">'https://indiegamestand\\.com/wishlist\\.php'</span>:
-      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'indiegamestand'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-        {
-          <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.game-thumb'</span>, x)?.closest(<span class="hljs-string">'a'</span>)?[<span class="hljs-number">0</span>]?.href
-          <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.game_details h3'</span>, x).text().trim()
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'indiegamestand'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#store_browse_game_list .game_list_item'</span>)
-      <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
-
-      <span class="hljs-string">'insert_button'</span>:<span class="hljs-function"> -&gt;</span>
-        innerDiv = $(<span class="hljs-string">"&lt;div&gt;&lt;/div&gt;"</span>).css
-          <span class="hljs-attribute">paddingLeft</span>: <span class="hljs-string">'10px'</span>
-          <span class="hljs-attribute">background</span>: (<span class="hljs-string">'url("images/icon-arrow.png") no-repeat scroll '</span> +
-                      <span class="hljs-string">'155px 45% transparent'</span>)
-
-        $(<span class="hljs-string">'&lt;div class="request key"&gt;&lt;/div&gt;'</span>)
-        .html(BUTTON_LABEL).wrapInner(innerDiv).css <span class="hljs-comment"># IGS CSS</span>
-          <span class="hljs-attribute">display</span>: <span class="hljs-string">'inline-block'</span>
-          <span class="hljs-attribute">verticalAlign</span>: <span class="hljs-string">'middle'</span>
-          <span class="hljs-attribute">float</span>: <span class="hljs-string">'right'</span>
-          <span class="hljs-attribute">width</span>: <span class="hljs-string">'170px'</span>
-          <span class="hljs-attribute">height</span>: <span class="hljs-string">'21px'</span>
-          <span class="hljs-attribute">background</span>: (<span class="hljs-string">'url("images/btn-bg-blue-longer.png") '</span> +
-                       <span class="hljs-string">'no-repeat scroll 0px 0px transparent'</span>)
-          <span class="hljs-attribute">lineHeight</span>: <span class="hljs-string">'21px'</span>
-          <span class="hljs-attribute">color</span>: <span class="hljs-string">'#FFF'</span>
-          <span class="hljs-attribute">whiteSpace</span>: <span class="hljs-string">'nowrap'</span>
-          <span class="hljs-attribute">marginLeft</span>: <span class="hljs-string">'1em'</span>
-          <span class="hljs-attribute">marginBottom</span>: <span class="hljs-string">'4px'</span>
-          <span class="hljs-attribute">fontSize</span>: <span class="hljs-string">'12px'</span>
-          <span class="hljs-attribute">cursor</span>: <span class="hljs-string">'pointer'</span>
-        .css <span class="hljs-comment"># Our CSS</span>
-          <span class="hljs-attribute">margin</span>: <span class="hljs-string">'11px 5px auto auto'</span>
-        .appendTo(<span class="hljs-string">'#store_browse_game_list .header'</span>)
-
-  <span class="hljs-string">'www.shinyloot.com'</span>:
-    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/games/?'</span>:
-      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'shinyloot'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-        {
-          <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.right-float a img'</span>, x).closest(<span class="hljs-string">'a'</span>)[<span class="hljs-number">0</span>].href
-          <span class="hljs-attribute">title</span>: $(x).prev(<span class="hljs-string">'h3'</span>).text().trim()
-          <span class="hljs-attribute">sources</span>: [<span class="hljs-string">'shinyloot'</span>]
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'#accordion .ui-widget-content'</span>)
-      <span class="hljs-string">'insert_button'</span>: shinyloot_insert_button
-    <span class="hljs-string">'https?://www\\.shinyloot\\.com/m/wishlist/?'</span>:
-      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'shinyloot'</span>
-      <span class="hljs-string">'game_list'</span>:<span class="hljs-function"> -&gt;</span>
-        {
-          <span class="hljs-attribute">url</span>: $(<span class="hljs-string">'.gameInfo + a'</span>, x)[<span class="hljs-number">0</span>].href
-          <span class="hljs-attribute">title</span>: $(<span class="hljs-string">'.gameName'</span>, x).text().trim()
-        } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-string">'.gameItem'</span>)
-      <span class="hljs-string">'insert_button'</span>: shinyloot_insert_button
-      <span class="hljs-string">'is_wishlist'</span>: <span class="hljs-literal">true</span>
 
 scrapers[<span class="hljs-string">'www.flyingbundle.com'</span>] = scrapers[<span class="hljs-string">'flyingbundle.com'</span>]
 scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span class="hljs-string">'groupees.com'</span>]</pre></div></div>
@@ -740,11 +513,11 @@ scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span c
         </li>
         
         
-        <li id="section-25">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Callback for the button</p>
 
@@ -752,23 +525,24 @@ scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span c
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">scrapeGames</span> = <span class="hljs-params">(scraper_obj)</span> -&gt;</span>
   params = {
-    <span class="hljs-attribute">json</span>: JSON.stringify(scraper_obj.game_list()),
-    <span class="hljs-attribute">source</span>: scraper_obj.source_id
+    file: btoa(unescape(encodeURIComponent(JSON.stringify(
+      scraper_obj.game_list())))),
+    upload: <span class="hljs-string">'x'</span>
   }
 
   url = <span class="hljs-keyword">if</span> scraper_obj.is_wishlist?
-    <span class="hljs-string">'https://isthereanydeal.com/outside/user/wait/3rdparty'</span>
+    <span class="hljs-string">'https://isthereanydeal.com/waitlist/import/'</span>
   <span class="hljs-keyword">else</span>
-    <span class="hljs-string">'https://isthereanydeal.com/outside/user/collection/3rdparty'</span></pre></div></div>
+    <span class="hljs-string">'https://isthereanydeal.com/collection/import/'</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-26">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p><strong>TODO:</strong> Figure out why attempting to use an iframe for non-HTTPS sites
 navigates the top-level window.</p>
@@ -781,17 +555,17 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Submit the form data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  form.css({ <span class="hljs-attribute">display</span>: <span class="hljs-string">'none'</span> })
+            <div class="content"><div class='highlight'><pre>  form.css({ display: <span class="hljs-string">'none'</span> })
   $.each params, <span class="hljs-function"><span class="hljs-params">(key, value)</span> -&gt;</span>
     $(<span class="hljs-string">"&lt;input type='hidden' /&gt;"</span>)
       .attr(<span class="hljs-string">"name"</span>, key)
@@ -804,26 +578,26 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$<span class="hljs-function"> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>$ -&gt;</pre></div></div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Resolve and call the correct profile</p>
 <p>It seems we don’t need an explicit <code>if location.host of scrapers</code>
@@ -846,11 +620,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Allow reloading the script without reloading the page for RAD</p>
 
@@ -861,11 +635,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Simplify the following code</p>
 
@@ -879,26 +653,26 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>We’ll need a closure to ensure click() calls the proper scraper</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">do</span> <span class="hljs-function"><span class="hljs-params">(scraper)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">do</span> (scraper) -&gt;</pre></div></div>
             
         </li>
         
         
-        <li id="section-33">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Use the <code>?</code> existential operator to die quietly if the scraper
 doesn’t have an <code>insert_button</code> member.</p>
@@ -907,18 +681,18 @@ doesn’t have an <code>insert_button</code> member.</p>
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Inserting ITAD button for source ID: "</span> +
                         scraper.source_id)
-            scraper.insert_button?().addClass(<span class="hljs-string">'itad_btn'</span>).click <span class="hljs-function">-&gt;</span>
+            scraper.insert_button?().addClass(<span class="hljs-string">'itad_btn'</span>).click -&gt;
               <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"ITAD button clicked"</span>)
               scrapeGames(scraper)</pre></div></div>
             
         </li>
         
         
-        <li id="section-34">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>We only ever want to match one profile so break here</p>
 
