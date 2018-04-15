@@ -1,7 +1,7 @@
 ### IsThereAnyDeal.com Collection Importer
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b16
+// @version 0.1b17
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -10,8 +10,8 @@
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
 // @match *://fireflowergames.com/my-lists/*
-// @match *://flyingbundle.com/users/account
-// @match *://www.flyingbundle.com/users/account
+// @match *://flyingbundle.com/users/account*
+// @match *://www.flyingbundle.com/users/account*
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
 // @match *://groupees.com/purchases*
@@ -77,14 +77,18 @@ humble_make_button = ->
   .append(label)
   .append(a)
 
-humble_parse = -> { title: x.textContent.trim(), sources: ['humblestore']
+humble_parse = -> {
+  version: "02",
+  data: {
+    title: x.textContent.trim(),
+    copies: [{ type: 'humblestore' }]
   } for x in $('div.row').has(
-  # Humble Library has no easy way to list only games
-  ' .downloads.windows .download,
-    .downloads.linux .download,
-    .downloads.mac .download,
-    .downloads.android .download'
-  ).find('div.title')
+    # Humble Library has no easy way to list only games
+    ' .downloads.windows .download,
+      .downloads.linux .download,
+      .downloads.mac .download,
+      .downloads.android .download'
+  ).find('div.title')}
 
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
@@ -103,10 +107,17 @@ scrapers =
           results = $('table.wl-table td.product-name a')
 
         {
-          title: $(x).text().trim()
-          url: x.href
-          sources: ['fireflower']
-        } for x in results
+          version: "02",
+          data: {
+            title: $(x).text().trim()
+            url: x.href
+            copies: [{
+              type: 'fireflower',
+              status: 'redeemed',
+              owned: 1,
+            }]
+          } for x in results
+        }
       'insert_button': ->
         # XXX: If you can debug the broken behaviour with <button>, please do.
         # I don't have time.
@@ -117,13 +128,24 @@ scrapers =
       'is_wishlist': true
 
   'flyingbundle.com':
-    'https?://(www\\.)?flyingbundle\\.com/users/account':
+    'https?://(www\\.)?flyingbundle\\.com/users/account#?':
       'source_id': 'flying_bundle'
       'game_list': -> {
-        title: $(x).text()
-        sources: 'flying_bundle'
-      } for x in $(".div_btn_download[href^='/users/sources']"
-      ).parents('li').find(':first')
+        version: "02",
+        data: {
+          title: $(x).text(),
+          copies: [{
+            type: 'Flying Bundle',
+            status: 'redeemed',
+            owned: 1,
+            source: {
+              type: "s",
+              id: "other"
+            }
+          }]
+        } for x in $(".div_btn_download[href^='/users/sources']"
+        ).parents('li').find(':first')
+      }
       'insert_button': ->
         li = $("<li></li>"
         ).appendTo('.legenda_points ul')
@@ -139,9 +161,16 @@ scrapers =
       'game_list': ->
         console.debug("game_list called for GOG order status page")
         {
-          title: gog_prepare_title(x)
-          sources: ['gog']
-        } for x in $('.order + .container .product-row')
+          "version": "02",
+          "data": {
+            title: gog_prepare_title(x)
+            copies: [{
+              type: 'gog',
+              status: 'redeemed',
+              owned: 1,
+            }]
+          } for x in $('.order + .container .product-row')
+        }
 
       'insert_button': ->
         console.debug("insert_button called for GOG order status page")
@@ -161,10 +190,17 @@ scrapers =
       'game_list': ->
         console.debug("game_list called for GOG collection page")
         {
-          id: attr(x, 'gog-product')
-          title: gog_prepare_title(x)
-          sources: ['gog']
-        } for x in $('.product-row')
+          "version": "02",
+          "data": {
+            # id: attr(x, 'gog-account-product')
+            title: gog_prepare_title(x)
+            copies: [{
+              type: 'gog',
+              status: 'redeemed',
+              owned: 1,
+            }]
+          } for x in $('.product-row')
+        }
 
       'insert_button': ->
         console.debug("insert_button called for GOG collection page")
@@ -184,10 +220,21 @@ scrapers =
       'source_id': 'other'
       'game_list': ->
         {
-          title: x.textContent.trim(),
-          sources: ['other']
-        } for x in $('.product ul.dropdown-menu')
-                    .parents('.details').find('h3')
+          "version": "02",
+          "data": {
+            title: x.textContent.trim(),
+            copies: [{
+              type: 'Groupees.com',
+              status: 'redeemed',
+              owned: 1,
+              source: {
+                type: "s",
+                id: "other"
+              }
+            }]
+          } for x in $('.product ul.dropdown-menu')
+                      .parents('.details').find('h3')
+        }
       'insert_button': ->
         $("<button></button>")
           .css({ float: 'right' }).addClass('button btn btn-sm btn-primary')
@@ -198,8 +245,16 @@ scrapers =
     'https://www\\.humblebundle\\.com/home/library/?':
       'source_id': 'humblestore'
       'game_list': -> {
-        title: x.textContent.trim(), sources: ['humblestore']
-      } for x in $('.subproduct-selector h2')
+        "version": "02",
+        "data": {
+          title: x.textContent.trim(),
+          copies: [{
+            type: 'humblestore',
+            status: 'redeemed',
+            owned: 1,
+          }]
+        } for x in $('.subproduct-selector h2')
+      }
       # TODO: Figure out how to filter out non-games again
       # TODO: Figure out how to tap their Backbone.js store
 
@@ -263,14 +318,15 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {
-    json: JSON.stringify(scraper_obj.game_list()),
-    source: scraper_obj.source_id
+    file: btoa(unescape(encodeURIComponent(JSON.stringify(
+      scraper_obj.game_list())))),
+    upload: 'x'
   }
 
   url = if scraper_obj.is_wishlist?
-    'https://isthereanydeal.com/outside/user/wait/3rdparty'
+    'https://isthereanydeal.com/waitlist/import/'
   else
-    'https://isthereanydeal.com/outside/user/collection/3rdparty'
+    'https://isthereanydeal.com/collection/import/'
 
   # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
   # navigates the top-level window.
