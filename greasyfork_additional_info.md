@@ -7,7 +7,7 @@ It is currently in **beta** and any bugs should be reported in the
 
 Currently supported vendors are:
 
-* [FireFlower Games](http://fireflowergames.com/) (wishlists only)
+* [FireFlower Games](http://fireflowergames.com/)
 * [Flying Bundle](http://www.flyingbundle.com/) (direct downloads only)
 * [GOG.com](http://www.gog.com) (collection only. Wishlists supported by ITAD directly.)
 * [Groupees](http://groupees.com/) (direct downloads in bundles tab only)
