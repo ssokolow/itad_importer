@@ -3,7 +3,7 @@
 /* IsThereAnyDeal.com Collection Importer
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b17
+// @version 0.1b18
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -11,6 +11,7 @@
 // @supportURL https://github.com/ssokolow/itad_importer/issues
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
+// @match *://fireflowergames.com/my-account*
 // @match *://fireflowergames.com/my-lists/*
 // @match *://flyingbundle.com/users/account*
 // @match *://www.flyingbundle.com/users/account*
@@ -28,7 +29,7 @@ CoffeeScript source file available (and documented) at:
 
   https://github.com/ssokolow/itad_importer
 
-Copyright ©2014-2017 Stephan Sokolow
+Copyright ©2014-2018 Stephan Sokolow
 License: MIT (http://opensource.org/licenses/MIT)
 
 TODO:
@@ -88,6 +89,54 @@ humble_parse = function() {
 
 scrapers = {
   'fireflowergames.com': {
+    '^https://fireflowergames\\.com/my-account/?': {
+      'source_id': 'fireflower',
+      'game_list': function() {
+        var results, title, titles, uniques, x;
+        results = $('ul.digital-downloads li a');
+        titles = [
+          (function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = results.length; _i < _len; _i++) {
+              x = results[_i];
+              _results.push($(x).text().split(" – ")[0].trim());
+            }
+            return _results;
+          })()
+        ][0];
+        uniques = titles.filter(function(title, pos) {
+          return titles.indexOf(title) === pos;
+        });
+        return {
+          version: "02",
+          data: (function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = uniques.length; _i < _len; _i++) {
+              title = uniques[_i];
+              _results.push({
+                title: title,
+                copies: [
+                  {
+                    type: 'fireflower',
+                    status: 'redeemed',
+                    owned: 1
+                  }
+                ]
+              });
+            }
+            return _results;
+          })()
+        };
+      },
+      'insert_button': function() {
+        return $('<a class="button"></a>').html(BUTTON_LABEL).css({
+          verticalAlign: '20%',
+          marginLeft: '1em'
+        }).appendTo($('ul.digital-downloads').prev());
+      }
+    },
     '^http://fireflowergames\\.com/my-lists/(edit-my|view-a)-list/\\?.+': {
       'source_id': 'fireflower',
       'game_list': function() {
@@ -104,15 +153,7 @@ scrapers = {
             for (_i = 0, _len = results.length; _i < _len; _i++) {
               x = results[_i];
               _results.push({
-                title: $(x).text().trim(),
-                url: x.href,
-                copies: [
-                  {
-                    type: 'fireflower',
-                    status: 'redeemed',
-                    owned: 1
-                  }
-                ]
+                title: $(x).text().trim()
               });
             }
             return _results;

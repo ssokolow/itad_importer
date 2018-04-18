@@ -33,7 +33,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-regexp">//</span> ==UserScript==
 <span class="hljs-regexp">//</span> @name IsThereAnyDeal.com Collection Importer
-<span class="hljs-regexp">//</span> @version <span class="hljs-number">0.1</span>b17
+<span class="hljs-regexp">//</span> @version <span class="hljs-number">0.1</span>b18
 <span class="hljs-regexp">//</span> @namespace http:<span class="hljs-regexp">//i</span>sthereanydeal.com/
 <span class="hljs-regexp">//</span> @description Adds buttons to various sites to <span class="hljs-keyword">export</span> your game lists to ITAD
 <span class="hljs-regexp">//</span> @icon http:<span class="hljs-regexp">//</span>s3-eu-west<span class="hljs-number">-1.</span>amazonaws.com/itad/images/banners/<span class="hljs-number">50</span>x50.gif
@@ -41,6 +41,7 @@
 <span class="hljs-regexp">//</span> @supportURL https:<span class="hljs-regexp">//gi</span>thub.com/ssokolow/itad_importer/issues
 <span class="hljs-regexp">//</span> @require https:<span class="hljs-regexp">//</span>ajax.googleapis.com/ajax/libs/jquery/<span class="hljs-number">1.11</span><span class="hljs-number">.0</span>/jquery.min.js
 <span class="hljs-regexp">//</span>
+<span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>fireflowergames.com/my-account*
 <span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>fireflowergames.com<span class="hljs-regexp">/my-lists/</span>*
 <span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>flyingbundle.com/users/account*
 <span class="hljs-regexp">//</span> @match *:<span class="hljs-regexp">//</span>www.flyingbundle.com/users/account*
@@ -58,7 +59,7 @@ CoffeeScript source file available (<span class="hljs-keyword">and</span> docume
 
   https:<span class="hljs-regexp">//gi</span>thub.com/ssokolow/itad_importer
 
-Copyright ©<span class="hljs-number">2014</span><span class="hljs-number">-2017</span> Stephan Sokolow
+Copyright ©<span class="hljs-number">2014</span><span class="hljs-number">-2018</span> Stephan Sokolow
 License: MIT (http:<span class="hljs-regexp">//</span>opensource.org/licenses/MIT)
 
 TODO:
@@ -160,7 +161,7 @@ RK5CYII="""</span></pre></div></div>
             
             <div class="content"><div class='highlight'><pre>  label = $(<span class="hljs-string">'&lt;span class="label"&gt;&lt;/span&gt;'</span>).html(BUTTON_LABEL)
   a = $(<span class="hljs-string">'&lt;a class="a" href="#"&gt;&lt;/span&gt;'</span>)
-     .html(BUTTON_LABEL)</pre></div></div>
+    .html(BUTTON_LABEL)</pre></div></div>
             
         </li>
         
@@ -175,7 +176,7 @@ RK5CYII="""</span></pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>     .css(<span class="hljs-string">'padding-left'</span>, <span class="hljs-string">'9px'</span>)
+            <div class="content"><div class='highlight'><pre>    .css(<span class="hljs-string">'padding-left'</span>, <span class="hljs-string">'9px'</span>)
 
   button = $(<span class="hljs-string">'&lt;div class="flexbtn active noicon"&gt;&lt;/div&gt;'</span>)
   .append(<span class="hljs-string">'&lt;div class="right"&gt;&lt;/div&gt;'</span>)
@@ -227,6 +228,61 @@ Greasemonkey <code>@include</code> lines.</p>
             
             <div class="content"><div class='highlight'><pre>scrapers =
   <span class="hljs-string">'fireflowergames.com'</span>:
+    <span class="hljs-string">'^https://fireflowergames\\.com/my-account/?'</span>:
+      <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'fireflower'</span>
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span>
+        results = $(<span class="hljs-string">'ul.digital-downloads li a'</span>)
+        titles = [$(x).text().split(<span class="hljs-string">" – "</span>)[<span class="hljs-number">0</span>].trim() <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> results][<span class="hljs-number">0</span>]
+        uniques = titles.filter(<span class="hljs-function"><span class="hljs-params">(title, pos)</span> -&gt;</span>  titles.indexOf(title) == pos)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>TODO: Take screenshot</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        {
+          version: <span class="hljs-string">"02"</span>,
+          data: {
+            title: title,
+            copies: [{
+              type: <span class="hljs-string">'fireflower'</span>,
+              status: <span class="hljs-string">'redeemed'</span>,
+              owned: <span class="hljs-number">1</span>,
+            }]
+          } <span class="hljs-keyword">for</span> title <span class="hljs-keyword">in</span> uniques
+        }
+      <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>XXX: If you can debug the broken behaviour with <button>, please do.
+I don’t have time.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'&lt;a class="button"&gt;&lt;/a&gt;'</span>)
+          .html(BUTTON_LABEL)
+          .css({
+            verticalAlign: <span class="hljs-string">'20%'</span>,
+            marginLeft: <span class="hljs-string">'1em'</span>,
+          }).appendTo($(<span class="hljs-string">'ul.digital-downloads'</span>).prev())
+
     <span class="hljs-string">'^http://fireflowergames\\.com/my-lists/(edit-my|view-a)-list/\\?.+'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'fireflower'</span>
       <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span>
@@ -238,26 +294,18 @@ Greasemonkey <code>@include</code> lines.</p>
 
         {
           version: <span class="hljs-string">"02"</span>,
-          data: {
-            title: $(x).text().trim()
-            url: x.href
-            copies: [{
-              type: <span class="hljs-string">'fireflower'</span>,
-              status: <span class="hljs-string">'redeemed'</span>,
-              owned: <span class="hljs-number">1</span>,
-            }]
-          } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> results
+          data: { title: $(x).text().trim() } <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> results
         }
       <span class="hljs-string">'insert_button'</span>: <span class="hljs-function">-&gt;</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>XXX: If you can debug the broken behaviour with <button>, please do.
 I don’t have time.</p>
@@ -339,11 +387,11 @@ I don’t have time.</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>id: attr(x, ‘gog-account-product’)</p>
 
@@ -368,11 +416,11 @@ I don’t have time.</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>TODO: Replace the following hacks with whatever GOG uses</p>
 
@@ -384,11 +432,40 @@ I don’t have time.</p>
         .html(BUTTON_LABEL + <span class="hljs-string">" (This Page)"</span>)
         .prependTo($(<span class="hljs-string">'.collection-header'</span>).filter(<span class="hljs-string">':first'</span>))
 
-  <span class="hljs-string">'groupees.com'</span>:
+  <span class="hljs-string">'groupees.com'</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>TODO: Support the new UI beta</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
     <span class="hljs-string">'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)'</span>:
       <span class="hljs-string">'source_id'</span>: <span class="hljs-string">'other'</span>
-      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span>
-        {
+      <span class="hljs-string">'game_list'</span>: <span class="hljs-function">-&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>FIXME: Now I need to manually filter for actual games</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        {
           <span class="hljs-string">"version"</span>: <span class="hljs-string">"02"</span>,
           <span class="hljs-string">"data"</span>: {
             title: x.textContent.trim(),
@@ -428,11 +505,11 @@ I don’t have time.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>TODO: Figure out how to filter out non-games again
 TODO: Figure out how to tap their Backbone.js store</p>
@@ -449,11 +526,11 @@ TODO: Figure out how to tap their Backbone.js store</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>I wish they wouldn’t make their CSS rules so specific</p>
 
@@ -513,11 +590,11 @@ scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span c
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Callback for the button</p>
 
@@ -538,11 +615,11 @@ scrapers[<span class="hljs-string">'www.groupees.com'</span>] = scrapers[<span c
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><strong>TODO:</strong> Figure out why attempting to use an iframe for non-HTTPS sites
 navigates the top-level window.</p>
@@ -555,11 +632,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Submit the form data</p>
 
@@ -578,11 +655,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>CoffeeScript shorthand for <code>$(document).ready(function() {</code></p>
 
@@ -593,11 +670,11 @@ navigates the top-level window.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Resolve and call the correct profile</p>
 <p>It seems we don’t need an explicit <code>if location.host of scrapers</code>
@@ -620,11 +697,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Allow reloading the script without reloading the page for RAD</p>
 
@@ -635,11 +712,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Simplify the following code</p>
 
@@ -653,11 +730,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>We’ll need a closure to ensure click() calls the proper scraper</p>
 
@@ -668,11 +745,11 @@ before the <code>for</code> loop</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Use the <code>?</code> existential operator to die quietly if the scraper
 doesn’t have an <code>insert_button</code> member.</p>
@@ -688,11 +765,11 @@ doesn’t have an <code>insert_button</code> member.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>We only ever want to match one profile so break here</p>
 

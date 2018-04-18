@@ -1,7 +1,7 @@
 ### IsThereAnyDeal.com Collection Importer
 // ==UserScript==
 // @name IsThereAnyDeal.com Collection Importer
-// @version 0.1b17
+// @version 0.1b18
 // @namespace http://isthereanydeal.com/
 // @description Adds buttons to various sites to export your game lists to ITAD
 // @icon http://s3-eu-west-1.amazonaws.com/itad/images/banners/50x50.gif
@@ -9,6 +9,7 @@
 // @supportURL https://github.com/ssokolow/itad_importer/issues
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
 //
+// @match *://fireflowergames.com/my-account*
 // @match *://fireflowergames.com/my-lists/*
 // @match *://flyingbundle.com/users/account*
 // @match *://www.flyingbundle.com/users/account*
@@ -26,7 +27,7 @@ CoffeeScript source file available (and documented) at:
 
   https://github.com/ssokolow/itad_importer
 
-Copyright ©2014-2017 Stephan Sokolow
+Copyright ©2014-2018 Stephan Sokolow
 License: MIT (http://opensource.org/licenses/MIT)
 
 TODO:
@@ -68,9 +69,9 @@ humble_make_button = ->
   # Humble Library uses very weird button markup
   label = $('<span class="label"></span>').html(BUTTON_LABEL)
   a = $('<a class="a" href="#"></span>')
-     .html(BUTTON_LABEL)
-     # Apparently the `noicon` class isn't versatile enough
-     .css('padding-left', '9px')
+    .html(BUTTON_LABEL)
+    # Apparently the `noicon` class isn't versatile enough
+    .css('padding-left', '9px')
 
   button = $('<div class="flexbtn active noicon"></div>')
   .append('<div class="right"></div>')
@@ -97,6 +98,36 @@ humble_parse = -> {
 # Greasemonkey `@include` lines.
 scrapers =
   'fireflowergames.com':
+    '^https://fireflowergames\\.com/my-account/?':
+      'source_id': 'fireflower'
+      'game_list': ->
+        results = $('ul.digital-downloads li a')
+        titles = [$(x).text().split(" – ")[0].trim() for x in results][0]
+        uniques = titles.filter((title, pos) ->  titles.indexOf(title) == pos)
+
+        # TODO: Take screenshot
+
+        {
+          version: "02",
+          data: {
+            title: title,
+            copies: [{
+              type: 'fireflower',
+              status: 'redeemed',
+              owned: 1,
+            }]
+          } for title in uniques
+        }
+      'insert_button': ->
+        # XXX: If you can debug the broken behaviour with <button>, please do.
+        # I don't have time.
+        $('<a class="button"></a>')
+          .html(BUTTON_LABEL)
+          .css({
+            verticalAlign: '20%',
+            marginLeft: '1em',
+          }).appendTo($('ul.digital-downloads').prev())
+
     '^http://fireflowergames\\.com/my-lists/(edit-my|view-a)-list/\\?.+':
       'source_id': 'fireflower'
       'game_list': ->
@@ -108,15 +139,7 @@ scrapers =
 
         {
           version: "02",
-          data: {
-            title: $(x).text().trim()
-            url: x.href
-            copies: [{
-              type: 'fireflower',
-              status: 'redeemed',
-              owned: 1,
-            }]
-          } for x in results
+          data: { title: $(x).text().trim() } for x in results
         }
       'insert_button': ->
         # XXX: If you can debug the broken behaviour with <button>, please do.
@@ -216,9 +239,13 @@ scrapers =
         .prependTo($('.collection-header').filter(':first'))
 
   'groupees.com':
+    # TODO: Support the new UI beta
+
     'https?://(www\\.)?groupees\\.com/(purchases|users/\\d+)':
       'source_id': 'other'
       'game_list': ->
+
+        # FIXME: Now I need to manually filter for actual games
         {
           "version": "02",
           "data": {
