@@ -15,6 +15,7 @@
 // @match *://www.flyingbundle.com/users/account*
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
+// @match *://itch.io/my-purchases*
 // @match *://groupees.com/purchases*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
@@ -238,6 +239,42 @@ scrapers =
         .html(BUTTON_LABEL + " (This Page)")
         .prependTo($('.collection-header').filter(':first'))
 
+  'itch.io':
+    '^https?://itch\\.io/my-purchases':
+      'source_id': 'itchio'
+      'game_list': ->
+        console.debug("game_list called for itch.io collection page")
+        {
+#          old_date = 0
+#          new_date = ""
+          "version": "02",
+          "data": {
+            # id: attr(x, 'gog-account-product')
+            #.attr('title').trim()
+            title: $('.title.game_link',x).first().text().trim()
+            copies: [{
+              added: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
+              type: 'itchio',
+              status: 'redeemed',
+              owned: 1,
+            }]
+          } for x in $('.game_cell')
+        }
+
+      'insert_button': ->
+        console.debug("insert_button called for GOG collection page")
+        $("<span></span>")
+        .css
+          float: 'right'
+          cursor: 'pointer'
+          # TODO: Replace the following hacks with whatever GOG uses
+          position: 'relative'
+          marginBottom: '-2em'
+          zIndex: 1
+        .html(BUTTON_LABEL + " (This Page)")
+        .appendTo($('.header_tabs').filter(':first'))
+
+
   'groupees.com':
     # TODO: Support the new UI beta
 
@@ -345,6 +382,7 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {
+#    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
     file: btoa(unescape(encodeURIComponent(JSON.stringify(
       scraper_obj.game_list())))),
     upload: 'x'
@@ -353,6 +391,7 @@ scrapeGames = (scraper_obj) ->
   url = if scraper_obj.is_wishlist?
     'https://isthereanydeal.com/waitlist/import/'
   else
+#    'https://httpbin.org/post'
     'https://isthereanydeal.com/collection/import/'
 
   # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
