@@ -16,6 +16,7 @@
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
 // @match *://itch.io/my-purchases*
+// @match *://*.itch.io/*
 // @match *://groupees.com/purchases*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
@@ -240,25 +241,65 @@ scrapers =
         .prependTo($('.collection-header').filter(':first'))
 
   'itch.io':
-    '^https?://itch\\.io/my-purchases':
+    '^https?://itch\\.io/my-purchadses':
       'source_id': 'itchio'
       'game_list': ->
+        old_date=0
+        new_date=null
         console.debug("game_list called for itch.io collection page")
         {
-#          old_date = 0
-#          new_date = ""
+#           new_date=0
           "version": "02",
           "data": {
             # id: attr(x, 'gog-account-product')
             #.attr('title').trim()
             title: $('.title.game_link',x).first().text().trim()
             copies: [{
+              new_date: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
+#if (new_date == null)
+#                 new_date=o
               added: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
               type: 'itchio',
               status: 'redeemed',
               owned: 1,
             }]
           } for x in $('.game_cell')
+        }
+
+      'insert_button': ->
+        console.debug("insert_button called for GOG collection page")
+        $("<span></span>")
+        .css
+          float: 'right'
+          cursor: 'pointer'
+          # TODO: Replace the following hacks with whatever GOG uses
+          position: 'relative'
+          marginBottom: '-2em'
+          zIndex: 1
+        .html(BUTTON_LABEL + " (This Page)")
+        .appendTo($('.header_tabs').filter(':first'))
+ 
+    '^https?://.+\\.itch\\.io/.+/download/.+':
+#     '^https?://itch\\.io/my-purchases':
+      'source_id': 'itchio'
+      'game_list': ->
+        console.debug("game_list called for itch.io download page")
+        {
+          "version": "02",
+          "data": {
+            # id: attr(x, 'gog-account-product')
+            #.attr('title').trim()
+            title: $('.object_title',x).first().text().trim()
+            copies: [{
+              added: new Date($('abbr').first().attr('title')).getTime()/1000
+#if (new_date == null)
+#                 new_date=o
+#               added: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
+              type: 'itchio',
+              status: 'redeemed',
+              owned: 1,
+            }]
+          } for x in $('.inner_column')
         }
 
       'insert_button': ->
@@ -382,17 +423,16 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {
-#    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
-    file: btoa(unescape(encodeURIComponent(JSON.stringify(
-      scraper_obj.game_list())))),
+    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
+#    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
     upload: 'x'
   }
 
   url = if scraper_obj.is_wishlist?
     'https://isthereanydeal.com/waitlist/import/'
   else
-#    'https://httpbin.org/post'
-    'https://isthereanydeal.com/collection/import/'
+    'https://httpbin.org/post'
+#    'https://isthereanydeal.com/collection/import/'
 
   # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
   # navigates the top-level window.
@@ -417,6 +457,10 @@ $ ->
   # It seems we don't need an explicit `if location.host of scrapers`
   # before the `for` loop
   console.log("Loading ITAD importer...")
+  console.log(location.host)
+  console.log(location.host.match(/\.itch\.io/))
+  if location.host.match(/\.itch\.io/)
+        scrapers[location.host] = scrapers['itch.io']
   if scrapers[location.host]
     console.log("Matched domain: " + location.host)
     for regex, profile of scrapers[location.host]

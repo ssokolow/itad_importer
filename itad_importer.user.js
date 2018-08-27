@@ -18,6 +18,7 @@
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
 // @match *://itch.io/my-purchases*
+// @match *://*.itch.io/*
 // @match *://groupees.com/purchases*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
@@ -288,10 +289,12 @@ TODO:
       }
     },
     'itch.io': {
-      '^https?://itch\\.io/my-purchases': {
+      '^https?://itch\\.io/my-purchadses': {
         'source_id': 'itchio',
         'game_list': function() {
-          var date, x;
+          var new_date, old_date, x;
+          old_date = 0;
+          new_date = null;
           console.debug("game_list called for itch.io collection page");
           return {
             "version": "02",
@@ -305,7 +308,48 @@ TODO:
                   title: $('.title.game_link', x).first().text().trim(),
                   copies: [
                     {
-                      added: date = new Date($('span', $('.date_header', x)).first().attr('title')).getTime() / 1000,
+                      new_date: new Date($('span', $('.date_header', x)).first().attr('title')).getTime() / 1000,
+                      added: new Date($('span', $('.date_header', x)).first().attr('title')).getTime() / 1000,
+                      type: 'itchio',
+                      status: 'redeemed',
+                      owned: 1
+                    }
+                  ]
+                });
+              }
+              return results1;
+            })()
+          };
+        },
+        'insert_button': function() {
+          console.debug("insert_button called for GOG collection page");
+          return $("<span></span>").css({
+            float: 'right',
+            cursor: 'pointer',
+            position: 'relative',
+            marginBottom: '-2em',
+            zIndex: 1
+          }).html(BUTTON_LABEL + " (This Page)").appendTo($('.header_tabs').filter(':first'));
+        }
+      },
+      '^https?://.+\\.itch\\.io/.+/download/.+': {
+        'source_id': 'itchio',
+        'game_list': function() {
+          var x;
+          console.debug("game_list called for itch.io download page");
+          return {
+            "version": "02",
+            "data": (function() {
+              var i, len, ref, results1;
+              ref = $('.inner_column');
+              results1 = [];
+              for (i = 0, len = ref.length; i < len; i++) {
+                x = ref[i];
+                results1.push({
+                  title: $('.object_title', x).first().text().trim(),
+                  copies: [
+                    {
+                      added: new Date($('abbr').first().attr('title')).getTime() / 1000,
                       type: 'itchio',
                       status: 'redeemed',
                       owned: 1
@@ -466,10 +510,10 @@ TODO:
   scrapeGames = function(scraper_obj) {
     var form, params, url;
     params = {
-      file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
+      file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list()))),
       upload: 'x'
     };
-    url = scraper_obj.is_wishlist != null ? 'https://isthereanydeal.com/waitlist/import/' : 'https://isthereanydeal.com/collection/import/';
+    url = scraper_obj.is_wishlist != null ? 'https://isthereanydeal.com/waitlist/import/' : 'https://httpbin.org/post';
     form = $("<form id='itad_submitter' method='POST' />").attr('action', url);
     params['returnTo'] = location.href;
     form.css({
@@ -485,6 +529,11 @@ TODO:
   $(function() {
     var e, fn, i, len, profile, profile_matched, ref, regex, results1, scraper;
     console.log("Loading ITAD importer...");
+    console.log(location.host);
+    console.log(location.host.match(/\.itch\.io/));
+    if (location.host.match(/\.itch\.io/)) {
+      scrapers[location.host] = scrapers['itch.io'];
+    }
     if (scrapers[location.host]) {
       console.log("Matched domain: " + location.host);
       ref = scrapers[location.host];
