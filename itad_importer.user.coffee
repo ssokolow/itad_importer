@@ -241,7 +241,7 @@ scrapers =
         .prependTo($('.collection-header').filter(':first'))
 
   'itch.io':
-    '^https?://itch\\.io/my-purchadses':
+    '^https?://itch\\.io/my-purchases':
       'source_id': 'itchio'
       'game_list': ->
         old_date=0
@@ -291,7 +291,7 @@ scrapers =
             #.attr('title').trim()
             title: $('.object_title',x).first().text().trim()
             copies: [{
-              added: new Date($('abbr').first().attr('title')).getTime()/1000
+              added: new Date($('abbr',x).attr('title').replace('@','')).getTime()/1000
 #if (new_date == null)
 #                 new_date=o
 #               added: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
@@ -303,7 +303,7 @@ scrapers =
         }
 
       'insert_button': ->
-        console.debug("insert_button called for GOG collection page")
+        console.debug("insert_button called for itch.io download page")
         $("<span></span>")
         .css
           float: 'right'
@@ -313,7 +313,7 @@ scrapers =
           marginBottom: '-2em'
           zIndex: 1
         .html(BUTTON_LABEL + " (This Page)")
-        .appendTo($('.header_tabs').filter(':first'))
+        .appendTo($('.header_nav_tabs').filter(':first'))
 
 
   'groupees.com':
@@ -423,16 +423,16 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {
-    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
-#    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
+#    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
+    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
     upload: 'x'
   }
 
   url = if scraper_obj.is_wishlist?
     'https://isthereanydeal.com/waitlist/import/'
   else
-    'https://httpbin.org/post'
-#    'https://isthereanydeal.com/collection/import/'
+#    'https://httpbin.org/post'
+    'https://isthereanydeal.com/collection/import/'
 
   # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
   # navigates the top-level window.

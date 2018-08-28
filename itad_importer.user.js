@@ -289,7 +289,7 @@ TODO:
       }
     },
     'itch.io': {
-      '^https?://itch\\.io/my-purchadses': {
+      '^https?://itch\\.io/my-purchases': {
         'source_id': 'itchio',
         'game_list': function() {
           var new_date, old_date, x;
@@ -349,7 +349,7 @@ TODO:
                   title: $('.object_title', x).first().text().trim(),
                   copies: [
                     {
-                      added: new Date($('abbr').first().attr('title')).getTime() / 1000,
+                      added: new Date($('abbr', x).attr('title').replace('@', '')).getTime() / 1000,
                       type: 'itchio',
                       status: 'redeemed',
                       owned: 1
@@ -362,14 +362,14 @@ TODO:
           };
         },
         'insert_button': function() {
-          console.debug("insert_button called for GOG collection page");
+          console.debug("insert_button called for itch.io download page");
           return $("<span></span>").css({
             float: 'right',
             cursor: 'pointer',
             position: 'relative',
             marginBottom: '-2em',
             zIndex: 1
-          }).html(BUTTON_LABEL + " (This Page)").appendTo($('.header_tabs').filter(':first'));
+          }).html(BUTTON_LABEL + " (This Page)").appendTo($('.header_nav_tabs').filter(':first'));
         }
       }
     },
@@ -510,10 +510,10 @@ TODO:
   scrapeGames = function(scraper_obj) {
     var form, params, url;
     params = {
-      file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list()))),
+      file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
       upload: 'x'
     };
-    url = scraper_obj.is_wishlist != null ? 'https://isthereanydeal.com/waitlist/import/' : 'https://httpbin.org/post';
+    url = scraper_obj.is_wishlist != null ? 'https://isthereanydeal.com/waitlist/import/' : 'https://isthereanydeal.com/collection/import/';
     form = $("<form id='itad_submitter' method='POST' />").attr('action', url);
     params['returnTo'] = location.href;
     form.css({
