@@ -39,7 +39,7 @@ TODO:
  */
 
 (function() {
-  var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, gog_prepare_title, humble_make_button, humble_parse, scrapeGames, scrapers;
+  var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, gog_prepare_title, humble_make_button, humble_parse, itch_plain, scrapeGames, scrapers;
 
   BUTTON_LABEL = "Export to ITAD";
 
@@ -58,6 +58,10 @@ TODO:
     dom = $('.product-title', elem).clone();
     $('._product-flag', dom).remove();
     return dom.text();
+  };
+
+  itch_plain = function(elem) {
+    return elem.toLowerCase();
   };
 
   humble_make_button = function() {
@@ -346,10 +350,10 @@ TODO:
               for (i = 0, len = ref.length; i < len; i++) {
                 x = ref[i];
                 results1.push({
-                  title: $('.object_title', x).first().text().trim(),
+                  title: $('.object_title', x).first().text().replace("  ", " ").trim(),
                   copies: [
                     {
-                      added: new Date($('abbr', x).attr('title').replace('@', '')).getTime() / 1000,
+                      added: new Date($('abbr', x).attr('title').replace('@', '') + " UTC").getTime() / 1000,
                       type: 'itchio',
                       status: 'redeemed',
                       owned: 1
@@ -510,7 +514,7 @@ TODO:
   scrapeGames = function(scraper_obj) {
     var form, params, url;
     params = {
-      file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list()))),
+      file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
       upload: 'x'
     };
     url = scraper_obj.is_wishlist != null ? 'https://isthereanydeal.com/waitlist/import/' : 'https://isthereanydeal.com/collection/import/';

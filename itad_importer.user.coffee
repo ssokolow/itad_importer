@@ -67,6 +67,9 @@ gog_prepare_title = (elem) ->
   $('._product-flag', dom).remove()
   dom.text()
 
+itch_plain = (elem) ->
+  elem.toLowerCase();
+
 humble_make_button = ->
   # Humble Library uses very weird button markup
   label = $('<span class="label"></span>').html(BUTTON_LABEL)
@@ -289,9 +292,10 @@ scrapers =
           "data": {
             # id: attr(x, 'gog-account-product')
             #.attr('title').trim()
-            title: $('.object_title',x).first().text().trim()
+            title: $('.object_title',x).first().text().replace("  "," ").trim()
+#            plain: itch_plain($('.object_title',x).first().text().trim())
             copies: [{
-              added: new Date($('abbr',x).attr('title').replace('@','')).getTime()/1000
+              added: new Date($('abbr',x).attr('title').replace('@','') + " UTC").getTime()/1000
 #if (new_date == null)
 #                 new_date=o
 #               added: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
@@ -423,8 +427,8 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {
-    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
-#    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
+#    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
+    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
     upload: 'x'
   }
 
