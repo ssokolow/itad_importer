@@ -73,7 +73,7 @@ TODO:
       version: "02",
       data: (function() {
         var i, len, ref, results1;
-        ref = $('div.row').has(' .downloads.windows .download, .downloads.linux .download, .downloads.mac .download, .downloads.android .download').find('div.title');
+        ref = $('div.row').has(' .downloads.windows .download, .downloads.linux .download, .downloads.mac .download, .downloads.android .download').find('div.product-name');
         results1 = [];
         for (i = 0, len = ref.length; i < len; i++) {
           x = ref[i];
@@ -510,7 +510,7 @@ TODO:
   scrapeGames = function(scraper_obj) {
     var form, params, url;
     params = {
-      file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
+      file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list()))),
       upload: 'x'
     };
     url = scraper_obj.is_wishlist != null ? 'https://isthereanydeal.com/waitlist/import/' : 'https://isthereanydeal.com/collection/import/';

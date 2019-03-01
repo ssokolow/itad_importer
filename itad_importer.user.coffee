@@ -91,7 +91,7 @@ humble_parse = -> {
       .downloads.linux .download,
       .downloads.mac .download,
       .downloads.android .download'
-  ).find('div.title')}
+  ).find('div.product-name')}
 
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
@@ -423,8 +423,8 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {
-#    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
-    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
+    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
+#    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
     upload: 'x'
   }
 
