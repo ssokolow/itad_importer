@@ -77,7 +77,7 @@ TODO:
       version: "02",
       data: (function() {
         var i, len, ref, results1;
-        ref = $('div.row').has(' .downloads.windows .download, .downloads.linux .download, .downloads.mac .download, .downloads.android .download').find('div.product-name');
+        ref = $('div.row').has(' .downloads.windows .download, .downloads.linux .download, .downloads.mac .download, .downloads.android .download').find('div.title');
         results1 = [];
         for (i = 0, len = ref.length; i < len; i++) {
           x = ref[i];
@@ -326,7 +326,7 @@ TODO:
           };
         },
         'insert_button': function() {
-          console.debug("insert_button called for GOG collection page");
+          console.debug("insert_button called for itch.io collection page");
           return $("<span></span>").css({
             float: 'right',
             cursor: 'pointer',
@@ -533,8 +533,6 @@ TODO:
   $(function() {
     var e, fn, i, len, profile, profile_matched, ref, regex, results1, scraper;
     console.log("Loading ITAD importer...");
-    console.log(location.host);
-    console.log(location.host.match(/\.itch\.io/));
     if (location.host.match(/\.itch\.io/)) {
       scrapers[location.host] = scrapers['itch.io'];
     }

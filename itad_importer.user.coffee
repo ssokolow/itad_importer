@@ -94,7 +94,7 @@ humble_parse = -> {
       .downloads.linux .download,
       .downloads.mac .download,
       .downloads.android .download'
-  ).find('div.product-name')}
+  ).find('div.title')}
 
 # Scrapers are looked up first by domain (lightweight) and then by
 # a regex check on the URL (accurate).
@@ -270,7 +270,7 @@ scrapers =
         }
 
       'insert_button': ->
-        console.debug("insert_button called for GOG collection page")
+        console.debug("insert_button called for itch.io collection page")
         $("<span></span>")
         .css
           float: 'right'
@@ -427,15 +427,14 @@ scrapers['www.groupees.com'] = scrapers['groupees.com']
 # Callback for the button
 scrapeGames = (scraper_obj) ->
   params = {
-#    file: unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))
-    file: btoa(unescape(encodeURIComponent(JSON.stringify(scraper_obj.game_list())))),
+    file: btoa(unescape(encodeURIComponent(JSON.stringify(
+      scraper_obj.game_list())))),
     upload: 'x'
   }
 
   url = if scraper_obj.is_wishlist?
     'https://isthereanydeal.com/waitlist/import/'
   else
-#    'https://httpbin.org/post'
     'https://isthereanydeal.com/collection/import/'
 
   # **TODO:** Figure out why attempting to use an iframe for non-HTTPS sites
@@ -461,8 +460,6 @@ $ ->
   # It seems we don't need an explicit `if location.host of scrapers`
   # before the `for` loop
   console.log("Loading ITAD importer...")
-  console.log(location.host)
-  console.log(location.host.match(/\.itch\.io/))
   if location.host.match(/\.itch\.io/)
         scrapers[location.host] = scrapers['itch.io']
   if scrapers[location.host]
