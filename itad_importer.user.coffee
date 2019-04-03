@@ -303,7 +303,7 @@ scrapers =
               status: 'redeemed',
               owned: 1,
             }]
-          } for x in $('.inner_column')
+          } for x in $('.inner_column').filter(':first')
         }
 
       'insert_button': ->

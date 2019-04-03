@@ -345,7 +345,7 @@ TODO:
             "version": "02",
             "data": (function() {
               var i, len, ref, results1;
-              ref = $('.inner_column');
+              ref = $('.inner_column').filter(':first');
               results1 = [];
               for (i = 0, len = ref.length; i < len; i++) {
                 x = ref[i];
