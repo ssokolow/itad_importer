@@ -39,7 +39,7 @@ TODO:
  */
 
 (function() {
-  var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, gog_prepare_title, humble_make_button, humble_parse, itch_plain, scrapeGames, scrapers;
+  var BUTTON_LABEL, ITAD_12X12, ITAD_14X14_GRAY, attr, gog_prepare_title, humble_make_button, humble_parse, itch_plain, romanise_numbers, scrapeGames, scrapers, title_plain;
 
   BUTTON_LABEL = "Export to ITAD";
 
@@ -53,6 +53,19 @@ TODO:
     return node.getAttribute(name);
   };
 
+  romanise_numbers = function(elem) {
+    elem = elem.replace(/1/g, "i");
+    elem = elem.replace(/2/g, "ii");
+    elem = elem.replace(/3/g, "iii");
+    elem = elem.replace(/4/g, "iv");
+    elem = elem.replace(/5/g, "v");
+    elem = elem.replace(/6/g, "vi");
+    elem = elem.replace(/7/g, "vii");
+    elem = elem.replace(/8/g, "viii");
+    elem = elem.replace(/9/g, "ix");
+    return elem = elem.replace(/9/g, "ix");
+  };
+
   gog_prepare_title = function(elem) {
     var dom;
     dom = $('.product-title', elem).clone();
@@ -62,6 +75,17 @@ TODO:
 
   itch_plain = function(elem) {
     return elem.toLowerCase();
+  };
+
+  title_plain = function(elem) {
+    var plain;
+    plain = elem;
+    plain = plain.toLowerCase();
+    plain = plain.replace(/\bthe\b/g, "");
+    plain = plain.replace(/ & /g, " and ");
+    plain = plain.replace(" ", "");
+    plain = plain.replace(/[\s\.\!@"#$%^&'*\(\)\-:_+=;,\?]/g, "");
+    return romanise_numbers(plain);
   };
 
   humble_make_button = function() {
@@ -293,49 +317,6 @@ TODO:
       }
     },
     'itch.io': {
-      '^https?://itch\\.io/my-purchases': {
-        'source_id': 'itchio',
-        'game_list': function() {
-          var new_date, old_date, x;
-          old_date = 0;
-          new_date = null;
-          console.debug("game_list called for itch.io collection page");
-          return {
-            "version": "02",
-            "data": (function() {
-              var i, len, ref, results1;
-              ref = $('.game_cell');
-              results1 = [];
-              for (i = 0, len = ref.length; i < len; i++) {
-                x = ref[i];
-                results1.push({
-                  title: $('.title.game_link', x).first().text().trim(),
-                  copies: [
-                    {
-                      new_date: new Date($('span', $('.date_header', x)).first().attr('title')).getTime() / 1000,
-                      added: new Date($('span', $('.date_header', x)).first().attr('title')).getTime() / 1000,
-                      type: 'itchio',
-                      status: 'redeemed',
-                      owned: 1
-                    }
-                  ]
-                });
-              }
-              return results1;
-            })()
-          };
-        },
-        'insert_button': function() {
-          console.debug("insert_button called for itch.io collection page");
-          return $("<span></span>").css({
-            float: 'right',
-            cursor: 'pointer',
-            position: 'relative',
-            marginBottom: '-2em',
-            zIndex: 1
-          }).html(BUTTON_LABEL + " (This Page)").appendTo($('.header_tabs').filter(':first'));
-        }
-      },
       '^https?://.+\\.itch\\.io/.+/download/.+': {
         'source_id': 'itchio',
         'game_list': function() {
@@ -351,9 +332,10 @@ TODO:
                 x = ref[i];
                 results1.push({
                   title: $('.object_title', x).first().text().replace("  ", " ").trim(),
+                  plain: title_plain($('.object_title', x).first().text().trim()),
                   copies: [
                     {
-                      added: new Date($('abbr', x).attr('title').replace('@', '') + " UTC").getTime() / 1000,
+                      added: new Date($('p > abbr', x).attr('title').replace('@', '') + " UTC").getTime() / 1000,
                       type: 'itchio',
                       status: 'redeemed',
                       owned: 1
