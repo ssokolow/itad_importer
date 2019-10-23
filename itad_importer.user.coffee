@@ -15,6 +15,8 @@
 // @match *://www.flyingbundle.com/users/account*
 // @match *://www.gog.com/account*
 // @match *://www.gog.com/order/status/*
+// @match *://itch.io/my-purchases*
+// @match *://*.itch.io/*
 // @match *://groupees.com/purchases*
 // @match *://groupees.com/users/*
 // @match *://www.humblebundle.com/home*
@@ -60,10 +62,37 @@ this.$ = this.jQuery = jQuery.noConflict(true)
 # Less overhead than instantiating a new jQuery object
 attr = (node, name) -> node.getAttribute(name)
 
+#from http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
+
+romanise_numbers = (elem) ->
+  elem = elem.replace(/1/g,"i")
+  elem = elem.replace(/2/g,"ii")
+  elem = elem.replace(/3/g,"iii")
+  elem = elem.replace(/4/g,"iv")
+  elem = elem.replace(/5/g,"v")
+  elem = elem.replace(/6/g,"vi")
+  elem = elem.replace(/7/g,"vii")
+  elem = elem.replace(/8/g,"viii")
+  elem = elem.replace(/9/g,"ix")        
+  elem = elem.replace(/9/g,"ix")
+
+
 gog_prepare_title = (elem) ->
   dom = $('.product-title', elem).clone()
   $('._product-flag', dom).remove()
   dom.text()
+
+itch_plain = (elem) ->
+  elem.toLowerCase();
+
+title_plain = (elem) ->
+  plain = elem;
+  plain = plain.toLowerCase()
+  plain = plain.replace(/\bthe\b/g,"")
+  plain = plain.replace(/ & /g," and ")
+  plain = plain.replace(" ","")
+  plain = plain.replace(/[\s\.\!@"#$%^&'*\(\)\-:_+=;,\?]/g,"")
+  return romanise_numbers(plain);
 
 humble_make_button = ->
   # Humble Library uses very weird button markup
@@ -238,6 +267,83 @@ scrapers =
         .html(BUTTON_LABEL + " (This Page)")
         .prependTo($('.collection-header').filter(':first'))
 
+  'itch.io':
+#     '^https?://itch\\.io/my-purchases':
+#       'source_id': 'itchio'
+#       'game_list': ->
+#         old_date=0
+#         new_date=null
+#         console.debug("game_list called for itch.io collection page")
+#         {
+# #           new_date=0
+#           "version": "02",
+#           "data": {
+#             # id: attr(x, 'gog-account-product')
+#             #.attr('title').trim()
+#             title: $('.title.game_link',x).first().text().trim()
+#             copies: [{
+#               new_date: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
+# #if (new_date == null)
+# #                 new_date=o
+#               added: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
+#               type: 'itchio',
+#               status: 'redeemed',
+#               owned: 1,
+#             }]
+#           } for x in $('.game_cell')
+#         }
+# 
+#       'insert_button': ->
+#         console.debug("insert_button called for itch.io collection page")
+#         $("<span></span>")
+#         .css
+#           float: 'right'
+#           cursor: 'pointer'
+#           # TODO: Replace the following hacks with whatever GOG uses
+#           position: 'relative'
+#           marginBottom: '-2em'
+#           zIndex: 1
+#         .html(BUTTON_LABEL + " (This Page)")
+#         .appendTo($('.header_tabs').filter(':first'))
+ 
+    '^https?://.+\\.itch\\.io/.+/download/.+':
+#     '^https?://itch\\.io/my-purchases':
+      'source_id': 'itchio'
+      'game_list': ->
+        console.debug("game_list called for itch.io download page")
+        {
+          "version": "02",
+          "data": {
+            # id: attr(x, 'gog-account-product')
+            #.attr('title').trim()
+            title: $('.object_title',x).first().text().replace("  "," ").trim()
+            plain: title_plain($('.object_title',x).first().text().trim())
+            copies: [{
+              added: new Date($('p > abbr',x).attr('title').replace('@','') + " UTC").getTime()/1000
+#if (new_date == null)
+#                 new_date=o
+#               added: new Date($('span',$('.date_header',x)).first().attr('title')).getTime()/1000
+              type: 'itchio',
+              status: 'redeemed',
+              owned: 1,
+            }]
+          } for x in $('.inner_column').filter(':first')
+        }
+
+      'insert_button': ->
+        console.debug("insert_button called for itch.io download page")
+        $("<span></span>")
+        .css
+          float: 'right'
+          cursor: 'pointer'
+          # TODO: Replace the following hacks with whatever GOG uses
+          position: 'relative'
+          marginBottom: '-2em'
+          zIndex: 1
+        .html(BUTTON_LABEL + " (This Page)")
+        .appendTo($('.header_nav_tabs').filter(':first'))
+
+
   'groupees.com':
     # TODO: Support the new UI beta
 
@@ -378,6 +484,8 @@ $ ->
   # It seems we don't need an explicit `if location.host of scrapers`
   # before the `for` loop
   console.log("Loading ITAD importer...")
+  if location.host.match(/\.itch\.io/)
+        scrapers[location.host] = scrapers['itch.io']
   if scrapers[location.host]
     console.log("Matched domain: " + location.host)
     for regex, profile of scrapers[location.host]
